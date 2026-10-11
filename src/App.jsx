@@ -30,7 +30,7 @@ import TechnicalVisualization from "./TechnicalVisualization";
 import ExplainerContent from "./ExplainerContent";
 import CorporateBrandFilms from "./CorporateBrandFilms";
 import ProductIndustrialFilms from "./ProductzindustrialFilms";
-import PromotionalVideos from "./promotional-videos";
+import PromotionalVideos from "./PromotionalVideos";
 import PhotographyVideography from "./PhotographyVideography";
 import EditingVFX from "./EditingVFX";
 import BrandIdentity from "./BrandIdentity";
