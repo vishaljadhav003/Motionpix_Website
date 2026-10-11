@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Interactive3D.css";
-import SEO from "./Seo";
+import SEO from "./SEO";
 
 const interactiveServices = [
   {
