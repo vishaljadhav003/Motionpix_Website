@@ -125,6 +125,30 @@ app.use((err, req, res, next) => {
 });
 
 // ============================================================
+// FRONTEND — SERVE VITE PRODUCTION BUILD
+// ============================================================
+
+app.use(express.static(frontendDist, { index: false }));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(frontendDist, "index.html"));
+});
+
+// React Router fallback — preserve API and upload routes
+app.use((req, res, next) => {
+  if (
+    req.method !== "GET" ||
+    req.path === "/api" ||
+    req.path.startsWith("/api/") ||
+    req.path.startsWith("/uploads/")
+  ) {
+    return next();
+  }
+
+  return res.sendFile(path.join(frontendDist, "index.html"));
+});
+
+// ============================================================
 // SOCKET
 // "/"      -> admin dashboard (login required for live data)
 // "/live"  -> website visitors (presence tracking)
