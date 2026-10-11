@@ -79,7 +79,9 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 // VIEW ENGINE
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  express.static(path.join(__dirname, "public"), { index: false })
+);
 app.use("/uploads", express.static("uploads"));
 
 // ROUTES
@@ -97,9 +99,7 @@ app.use("/api", teamRoutes);
 app.use("/api", adminRoutes);
 
 // HOME
-app.get("/", (req, res) => {
-  res.redirect("/api/admin");
-});
+
 
 // ERROR HANDLER — keeps the chatbot working with clean JSON errors
 // (too-large uploads, bad JSON, blocked CORS) instead of an HTML error page
@@ -128,13 +128,28 @@ app.use((err, req, res, next) => {
 // FRONTEND — SERVE VITE PRODUCTION BUILD
 // ============================================================
 
+// ============================================================
+// FRONTEND — SERVE VITE PRODUCTION BUILD
+// ============================================================
+
+// Serve React frontend assets
 app.use(express.static(frontendDist, { index: false }));
 
+// Main website
 app.get("/", (req, res) => {
   res.sendFile(path.join(frontendDist, "index.html"));
 });
 
-// React Router fallback — preserve API and upload routes
+// Admin login — keep /admin in the browser URL
+app.get("/admin", (req, res) => {
+  if (req.session?.isAuth) {
+    return res.redirect("/api/admin");
+  }
+
+  return res.render("login");
+});
+
+// React Router fallback — preserve API and uploads
 app.use((req, res, next) => {
   if (
     req.method !== "GET" ||
