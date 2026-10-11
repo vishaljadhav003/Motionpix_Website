@@ -45,7 +45,7 @@ const sessionMiddleware = session({
   cookie: {
     httpOnly: true,
     sameSite: "lax",
-    secure: false, // production मध्ये true
+    secure: process.env.NODE_ENV === "production",
   },
 });
 
