@@ -164,7 +164,7 @@ function Career() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/career", {
+      const response = await fetch("/api/career", {
         method: "POST",
         body: formData,
       });
