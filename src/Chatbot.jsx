@@ -7,7 +7,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 // ================= CONFIG =================
-const API_URL = "http://localhost:5000/api/chat";
+const API_URL = "/api/chat";
 const CONTACT_EMAIL = "info@motionpixindia.com";
 const STORAGE_KEY = "chats";
 const LEGACY_KEY = "chat"; // old single-conversation key (migrated once)
