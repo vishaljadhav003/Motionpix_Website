@@ -11,7 +11,7 @@ import {
   getImageAlt,
 } from "./Teamdata";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "/api";
 
 // The navbar is fixed, so anchors stop a little below the top of the screen
 const ANCHOR_OFFSET = { scrollMarginTop: "110px" };
