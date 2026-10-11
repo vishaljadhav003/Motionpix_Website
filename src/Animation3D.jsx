@@ -1,6 +1,6 @@
 import "./Animation3D.css";
 import { useEffect, useRef, useState } from "react";
-import SEO from "./Seo";
+import SEO from "./SEO";
 
 const animationServices = [
   {

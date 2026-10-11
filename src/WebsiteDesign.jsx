@@ -1,6 +1,6 @@
 import "./WebsiteDesign.css";
 import { useEffect, useRef, useState } from "react";
-import SEO from "./Seo";
+import SEO from "./SEO";
 
 import {
   FaCode,
