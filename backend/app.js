@@ -11,6 +11,7 @@ const liveVisitors = require("./services/liveVisitors");
 
 const app = express();
 const server = http.createServer(app);
+const frontendDist = path.join(__dirname, "..", "dist");
 
 // ============================================================
 // CORS — localhost for development + live site domains
