@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./About.css";
 import "./TeamSection.css";
-import "./IndustrialSectors.css";
+// import "./IndustrialSectors.css";
 import "./WorkProcess.css";
 import TeamSection from "./TeamSection";
-import CapsuleScrollPage from "./CapsuleScrollPage";
+// import CapsuleScrollPage from "./CapsuleScrollPage";
 import MotionPixJourney from "./MotionPixJourney";
 
 const sectors = [
@@ -40,6 +40,29 @@ const sectors = [
   },
 ];
 
+/* Custom hook for bidirectional scroll reveal on generic elements */
+const useBidirectionalReveal = () => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal-active");
+          } else {
+            entry.target.classList.remove("reveal-active");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    const elements = document.querySelectorAll(".reveal-on-scroll");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+};
+
 const GraphNode = ({ title, children, delay = "0s" }) => {
   const nodeRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -50,10 +73,7 @@ const GraphNode = ({ title, children, delay = "0s" }) => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(element);
-        }
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.25 }
     );
@@ -82,7 +102,7 @@ const GraphNode = ({ title, children, delay = "0s" }) => {
 };
 
 const About = () => {
-  const graphCenterRef = useRef(null);
+  useBidirectionalReveal();
 
   const handleMagnetMove = (e) => {
     if (window.innerWidth <= 768) return;
@@ -116,73 +136,67 @@ const About = () => {
   return (
     <>
       <section className="about-graph-section">
-        <div className="container">
-          <div className="text-center mb-5">
-            <h1 className="fw-bold text-light ">
-              About <span>Motionpix</span>
-            </h1>
-            <p className="text-secondary mt-3">
-              Our vision, mission, values, and quality policy define how we create impact.
-            </p>
-          </div>
-
-          <div
-            className="graph-wrapper"
-            onMouseMove={handleMagnetMove}
-            onMouseLeave={resetMagnet}
-          >
-            <GraphNode title="Vision" delay="0s">
-              <img src="./Vision.svg" alt="Vision" className="graph-icon" />
-              <p className="text-light mt-3 text-center fw-bold">
-                To redefine visual communication by merging creativity,
-                technology, and storytelling.
-              </p>
-            </GraphNode>
-
-            <GraphNode title="Mission" delay="0.15s">
-              <img src="./Mission.svg" alt="Mission" className="graph-icon" />
-              <p className="text-light mt-3 text-center fw-bold">
-                Deliver innovative animation and digital solutions that empower.
-              </p>
-            </GraphNode>
-
-            <div className="graph-center" ref={graphCenterRef}>
-              <img
-                src="/Logo.png"
-                alt="MotionPix Logo"
-                className="graph-center-logo"
-              />
-            </div>
-
-            <GraphNode title="Quality Policy" delay="0.3s">
-              <img src="./Quality.svg" alt="Quality Policy" className="graph-icon" />
-              <p className="text-light mt-3 text-center fw-bold">
-                Structured processes, strict benchmarks, and continuous improvement
-                across every project.
-              </p>
-            </GraphNode>
-
-            <GraphNode title="Core Values" delay="0.45s">
-              <img src="./Core-Values.svg" alt="Core Values" className="graph-icon" />
-              <ul className="mt-3 center-ul fw-bold">
-                <li className="text-light">Creativity with purpose</li>
-                <li className="text-light">Clients-first mindset</li>
-                <li className="text-light">Innovation & integrity</li>
-              </ul>
-            </GraphNode>
-          </div>
+      <div className="container">
+        <div className="text-center mb-5 reveal-on-scroll">
+          <h1 className="fw-bold text-light about-title">
+            About <span>Us</span>
+          </h1>
+          <p className="text-secondary mt-3">
+            Our vision, mission, values, and quality policy define how we create impact.
+          </p>
         </div>
-      </section>
 
-      <CapsuleScrollPage />
+        <div className="graph-wrapper">
+          <GraphNode title="Vision" delay="0s">
+            <img src="./Vision.svg" alt="Vision" className="graph-icon" />
+            <p className="text-light mt-3 text-center fw-bold">
+              To redefine visual communication by merging creativity,
+              technology, and storytelling.
+            </p>
+          </GraphNode>
 
+          <GraphNode title="Mission" delay="0.15s">
+            <img src="./Mission.svg" alt="Mission" className="graph-icon" />
+            <p className="text-light mt-3 text-center fw-bold">
+              Deliver innovative animation and digital solutions that empower.
+            </p>
+          </GraphNode>
 
-      <MotionPixJourney />
+          <div className="graph-center reveal-on-scroll">
+            <img
+              src="/Logo.png"
+              alt="MotionPix Logo"
+              className="graph-center-logo"
+            />
+          </div>
+
+          <GraphNode title="Quality Policy" delay="0.3s">
+            <img src="./Quality.svg" alt="Quality Policy" className="graph-icon" />
+            <p className="text-light mt-3 text-center fw-bold">
+              Structured processes, strict benchmarks, and continuous improvement
+              across every project.
+            </p>
+          </GraphNode>
+
+          <GraphNode title="Core Values" delay="0.45s">
+            <img src="./Core-Values.svg" alt="Core Values" className="graph-icon" />
+            <ul className="mt-3 center-ul fw-bold">
+              <li className="text-light">Creativity with purpose</li>
+              <li className="text-light">Clients-first mindset</li>
+              <li className="text-light">Innovation & integrity</li>
+            </ul>
+          </GraphNode>
+        </div>
+      </div>
+    </section>
+      {/* <CapsuleScrollPage /> */}
+
+      {/* <MotionPixJourney /> */}
       <TeamSection />
 
-      <section className="sectors-section">
+      {/* <section className="sectors-section">
         <div className="container">
-          <div className="sectors-header">
+          <div className="sectors-header reveal-on-scroll">
             <h2 className="fw-bold">
               Industries We <span>Serve</span>
             </h2>
@@ -192,7 +206,7 @@ const About = () => {
           </div>
 
           <div className="sectors-layout">
-            <div className="sectors-image">
+            <div className="sectors-image reveal-on-scroll">
               <img
                 src="https://mechatrix.com/wp-content/uploads/2025/11/2.svg"
                 alt="Industrial sectors"
@@ -200,8 +214,12 @@ const About = () => {
             </div>
 
             <div className="sectors-grid-3">
-              {sectors.map((item) => (
-                <div className="sector-card-3" key={item.title}>
+              {sectors.map((item, index) => (
+                <div
+                  className="sector-card-3 reveal-on-scroll"
+                  key={item.title}
+                  style={{ transitionDelay: `${index * 0.1}s` }}
+                >
                   <span className="sector-icon">{item.icon}</span>
                   <h4>{item.title}</h4>
                   <p>{item.desc}</p>
@@ -210,10 +228,10 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="work-process">
-        <div className="process-header">
+        <div className="process-header reveal-on-scroll">
           <h2>
             Our Work <span>Process</span>
           </h2>
@@ -224,12 +242,12 @@ const About = () => {
         </div>
 
         <div className="process-wrapper">
-          <div className="process-video">
+          <div className="process-video reveal-on-scroll">
             <video src="./Work.mp4" autoPlay muted loop playsInline />
           </div>
 
           <div className="process-steps">
-            <div className="process-card">
+            <div className="process-card reveal-on-scroll" style={{ transitionDelay: "0s" }}>
               <span className="step-tag">01</span>
               <h3>Pre-Production</h3>
               <ul>
@@ -240,7 +258,7 @@ const About = () => {
               </ul>
             </div>
 
-            <div className="process-card">
+            <div className="process-card reveal-on-scroll" style={{ transitionDelay: "0.15s" }}>
               <span className="step-tag">02</span>
               <h3>Production</h3>
               <ul>
@@ -251,7 +269,7 @@ const About = () => {
               </ul>
             </div>
 
-            <div className="process-card">
+            <div className="process-card reveal-on-scroll" style={{ transitionDelay: "0.3s" }}>
               <span className="step-tag">03</span>
               <h3>Post-Production</h3>
               <ul>
@@ -269,3 +287,4 @@ const About = () => {
 };
 
 export default About;
+

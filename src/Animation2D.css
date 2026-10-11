@@ -1,528 +1,1808 @@
+/* =========================================================
+   2D ANIMATION PAGE
+   Scoped only to Animation2D.jsx
+   Uses existing global light/dark theme variables.
+   No images / no external assets / no grid background.
+========================================================= */
+
 .animation2d-page {
-  background: black;
-  color: #fff;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-/* HERO */
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.animation2d-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   REVEAL SYSTEM
+========================================================= */
+
+.animation2d-reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay);
+}
+
+.animation2d-reveal--up {
+  transform: translate3d(0, 60px, 0);
+}
+
+.animation2d-reveal--left {
+  transform: translate3d(-70px, 0, 0);
+}
+
+.animation2d-reveal--right {
+  transform: translate3d(70px, 0, 0);
+}
+
+.animation2d-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
 .animation2d-hero {
-  min-height: 90vh;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  position: relative;
+  min-height: 92vh;
+  display: flex;
   align-items: center;
-  gap: 40px;
-  padding: 60px 8%;
+  padding: 110px 0 90px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 75% 50%,
+      color-mix(in srgb, var(--accent-color) 8%, transparent),
+      transparent 34%
+    ),
+    var(--bg-primary);
 }
 
-.hero-content h1 {
-  font-size: 3.2rem;
+.animation2d-hero-inner {
+  width: min(1280px, calc(100% - 80px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.animation2d-hero-content {
+  flex: 1 1 52%;
+  max-width: 650px;
+}
+
+.animation2d-eyebrow,
+.animation2d-section-heading > span,
+.animation2d-process-intro > span,
+.animation2d-final-inner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.animation2d-eyebrow::before,
+.animation2d-section-heading > span::before,
+.animation2d-process-intro > span::before,
+.animation2d-final-inner > span::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--accent-color);
+}
+
+.animation2d-hero-content h1 {
+  margin: 24px 0 24px;
+  color: var(--text-primary);
+  font-size: clamp(3.1rem, 6vw, 6.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.055em;
   font-weight: 800;
 }
 
-.hero-content span{
-  color:#e50914
+.animation2d-hero-content h1 span {
+  color: var(--accent-color);
 }
 
-.hero-content p {
-  color: #b0b0b0;
-  margin: 20px 0 30px;
-  max-width: 520px;
+.animation2d-hero-content p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
 }
 
-/* HERO BUTTON – RED */
-.hero-btn {
-  background: #e50914;
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-/* .hero-btn:hover {
-  background: #ff1a25;
-} */
-
-.hero-media video {
-  width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 30px 80px rgba(229, 9, 20, 0.25) !important;
-}
-
-/* SECTIONS */
-.section {
-  padding: 80px 0;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 50px;
-  font-size: 2.2rem;
-}
-
-/* GRID */
-.d-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-
-.feature-card-2d {
-  background: rgba(255, 255, 255, 0.06);
-  padding: 30px;
-  border-radius: 20px;
-  transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
-  margin-top:30px;
-}
-.feature-card-2d span {
-  color: #e50914;
-}
-.feature-card-2d:hover {
-  transform: translateY(-8px);
-  /* background: rgba(229, 9, 20, 0.18); RED */
-  box-shadow: 0 18px 40px rgba(229, 9, 20, 0.35); /* RED glow */
-}
-
-.feature-card-2d span {
-  color: #e50914;
-  font-weight: 700;
-}
-
-/* PROCESS */
-.process-section {
-  padding: 90px 0;
-  text-align: center;
-}
-
-.process-flow {
+.animation2d-hero-meta {
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-}
-
-.step-circle {
-  width: 55px;
-  height: 55px;
-  background: #e50914;
-  color: #fff;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 0 18px rgba(229, 9, 20, 0.45);
-  
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* WHY */
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  text-align: center;
+.animation2d-hero-meta i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
 }
 
-.why-grid div {
-  background: rgba(255, 255, 255, 0.06);
-  padding: 25px;
-  border-radius: 18px;
-  margin-top:30px;
+/* =========================================================
+   HERO 2D STAGE
+========================================================= */
+
+.animation2d-hero-visual {
+  flex: 0 1 520px;
+  min-width: 0;
 }
 
-.section-title span{
-  color:#e50914;
-}
-.process-section span{
-  color:#e50914;
-}
-
-.animation2d-cta span{
-  color:#e50914;
-}
-
-.why-grid div:hover{
-
-   /* transform: translateY(-8px); */
-  /* background: rgba(229, 9, 20, 0.18); RED */
-  box-shadow: 0 18px 40px rgba(229, 9, 20, 0.35); /* RED glow */
-
-}
-
-/* CTA */
-.animation2d-cta {
-  padding: 90px 20px;
-  text-align: center;
-  background:black;
-}
-
-.animation2d-cta h2 {
-  color: #fff;
-  margin-bottom: 25px;
-}
-
-.cta-btn {
-  background: #e50914;
-  color: #fff;
-  padding: 14px 30px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.cta-btn:hover {
-  background: #ff1a25;
-}
-
-/* RESPONSIVE */
-@media (max-width: 992px) {
-  .animation2d-hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .hero-content p {
-    margin-inline: auto;
-  }
-
-  .d-grid,
-  .why-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .process-flow {
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-width: 576px) {
-  .d-grid,
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-content h1 {
-    font-size: 2.4rem;
-  }
-}
-/* IMAGE CARDS */
-.image-card {
-  padding: 0;
-  overflow: hidden;
-}
-
-.image-card img {
+.animation2d-stage {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  aspect-ratio: 1 / 0.94;
+  min-height: 440px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--bg-secondary) 96%, transparent),
+      var(--bg-card)
+    );
+  /* box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 8%, transparent); */
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.animation2d-stage::before {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: 40px;
+  right: 45px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 35%, transparent);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+  animation: animation2d-orbit 8s ease-in-out infinite;
+}
+
+.animation2d-stage::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 1px;
+  left: 50%;
+  top: 50%;
+  background: var(--border-color);
+  transform: translate(-50%, -50%) rotate(-26deg);
+}
+
+.animation2d-stage-label {
+  position: absolute;
+  z-index: 8;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+}
+
+.animation2d-stage-label strong {
+  color: var(--accent-color);
+  font-size: 0.82rem;
+}
+
+/* Floating frame cards */
+
+.animation2d-frame {
+  position: absolute;
+  z-index: 3;
+  width: 118px;
+  height: 82px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transform-style: preserve-3d;
+}
+
+.animation2d-frame::before,
+.animation2d-frame::after {
+  content: "";
+  position: absolute;
+  background: var(--border-color);
+}
+
+.animation2d-frame::before {
+  width: 70%;
+  height: 1px;
+  top: 23px;
+  left: 15%;
+}
+
+.animation2d-frame::after {
+  width: 45%;
+  height: 1px;
+  top: 39px;
+  left: 15%;
+}
+
+.animation2d-frame span {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  bottom: 14px;
+  left: 15%;
+  border: 1px solid var(--accent-color);
+  transform: rotate(45deg);
+}
+
+.frame-one {
+  top: 88px;
+  right: 38px;
+  transform: rotate(8deg) translateZ(20px);
+  animation: animation2d-float-one 5s ease-in-out infinite;
+}
+
+.frame-two {
+  bottom: 140px;
+  left: 36px;
+  transform: rotate(-8deg) translateZ(30px);
+  animation: animation2d-float-two 6s ease-in-out infinite;
+}
+
+/* Character */
+
+.animation2d-character {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 47%;
+  width: 170px;
+  height: 230px;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  transform-style: preserve-3d;
+  animation: animation2d-character-float 4.5s ease-in-out infinite;
+}
+
+.character-head {
+  position: absolute;
+  top: 0;
+  left: 31px;
+  width: 108px;
+  height: 108px;
+  border: 3px solid var(--text-primary);
+  border-radius: 46% 54% 48% 52%;
+  background: var(--bg-secondary);
+  transform: rotate(4deg);
+}
+
+.character-eye {
+  position: absolute;
+  top: 38px;
+  width: 8px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  animation: animation2d-blink 4s infinite;
+}
+
+.eye-one {
+  left: 31px;
+}
+
+.eye-two {
+  right: 31px;
+}
+
+.character-mouth {
+  position: absolute;
+  left: 50%;
+  bottom: 25px;
+  width: 28px;
+  height: 10px;
+  border-bottom: 2px solid var(--text-primary);
+  border-radius: 0 0 50% 50%;
+  transform: translateX(-50%);
+}
+
+.character-body {
+  position: absolute;
+  top: 98px;
+  left: 51px;
+  width: 68px;
+  height: 88px;
+  border: 3px solid var(--text-primary);
+  border-radius: 24px 24px 14px 14px;
+  background: var(--accent-color);
+}
+
+.character-arm {
+  position: absolute;
+  top: 20px;
+  width: 18px;
+  height: 70px;
+  border: 3px solid var(--text-primary);
   border-radius: 20px;
+  background: var(--bg-secondary);
+  transform-origin: top center;
+}
+
+.arm-left {
+  left: -31px;
+  transform: rotate(25deg);
+  animation: animation2d-arm-left 2.4s ease-in-out infinite;
+}
+
+.arm-right {
+  right: -31px;
+  transform: rotate(-32deg);
+  animation: animation2d-arm-right 2.4s ease-in-out infinite;
+}
+
+.character-leg {
+  position: absolute;
+  top: 177px;
+  width: 19px;
+  height: 58px;
+  border: 3px solid var(--text-primary);
+  border-radius: 20px;
+  background: var(--bg-secondary);
+  transform-origin: top center;
+}
+
+.leg-left {
+  left: 59px;
+  transform: rotate(8deg);
+}
+
+.leg-right {
+  right: 59px;
+  transform: rotate(-8deg);
+}
+
+/* Motion path */
+
+.animation2d-motion-path {
+  position: absolute;
+  z-index: 2;
+  left: 17%;
+  top: 31%;
+  width: 190px;
+  height: 130px;
+  border-top: 2px dashed color-mix(in srgb, var(--accent-color) 65%, transparent);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.animation2d-motion-path span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.animation2d-motion-path span:nth-child(1) {
+  left: 4px;
+  top: -4px;
+}
+
+.animation2d-motion-path span:nth-child(2) {
+  left: 50%;
+  top: -5px;
+}
+
+.animation2d-motion-path span:nth-child(3) {
+  right: 4px;
+  top: 31px;
+}
+
+/* Timeline */
+
+.animation2d-timeline {
+  position: absolute;
+  z-index: 7;
+  left: 24px;
+  right: 24px;
+  bottom: 22px;
+  padding-top: 14px;
+}
+
+.timeline-head {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+}
+
+.timeline-track {
+  position: relative;
+  display: flex;
+  height: 28px;
+  margin-top: 7px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.timeline-track span {
+  flex: 1;
+  border-right: 1px solid var(--border-color);
+}
+
+.timeline-track span:last-child {
+  border-right: 0;
+}
+
+.timeline-track span:nth-child(2),
+.timeline-track span:nth-child(5) {
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+}
+
+.timeline-playhead {
+  position: absolute;
+  z-index: 2;
+  top: 27px;
+  left: 0;
+  width: 1px;
+  height: 35px;
+  background: var(--accent-color);
+  animation: animation2d-playhead 4s linear infinite;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.animation2d-section {
+  position: relative;
+  padding: 130px 0;
+  background: var(--bg-primary);
+}
+
+.animation2d-section:nth-of-type(odd) {
+  background: var(--bg-secondary);
+}
+
+.animation2d-section-heading {
+  max-width: 760px;
+  margin-bottom: 70px;
+}
+
+.animation2d-section-heading h2,
+.animation2d-process-intro h2 {
+  margin: 18px 0 20px;
+  color: var(--text-primary);
+  font-size: clamp(2.3rem, 4.7vw, 4.7rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.animation2d-section-heading h2 strong,
+.animation2d-process-intro h2 strong {
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.animation2d-section-heading p,
+.animation2d-process-intro p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   SERVICE LIST
+========================================================= */
+
+.animation2d-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.animation2d-service-wrap {
+  width: 100%;
+}
+
+.animation2d-service-card {
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  padding: 28px 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-card);
+  overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.animation2d-service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--accent-color);
+  transform: scaleY(0);
+  transform-origin: center;
   transition: transform 0.4s ease;
 }
 
-.image-card:hover img {
-  transform: scale(1.05);
+.animation2d-service-card:hover {
+  transform: perspective(900px) rotateX(1deg) translateY(-5px);
+  border-color: color-mix(in srgb, var(--accent-color) 55%, var(--border-color));
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.12);
 }
 
-/* FAQ */
-.faq-container {
-  max-width: 900px;
-  margin: auto;
-  display: grid;
-  gap: 20px;
+.animation2d-service-card:hover::before {
+  transform: scaleY(1);
 }
 
-.faq-item {
-  background: rgba(255,255,255,0.06);
-  padding: 20px;
-  border-radius: 14px;
+.animation2d-service-number {
+  align-self: flex-start;
+  min-width: 38px;
+  padding-top: 5px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 }
 
-.faq-item h4 {
-  margin-bottom: 10px;
-  color: #e50914;
+.animation2d-service-content {
+  flex: 1;
+  min-width: 0;
 }
 
-.faq-item p {
-  color: #b0b0b0;
-  line-height: 1.6;
+.animation2d-service-content h3 {
+  margin: 0 0 9px;
+  color: var(--text-primary);
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
 }
 
-/* FAQ ACCORDION */
-.faq-item {
-  background: rgba(255,255,255,0.06);
-  padding: 18px 20px;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.faq-item:hover {
-  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.2);
-}
-
-.faq-question {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.faq-question h4 {
+.animation2d-service-content p {
+  max-width: 760px;
   margin: 0;
-  color: #e50914;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 0.94rem;
+}
+
+.animation2d-service-arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  transition:
+    transform 0.4s ease,
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+.animation2d-service-card:hover .animation2d-service-arrow {
+  color: #ffffff;
+  background: var(--accent-color);
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   CUSTOM 2D ICONS
+========================================================= */
+
+.animation2d-icon {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.animation2d-service-card:hover .animation2d-icon {
+  transform: perspective(500px) rotateY(-12deg) rotateX(8deg);
+  border-color: var(--accent-color);
+}
+
+/* Explainer */
+
+.icon-paper {
+  position: absolute;
+  width: 32px;
+  height: 39px;
+  top: 15px;
+  left: 20px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+  transform: rotate(-5deg);
+}
+
+.icon-line {
+  position: absolute;
+  height: 2px;
+  background: var(--text-muted);
+}
+
+.icon-line-one {
+  width: 18px;
+  top: 28px;
+  left: 27px;
+}
+
+.icon-line-two {
+  width: 13px;
+  top: 35px;
+  left: 27px;
+}
+
+.icon-play {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.icon-play::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  border-left: 6px solid #ffffff;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+/* Character */
+
+.icon-head {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  left: 17px;
+  top: 12px;
+  border: 2px solid var(--text-primary);
+  border-radius: 46% 54% 48% 52%;
+}
+
+.icon-eye {
+  position: absolute;
+  width: 4px;
+  height: 7px;
+  top: 25px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.icon-eye-one {
+  left: 27px;
+}
+
+.icon-eye-two {
+  left: 42px;
+}
+
+.icon-mouth {
+  position: absolute;
+  left: 30px;
+  top: 38px;
+  width: 12px;
+  height: 5px;
+  border-bottom: 1px solid var(--text-primary);
+  border-radius: 50%;
+}
+
+.icon-body {
+  position: absolute;
+  width: 28px;
+  height: 19px;
+  left: 22px;
+  bottom: 9px;
+  border: 2px solid var(--text-primary);
+  border-radius: 9px 9px 5px 5px;
+  background: var(--accent-color);
+}
+
+/* Motion */
+
+.icon-motion-shape {
+  position: absolute;
+  border: 2px solid var(--text-primary);
+}
+
+.shape-one {
+  width: 18px;
+  height: 18px;
+  top: 18px;
+  left: 14px;
+  transform: rotate(45deg);
+}
+
+.shape-two {
+  width: 16px;
+  height: 16px;
+  top: 29px;
+  left: 29px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.shape-three {
+  width: 13px;
+  height: 13px;
+  right: 12px;
+  bottom: 15px;
+  transform: rotate(45deg);
+}
+
+.icon-motion-line {
+  position: absolute;
+  width: 40px;
+  height: 1px;
+  left: 17px;
+  bottom: 11px;
+  background: var(--text-muted);
+  transform: rotate(-16deg);
+}
+
+/* Education */
+
+.icon-book {
+  position: absolute;
+  width: 43px;
+  height: 32px;
+  left: 14px;
+  top: 20px;
+  border: 2px solid var(--text-primary);
+  border-radius: 5px;
+  transform: perspective(300px) rotateX(12deg);
+}
+
+.icon-book::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-color);
+}
+
+.icon-book-line {
+  position: absolute;
+  width: 12px;
+  height: 1px;
+  background: var(--text-muted);
+}
+
+.icon-book-line.line-one {
+  left: 20px;
+  top: 29px;
+}
+
+.icon-book-line.line-two {
+  right: 19px;
+  top: 36px;
+}
+
+.icon-book-dot {
+  position: absolute;
+  right: 9px;
+  top: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* Story */
+
+.icon-story-circle {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  left: 23px;
+  top: 21px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.icon-story-ring {
+  position: absolute;
+  width: 43px;
+  height: 43px;
+  left: 15px;
+  top: 13px;
+  border: 1px solid var(--text-primary);
+  border-radius: 50%;
+  animation: animation2d-ring 4s linear infinite;
+}
+
+.icon-story-line {
+  position: absolute;
+  width: 18px;
+  height: 1px;
+  background: var(--text-muted);
+}
+
+.icon-story-line.line-one {
+  top: 20px;
+  right: 7px;
+  transform: rotate(-28deg);
+}
+
+.icon-story-line.line-two {
+  bottom: 18px;
+  left: 7px;
+  transform: rotate(-28deg);
+}
+
+/* Product */
+
+.icon-product-box {
+  position: absolute;
+  width: 35px;
+  height: 31px;
+  left: 18px;
+  top: 24px;
+  border: 2px solid var(--text-primary);
+  background: var(--accent-color);
+  transform: perspective(300px) rotateX(7deg) rotateY(-12deg);
+}
+
+.icon-product-top {
+  position: absolute;
+  width: 35px;
+  height: 12px;
+  left: 18px;
+  top: 18px;
+  border: 2px solid var(--text-primary);
+  transform: skewY(-24deg);
+}
+
+.icon-product-line {
+  position: absolute;
+  width: 10px;
+  height: 1px;
+  background: #ffffff;
+}
+
+.icon-product-line.line-one {
+  left: 25px;
+  top: 34px;
+}
+
+.icon-product-line.line-two {
+  left: 25px;
+  top: 39px;
+}
+
+/* =========================================================
+   PROCESS
+========================================================= */
+
+.animation2d-process {
+  background: var(--bg-primary);
+}
+
+.animation2d-process-intro {
+  max-width: 780px;
+  margin-bottom: 80px;
+}
+
+.animation2d-process-line {
+  position: relative;
+  padding-left: 90px;
+}
+
+.animation2d-process-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 24px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-color) 12%,
+    var(--border-color) 88%,
+    transparent
+  );
+}
+
+.animation2d-process-item {
+  position: relative;
+  margin-bottom: 58px;
+}
+
+.animation2d-process-item:last-child {
+  margin-bottom: 0;
+}
+
+.animation2d-process-marker {
+  position: absolute;
+  left: -90px;
+  top: 0;
+  width: 49px;
+  height: 49px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--accent-color);
+  font-size: 0.68rem;
+  font-weight: 800;
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.animation2d-process-item:hover .animation2d-process-marker {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #ffffff;
+  transform: scale(1.1) rotate(8deg);
+}
+
+.animation2d-process-copy {
+  padding: 26px 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  background: var(--bg-card);
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.animation2d-process-copy:hover {
+  transform: translateX(8px);
+  border-color: color-mix(in srgb, var(--accent-color) 45%, var(--border-color));
+}
+
+.animation2d-process-copy h3 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.animation2d-process-copy p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.animation2d-benefits {
+  background: var(--bg-secondary);
+}
+
+.animation2d-section-heading--right {
+  margin-left: auto;
+  text-align: right;
+}
+
+.animation2d-section-heading--right > span {
+  justify-content: flex-end;
+}
+
+.animation2d-section-heading--right > span::before {
+  order: 2;
+}
+
+.animation2d-section-heading--right p {
+  margin-left: auto;
+}
+
+.animation2d-benefit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.animation2d-benefit {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  min-height: 125px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  transition:
+    padding 0.4s ease,
+    transform 0.4s ease;
+}
+
+.animation2d-benefit:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.animation2d-benefit:hover {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.animation2d-benefit > span {
+  flex: 0 0 45px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.animation2d-benefit > div {
+  flex: 1;
+}
+
+.animation2d-benefit h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.animation2d-benefit p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-size: 0.93rem;
+}
+
+.animation2d-benefit i {
+  width: 45px;
+  height: 1px;
+  flex: 0 0 45px;
+  background: var(--border-color);
+  transition:
+    width 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.animation2d-benefit:hover i {
+  width: 70px;
+  background: var(--accent-color);
+}
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+.animation2d-faq {
+  background: var(--bg-primary);
+}
+
+.animation2d-faq-list {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.animation2d-faq-item {
+  border-top: 1px solid var(--border-color);
+}
+
+.animation2d-faq-item:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.animation2d-faq-question {
+  width: 100%;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 20px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.animation2d-faq-question > span {
+  display: flex;
+  align-items: center;
+  gap: 22px;
   font-size: 1.05rem;
+  font-weight: 650;
 }
 
-.faq-question span {
-  font-size: 1.6rem;
-  font-weight: bold;
-  transition: transform 0.3s ease;
+.animation2d-faq-question small {
+  color: var(--accent-color);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
 }
 
-/* ROTATE ICON */
-.faq-item.active .faq-question span {
+.animation2d-faq-question b {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 35px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 400;
+  transition:
+    transform 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.animation2d-faq-item.is-active .animation2d-faq-question b {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
   transform: rotate(180deg);
 }
 
-/* ANSWER ANIMATION */
-.faq-answer {
-  max-height: 0;
+.animation2d-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animation2d-faq-answer p {
+  min-height: 0;
   overflow: hidden;
-  transition: all 0.4s ease;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 820px;
 }
 
-.faq-answer p {
-  margin-top: 12px;
-  color: #b0b0b0;
-  line-height: 1.6;
+.animation2d-faq-item.is-active .animation2d-faq-answer {
+  grid-template-rows: 1fr;
 }
 
-/* ACTIVE OPEN */
-.faq-item.active .faq-answer {
-  max-height: 200px;
+.animation2d-faq-item.is-active .animation2d-faq-answer p {
+  padding: 0 57px 30px;
 }
 
-/* MOBILE SAFE */
-@media (max-width: 576px) {
-  .faq-question h4 {
-    font-size: 0.95rem;
-  }
-}
+/* =========================================================
+   FINAL STATEMENT
+   NO CTA BUTTON
+========================================================= */
 
-/* WHY SECTION */
-.why-2d-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.why-card {
-  background: #111827;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.why-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: contain;
-  margin-bottom: 15px;
-}
-
-.why-card:hover {
-  transform: translateY(-5px);
-}
-
-/* APPROACH */
-.approach-list {
-  display: grid;
-  gap: 30px;
-}
-
-.approach-item {
-  background: black;
-  padding: 20px;
-  border-left: 4px solid red;
-  border-radius: 8px;
-}
-
-/* USE CASE */
-.usecase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.usecase-card {
-  background: #111827;
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.usecase-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: contain;
-  margin-bottom: 10px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .why-card img,
-  .usecase-card img {
-    height: 100px;
-  }
-}
-
-.d-grid {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-.why-card,
-.usecase-card,
-.feature-card-2d {
-  transition: all 0.3s ease;
-}
-
-
-/* ===== PREMIUM CARD EFFECT ===== */
-.premium-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.35s ease;
+.animation2d-final {
   position: relative;
-  overflow: hidden;
-}
-
-.premium-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(229,9,20,0.15), transparent);
-  opacity: 0;
-  transition: 0.4s;
-}
-
-.premium-card:hover::before {
-  opacity: 1;
-}
-
-.premium-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 25px 60px rgba(229, 9, 20, 0.35);
-}
-
-
-/* ===== APPROACH LINE STYLE ===== */
-.premium-line {
+  min-height: 62vh;
   display: flex;
   align-items: center;
-  gap: 15px;
-  position: relative;
-  background:rgba(255, 255, 255, 0.08);
-  padding: 15px 20px;
-  border-radius: 10px;
-  transition: 0.3s;
-}
-
-.premium-line:hover {
-  transform: translateX(8px);
-  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.25);
-}
-
-/* STEP NUMBER */
-.step-number {
-  min-width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: #e50914;
-  display: grid;
-  place-items: center;
-  font-weight: bold;
-}
-
-
-/* ===== SMOOTH IMAGE ===== */
-.why-card img,
-.usecase-card img {
-  transition: transform 0.4s ease;
-}
-
-.why-card:hover img,
-.usecase-card:hover img {
-  transform: scale(1.08);
-}
-
-
-/* ===== GRID IMPROVEMENT ===== */
-.why-2d-grid,
-.usecase-grid,
-.d-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-}
-
-/* ===== PARALLAX SMOOTH ===== */
-.hero-media video {
-  will-change: transform;
-  transition: transform 0.1s linear;
-}
-
-/* ===== APPROACH GRID ===== */
-.approach-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 25px;
-  margin-top: 30px;
-}
-
-.approach-card {
-  background: rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 20px;
+  justify-content: center;
+  padding: 100px 24px;
+  overflow: hidden;
+  background: var(--bg-secondary);
   text-align: center;
-  transition: 0.35s ease;
 }
 
-.approach-card img {
-  width: 100%;
-  height: 130px;
-  object-fit: contain;
-  margin-bottom: 15px;
-  transition: transform 0.4s ease;
+.animation2d-final::before,
+.animation2d-final::after {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.approach-card:hover img {
-  transform: scale(1.08);
+.animation2d-final::before {
+  width: 500px;
+  height: 500px;
+  left: -250px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.approach-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(229, 9, 20, 0.25);
+.animation2d-final::after {
+  width: 420px;
+  height: 420px;
+  right: -210px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 768px) {
-  .approach-card img {
-    height: 100px;
+.animation2d-final-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+}
+
+.animation2d-final-inner h2 {
+  margin: 24px 0 22px;
+  color: var(--text-primary);
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.animation2d-final-inner h2 strong {
+  color: var(--accent-color);
+}
+
+.animation2d-final-inner p {
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.animation2d-final-line {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 42px;
+}
+
+.animation2d-final-line span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  animation: animation2d-final-dot 1.6s ease-in-out infinite;
+}
+
+.animation2d-final-line span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.animation2d-final-line span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.animation2d-final-line span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.animation2d-final-line span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes animation2d-orbit {
+  0%,
+  100% {
+    transform: rotate(-18deg) scale(1);
   }
 
-  .hero-media video {
-    transform: none !important; /* disable heavy parallax */
+  50% {
+    transform: rotate(18deg) scale(1.05);
   }
 }
 
-/* GSAP PERFORMANCE */
-.hero-media video {
-  will-change: transform;
+@keyframes animation2d-float-one {
+  0%,
+  100% {
+    transform: rotate(8deg) translateY(0) translateZ(20px);
+  }
+
+  50% {
+    transform: rotate(5deg) translateY(-12px) translateZ(30px);
+  }
 }
 
-/* GPU acceleration */
-.premium-card,
-.approach-card,
-.usecase-card {
-  will-change: transform, opacity;
+@keyframes animation2d-float-two {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0) translateZ(30px);
+  }
+
+  50% {
+    transform: rotate(-12deg) translateY(10px) translateZ(40px);
+  }
 }
 
+@keyframes animation2d-character-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+
+  50% {
+    transform: translate(-50%, calc(-50% - 12px)) rotate(2deg);
+  }
+}
+
+@keyframes animation2d-arm-left {
+  0%,
+  100% {
+    transform: rotate(25deg);
+  }
+
+  50% {
+    transform: rotate(42deg);
+  }
+}
+
+@keyframes animation2d-arm-right {
+  0%,
+  100% {
+    transform: rotate(-32deg);
+  }
+
+  50% {
+    transform: rotate(-18deg);
+  }
+}
+
+@keyframes animation2d-blink {
+  0%,
+  46%,
+  50%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  48% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes animation2d-playhead {
+  0% {
+    left: 0;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes animation2d-ring {
+  0% {
+    transform: scale(0.9) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.08) rotate(180deg);
+  }
+
+  100% {
+    transform: scale(0.9) rotate(360deg);
+  }
+}
+
+@keyframes animation2d-final-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateY(-7px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
+  .animation2d-hero-inner {
+    gap: 45px;
+  }
+
+  .animation2d-hero-content h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+  }
+
+  .animation2d-hero-visual {
+    flex-basis: 450px;
+  }
+
+  .animation2d-stage {
+    min-height: 400px;
+  }
+
+  .animation2d-service-card {
+    gap: 24px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET / SMALL LAPTOP
+========================================================= */
+
+@media (max-width: 850px) {
+  .animation2d-hero {
+    min-height: auto;
+    padding: 100px 0 80px;
+  }
+
+  .animation2d-hero-inner {
+    width: min(100% - 40px, 680px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 55px;
+  }
+
+  .animation2d-hero-content {
+    max-width: none;
+  }
+
+  .animation2d-hero-content h1 {
+    max-width: 700px;
+  }
+
+  .animation2d-hero-visual {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .animation2d-stage {
+    min-height: 460px;
+  }
+
+  .animation2d-section {
+    padding: 100px 0;
+  }
+
+  .animation2d-section-heading {
+    margin-bottom: 55px;
+  }
+
+  .animation2d-service-card {
+    padding: 24px;
+  }
+
+  .animation2d-process-line {
+    padding-left: 75px;
+  }
+
+  .animation2d-process-marker {
+    left: -75px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 620px) {
+  .animation2d-container {
+    width: min(100% - 32px, 520px);
+  }
+
+  .animation2d-hero {
+    padding: 85px 0 65px;
+    margin-top:20px;
+  }
+
+  .animation2d-hero-inner {
+    width: min(100% - 32px, 520px);
+  }
+
+  .animation2d-hero-content h1 {
+    margin-top: 20px;
+    font-size: clamp(2.7rem, 14vw, 4.3rem);
+  }
+
+  .animation2d-hero-content p {
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .animation2d-hero-meta {
+    gap: 10px;
+    font-size: 0.66rem;
+  }
+
+  .animation2d-stage {
+    min-height: 370px;
+    border-radius: 22px;
+  }
+
+  .animation2d-stage::before {
+    width: 170px;
+    height: 170px;
+    top: 45px;
+    right: 20px;
+  }
+
+  .animation2d-frame {
+    width: 88px;
+    height: 62px;
+  }
+
+  .frame-one {
+    top: 78px;
+    right: 18px;
+  }
+
+  .frame-two {
+    bottom: 125px;
+    left: 18px;
+  }
+
+  .animation2d-character {
+    transform: translate(-50%, -50%) scale(0.78) rotate(-3deg);
+  }
+
+  .animation2d-motion-path {
+    left: 9%;
+    top: 29%;
+    transform: rotate(-18deg) scale(0.75);
+    transform-origin: left center;
+  }
+
+  .animation2d-timeline {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .animation2d-section {
+    padding: 80px 0;
+  }
+
+  .animation2d-section-heading h2,
+  .animation2d-process-intro h2 {
+    font-size: clamp(2.2rem, 11vw, 3.5rem);
+  }
+
+  .animation2d-section-heading p,
+  .animation2d-process-intro p {
+    font-size: 0.93rem;
+  }
+
+  .animation2d-service-card {
+    min-height: auto;
+    display: grid;
+    grid-template-columns: 35px 60px 1fr;
+    gap: 16px;
+    padding: 22px 18px;
+  }
+
+  .animation2d-service-number {
+    min-width: 0;
+  }
+
+  .animation2d-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .animation2d-service-content h3 {
+    font-size: 1.08rem;
+  }
+
+  .animation2d-service-content p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .animation2d-service-arrow {
+    display: none;
+  }
+
+  .animation2d-process-line {
+    padding-left: 55px;
+  }
+
+  .animation2d-process-line::before {
+    left: 17px;
+  }
+
+  .animation2d-process-marker {
+    left: -55px;
+    width: 36px;
+    height: 36px;
+    font-size: 0.57rem;
+  }
+
+  .animation2d-process-copy {
+    padding: 20px;
+  }
+
+  .animation2d-process-copy h3 {
+    font-size: 1.1rem;
+  }
+
+  .animation2d-process-copy p {
+    font-size: 0.86rem;
+  }
+
+  .animation2d-benefit {
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .animation2d-benefit > span {
+    flex: 0 0 30px;
+  }
+
+  .animation2d-benefit h3 {
+    font-size: 1rem;
+  }
+
+  .animation2d-benefit p {
+    font-size: 0.85rem;
+  }
+
+  .animation2d-benefit i {
+    display: none;
+  }
+
+  .animation2d-faq-question {
+    min-height: 82px;
+    gap: 15px;
+  }
+
+  .animation2d-faq-question > span {
+    gap: 12px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .animation2d-faq-question small {
+    flex: 0 0 auto;
+  }
+
+  .animation2d-faq-question b {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+  }
+
+  .animation2d-faq-item.is-active .animation2d-faq-answer p {
+    padding: 0 0 25px 42px;
+    font-size: 0.88rem;
+  }
+
+  .animation2d-final {
+    min-height: 55vh;
+    padding: 80px 20px;
+  }
+
+  .animation2d-final::before {
+    width: 300px;
+    height: 300px;
+    left: -190px;
+  }
+
+  .animation2d-final::after {
+    width: 260px;
+    height: 260px;
+    right: -170px;
+  }
+
+  .animation2d-final-inner h2 {
+    font-size: clamp(2.7rem, 13vw, 4rem);
+  }
+
+  .animation2d-final-inner p {
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+  .animation2d-container {
+    width: calc(100% - 24px);
+  }
+
+  .animation2d-hero-inner {
+    width: calc(100% - 24px);
+  }
+
+  .animation2d-stage {
+    min-height: 330px;
+  }
+
+  .animation2d-character {
+    transform: translate(-50%, -50%) scale(0.65) rotate(-3deg);
+  }
+
+  .animation2d-service-card {
+    grid-template-columns: 30px 52px 1fr;
+    gap: 11px;
+    padding: 18px 14px;
+  }
+
+  .animation2d-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .animation2d-service-content h3 {
+    font-size: 0.98rem;
+  }
+
+  .animation2d-service-content p {
+    font-size: 0.8rem;
+  }
+
+  .animation2d-process-line {
+    padding-left: 47px;
+  }
+
+  .animation2d-process-marker {
+    left: -47px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .animation2d-reveal,
+  .animation2d-stage *,
+  .animation2d-icon *,
+  .animation2d-final-line span {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .animation2d-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

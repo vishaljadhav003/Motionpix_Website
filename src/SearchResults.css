@@ -1,4 +1,21 @@
 .search-result-section {
-  margin-top: 80px; /* navbar height */
-  padding: 20px;
+  margin-top: 100px;
+  padding-bottom: 50px;
+  min-height: 60vh;
+}
+
+.search-result-section .list-group-item {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 8px;
+  border-radius: 12px !important;
+  transition: all 0.25s ease;
+}
+
+.search-result-section .list-group-item:hover {
+  background: var(--accent-color);
+  color: #ffffff !important;
+  border-color: var(--accent-color);
+  transform: translateX(6px);
 }

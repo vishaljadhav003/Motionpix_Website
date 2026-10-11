@@ -1,14 +1,54 @@
+/* THEME: driven by a [data-theme="light"] attribute on an ancestor (e.g. <html>). */
+
 .about-graph-section {
+  --section-bg: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --node-bg: #000000;
+
   padding: 90px 0;
-  background: #000;
+  background: var(--section-bg);
   overflow-x: hidden;
-  pointer-events:none !important;
+}
+
+[data-theme="light"] .about-graph-section {
+  --section-bg: #ffffff;
+  --text-primary: #141414;
+  --text-secondary: #4d4d4d;
+  --node-bg: #ffffff;
 }
 
 .about-graph-section span {
   color: #e50914;
 }
 
+[data-theme="light"] .about-graph-section .text-light {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .about-graph-section .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Generic Bidirectional Reveal Classes */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.about-title{
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-top:70px;
+}
 /* Grid */
 .graph-wrapper {
   position: relative;
@@ -24,12 +64,14 @@
   position: relative;
   opacity: 0;
   transform: translateY(60px) scale(0.96);
-  transition: all 0.8s ease;
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
   min-width: 0;
   overflow: hidden;
   min-height: 260px;
+  will-change: opacity, transform;
 }
 
+/* Bidirectional active state for GraphNode */
 .graph-node.reveal {
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -43,7 +85,7 @@
 }
 
 .node-svg rect {
-  fill: #000;
+  fill: var(--node-bg);
   stroke: rgba(229, 9, 20, 0.6);
   stroke-width: 2;
   filter: drop-shadow(0 10px 30px rgba(229, 9, 20, 0.15));
@@ -54,7 +96,7 @@
   position: absolute;
   inset: 0;
   padding: 28px;
-  color: #fff;
+  color: var(--text-primary);
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -67,7 +109,7 @@
 .node-content p,
 .node-content li {
   font-size: 0.95rem;
-  color: #ccc;
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
   word-break: break-word;
 }

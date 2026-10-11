@@ -1,209 +1,364 @@
-/* SECTION CONTROLS SCROLL LENGTH */
-.sticky-courses-section {
-  position: relative;
-  height: 400vh;
-  background: black;
-}
-
-/* STICKY HOLDER */
-.sticky-wrapper {
-  position: sticky;
-  top: 100px;
-  height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* FULL WIDTH STACK AREA */
-.stack-stage {
+/* ==========================================
+   SERVICES SECTION & COVERFLOW CAROUSEL
+========================================== */
+.services-carousel-section {
   position: relative;
   width: 100%;
-  height: 82vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 1400px;
-  transform-style: preserve-3d;
+  padding: 80px 0;
+  background-color: var(--bg-primary);
+  overflow: hidden;
+  transition: background-color 0.4s ease, opacity 0.6s ease, transform 0.6s ease;
+
+  /* Bidirectional scroll-reveal starting state */
+  opacity: 0;
+  transform: translateY(40px);
 }
 
-/* STACK CARD */
-.sticky-card,
-.sticky-stack-card {
-  position: absolute;
-  width: 100%;
-  max-width: 720px;
-  background: black !important;
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.45s ease;
-}
-
-.sticky-card.active {
+.services-carousel-section.reveal-active {
   opacity: 1;
-  transform: scale(1) translateY(0);
-  z-index: 2;
+  transform: translateY(0);
 }
 
-/* GLASS CARD */
-.glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 20px;
-  padding: 1.6rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
-  text-align: center;
-  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
-}
-
-.glass-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 18px 40px rgba(229, 9, 20, 0.35);
-}
-
-.glass-card img {
-  width: 100%;
-  max-height: 460px;   /* height वाढवली */
-  object-fit: cover;
-  object-position: top; /* image चा वरचा भाग दिसण्यासाठी */
-  border-radius: 16px;
-  margin-bottom: 20px;
-  transition: transform 0.4s ease;
-}
-
-.glass-card:hover img {
-  transform: scale(1.05);
-}
-
-.glass-card h3 {
-  color: #fff;
-  font-weight: 700;
-}
-
-/* Progress bar should never block clicks */
-.nitro-progress {
-  position: absolute;
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 60%;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  z-index: 5;
-  pointer-events: none;
-}
-
-.nitro-progress span {
-  display: block;
-  width: 100%;
-  background: #ffffff;
-  transition: height 0.35s ease;
-}
-
-.card-link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  height: 100%;
-  position: relative;
-  z-index: 20;
-  cursor: pointer;
-}
-
-/* Only active card is interactive */
-.sticky-card {
-  pointer-events: none;
-}
-
-.sticky-card.active {
-  pointer-events: auto;
-}
-
-/* DESKTOP SERVICES HEADING */
-.desktop-services-heading {
-  position: relative;
-  width: 100%;
-  text-align: center;
-  z-index: 2;
-  margin-bottom: 40px;
-}
-
-.desktop-services-heading h2 {
+.services-heading h2 {
   font-size: 3rem;
   font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.4s ease;
+}
+
+.services-heading h2 span {
+  color: var(--accent-color);
+}
+
+/* Coverflow Container Wrapper */
+.coverflow-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coverflow-track {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  cursor: grab;
+  user-select: none;
+}
+
+.coverflow-track:active {
+  cursor: grabbing;
+}
+
+/* 3D Stack Offset Logic */
+.coverflow-card-wrapper {
+  position: absolute;
+  width: 300px;
+  height: 420px;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, filter 0.5s ease;
+  transform: translateX(calc(var(--coverflow-offset) * 180px))
+    scale(calc(1 - var(--coverflow-abs-offset) * 0.15))
+    rotateY(calc(var(--coverflow-offset) * -12deg));
+  opacity: calc(1 - var(--coverflow-abs-offset) * 0.3);
+  filter: brightness(calc(1 - var(--coverflow-abs-offset) * 0.25));
+}
+
+.coverflow-card-wrapper.active {
+  transform: translateX(0) scale(1.1) rotateY(0deg);
+  opacity: 1;
+  filter: brightness(1);
+}
+
+/* Hide cards that are far away from center view */
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 3"],
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 4"],
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 5"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Side Icon Navigation Buttons (Left & Right Circles) */
+.coverflow-nav-btn {
+  position: relative;
+  z-index: 30;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.coverflow-nav-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.coverflow-nav-btn:hover {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.coverflow-prev-btn:hover svg {
+  transform: translateX(-2px);
+}
+
+.coverflow-next-btn:hover svg {
+  transform: translateX(2px);
+}
+
+.coverflow-nav-btn:active {
+  transform: translateY(0) scale(0.92);
+}
+
+/* ==========================================
+   CARD STRUCTURE & HOVER OVERLAY
+========================================== */
+.service-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.service-card-bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #0d0d0d;
+}
+
+.service-card-bg img.service-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s ease;
+}
+
+.service-card:hover .service-card-bg img.service-img {
+  transform: scale(1.06);
+  filter: brightness(0.25) blur(2px);
+}
+
+/* Normal State Overlay */
+.service-card-default-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 24px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%);
+  text-align: center;
+  z-index: 2;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.service-default-title {
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.service-card:hover .service-card-default-overlay {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Hover State Overlay */
+.service-card-hover-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.service-card:hover .service-card-hover-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.service-hover-title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.service-hover-desc {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.service-hover-btn {
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease, color 0.3s ease;
+}
+
+.service-hover-btn span {
+  display: block;
+  line-height: 1.2;
+}
+
+.service-hover-btn:hover {
+  transform: scale(1.08);
+  background-color: var(--accent-color);
   color: #ffffff;
 }
 
-.desktop-services-heading span {
-  color: #e50914;
-}
-
-/* RESPONSIVE */
+/* ==========================================
+   RESPONSIVENESS & BREAKPOINTS
+========================================== */
 @media (max-width: 991px) {
-  .sticky-wrapper {
-    top: 72px;
-    height: 78vh;
+  .coverflow-track {
+    height: 420px;
   }
 
-  .sticky-courses-section {
-    background: black;
+  .coverflow-card-wrapper {
+    width: 240px;
+    height: 350px;
+    transform: translateX(calc(var(--coverflow-offset) * 130px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.15))
+      rotateY(calc(var(--coverflow-offset) * -10deg));
   }
 
-  .stack-stage {
-    height: 78vh;
-    perspective: 1100px;
+  .coverflow-nav-btn {
+    width: 44px;
+    height: 44px;
   }
 
-  .sticky-card,
-  .sticky-stack-card {
-    max-width: 92vw;
-  }
-
-  .glass-card {
-    padding: 1.2rem;
-    border-radius: 18px;
-  }
-
-  .glass-card img {
-    max-height: 340px;   /* tablet साठी वाढवली */
-    border-radius: 14px;
-    margin-bottom: 14px;
-  }
-
-  .desktop-services-heading {
-    margin-bottom: 18px;
-  }
-
-  .desktop-services-heading h2 {
-    font-size: 2.2rem;
-  }
-
-  .nitro-progress {
-    left: 14px;
-    height: 62%;
+  .coverflow-nav-btn svg {
+    width: 20px;
+    height: 20px;
   }
 }
 
-@media (max-width: 560px) {
-  .sticky-courses-section {
-    height: 360vh;
+@media (max-width: 768px) {
+  .coverflow-carousel-wrapper {
+    position: relative;
+    padding: 0 10px;
   }
 
-  .sticky-wrapper {
-    top: 64px;
-    height: 76vh;
+  .coverflow-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    width: 40px;
+    height: 40px;
   }
 
-  .stack-stage {
-    height: 76vh;
+  .coverflow-prev-btn {
+    left: 0;
   }
 
-  .glass-card img {
-    max-height: 280px;   /* mobile साठी वाढवली */
+  .coverflow-next-btn {
+    right: 0;
+  }
+
+  .coverflow-track {
+    height: 380px;
+  }
+
+  .coverflow-card-wrapper {
+    width: 210px;
+    height: 320px;
+    transform: translateX(calc(var(--coverflow-offset) * 100px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.16))
+      rotateY(calc(var(--coverflow-offset) * -8deg));
+  }
+}
+
+@media (max-width: 576px) {
+  .services-heading h2 {
+    font-size: 2rem;
+  }
+
+  .coverflow-track {
+    height: 350px;
+  }
+
+  .coverflow-card-wrapper {
+    width: 190px;
+    height: 300px;
+    transform: translateX(calc(var(--coverflow-offset) * 75px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.18))
+      rotateY(calc(var(--coverflow-offset) * -6deg));
+  }
+
+  .service-hover-title {
+    font-size: 1.1rem;
+  }
+
+  .service-hover-desc {
+    font-size: 0.78rem;
+    margin-bottom: 12px;
+  }
+
+  .service-hover-btn {
+    width: 75px;
+    height: 75px;
+    font-size: 0.7rem;
+  }
+
+  .coverflow-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .coverflow-nav-btn svg {
+    width: 18px;
+    height: 18px;
   }
 }

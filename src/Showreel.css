@@ -1,0 +1,160 @@
+/* ==========================================================================
+   SHOWREEL SECTION
+   Light & Dark Theme Supported
+   ========================================================================== */
+
+.showreel-section {
+  width: 100%;
+  padding: 100px 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.showreel-header {
+  margin-bottom: 45px;
+}
+
+.showreel-title {
+  margin-bottom: 0;
+  color: var(--text-primary);
+}
+
+.showreel-title span {
+  color: var(--accent-color);
+}
+
+.showreel-subtitle {
+  margin: 10px auto 0;
+  max-width: 700px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   VIDEO WRAPPER
+   ========================================================================== */
+
+.showreel-video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+
+  /* box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 0 30px var(--accent-glow); */
+
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* ==========================================================================
+   VIDEO
+   ========================================================================== */
+
+.showreel-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+
+  background-color: #000000;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .showreel-section {
+    padding: 80px 0;
+  }
+
+  .showreel-header {
+    margin-bottom: 35px;
+  }
+
+  .showreel-video-wrapper {
+    border-radius: 18px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .showreel-section {
+    padding: 70px 0;
+  }
+
+  .showreel-header {
+    margin-bottom: 30px;
+  }
+
+  .showreel-title {
+    font-size: 2rem;
+  }
+
+  .showreel-subtitle {
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+
+  .showreel-video-wrapper {
+    border-radius: 15px;
+  }
+}
+
+/* ==========================================================================
+   SMALL MOBILE
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .showreel-section {
+    padding: 60px 0;
+  }
+
+  .showreel-header {
+    margin-bottom: 25px;
+  }
+
+  .showreel-title {
+    font-size: 1.75rem;
+  }
+
+  .showreel-subtitle {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .showreel-video-wrapper {
+    border-radius: 12px;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .showreel-section,
+  .showreel-video-wrapper {
+    transition: none;
+  }
+}

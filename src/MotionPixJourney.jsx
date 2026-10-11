@@ -2,113 +2,212 @@ import { useEffect, useRef, useState } from "react";
 import "./MotionPixJourney.css";
 
 const journeyStats = [
-  { value: 15, suffix: "+", label: "Years of Experience" },
-  { value: 75, suffix: "%", label: "Audience Engagement" },
-  { value: 2500, suffix: "+", label: "Minutes of Content" },
-  { value: 500, suffix: "+", label: "Videos Created" },
-  { value: 20, suffix: "+", label: "Team of Experts" },
-  { value: 100, suffix: "+", label: "Clients Served" },
+  {
+    value: 15,
+    suffix: "+",
+    label: "Years of Experience",
+  },
+  {
+    value: 75,
+    suffix: "%",
+    label: "Audience Engagement",
+  },
+  {
+    value: 2500,
+    suffix: "+",
+    label: "Minutes of Content",
+  },
+  {
+    value: 500,
+    suffix: "+",
+    label: "Videos Created",
+  },
+  {
+    value: 20,
+    suffix: "+",
+    label: "Team of Experts",
+  },
+  {
+    value: 100,
+    suffix: "+",
+    label: "Clients Served",
+  },
 ];
 
 const easeInOutCubic = (t) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 const MotionPixJourney = () => {
   const sectionRef = useRef(null);
-  const frameRef = useRef(null);
+  const animationRef = useRef(null);
 
   const [isInView, setIsInView] = useState(false);
-  const [counts, setCounts] = useState(journeyStats.map(() => 0));
+  const [counts, setCounts] = useState(
+    journeyStats.map(() => 0)
+  );
+
+  /* ============================================================
+     BIDIRECTIONAL SCROLL REVEAL
+     ============================================================ */
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+
+    if (!section) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
       {
-        threshold: 0.18,
-        rootMargin: "-8% 0px -8% 0px",
+        threshold: 0.2,
       }
     );
 
     observer.observe(section);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
+  /* ============================================================
+     NUMBER COUNT ANIMATION
+     ============================================================ */
+
   useEffect(() => {
-    if (frameRef.current) {
-      cancelAnimationFrame(frameRef.current);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
     }
 
     const startValues = [...counts];
-    const endValues = isInView
+
+    const targetValues = isInView
       ? journeyStats.map((item) => item.value)
       : journeyStats.map(() => 0);
 
-    const duration = 1200;
+    const duration = 1300;
     const startTime = performance.now();
 
-    const animate = (time) => {
-      const progress = Math.min((time - startTime) / duration, 1);
-      const eased = easeInOutCubic(progress);
+    const animate = (currentTime) => {
+      const progress = Math.min(
+        (currentTime - startTime) / duration,
+        1
+      );
 
-      const nextValues = startValues.map((startValue, index) => {
-        const endValue = endValues[index];
-        return Math.round(startValue + (endValue - startValue) * eased);
-      });
+      const easedProgress = easeInOutCubic(progress);
+
+      const nextValues = startValues.map(
+        (startValue, index) => {
+          const targetValue = targetValues[index];
+
+          return Math.round(
+            startValue +
+              (targetValue - startValue) *
+                easedProgress
+          );
+        }
+      );
 
       setCounts(nextValues);
 
       if (progress < 1) {
-        frameRef.current = requestAnimationFrame(animate);
+        animationRef.current =
+          requestAnimationFrame(animate);
       }
     };
 
-    frameRef.current = requestAnimationFrame(animate);
+    animationRef.current =
+      requestAnimationFrame(animate);
 
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, [isInView]);
 
   return (
-    <section className="premium-journey" ref={sectionRef}>
+    <section
+      ref={sectionRef}
+      className={`premium-journey ${
+        isInView ? "reveal-active" : ""
+      }`}
+    >
       <div className="journey-container">
-        <div className="journey-header">
-          <span className="journey-badge">Our Growth Story</span>
+
+        {/* ======================================================
+            HEADER
+            ====================================================== */}
+
+        <header className="journey-header">
+          <span className="journey-badge">
+            OUR GROWTH STORY
+          </span>
 
           <h2 className="journey-heading">
             MotionPix <span>Journey</span>
           </h2>
 
           <p className="journey-subtitle">
-            Dynamic milestones that reflect our creative growth, impact, and
-            performance.
+            From experience to execution, every milestone
+            represents a step in our creative journey.
           </p>
-        </div>
+        </header>
 
-        <div className="journey-grid">
-          {journeyStats.map((item, index) => (
-            <article className="journey-card" key={item.label}>
-              <div className="journey-card-glow" />
-              <div className="journey-card-number-box">
-                {String(index + 1).padStart(2, "0")}
-              </div>
+        {/* ======================================================
+            JOURNEY TIMELINE
+            ====================================================== */}
 
-              <h3 className="journey-value">
-                {counts[index]}
-                {item.suffix}
-              </h3>
+        <div className="journey-timeline">
 
-              <p className="journey-label">{item.label}</p>
-            </article>
-          ))}
+          {/* Animated Journey Line */}
+          <div className="journey-line">
+            <span className="journey-line-progress"></span>
+          </div>
+
+          <div className="journey-grid">
+            {journeyStats.map((item, index) => (
+              <article
+                key={item.label}
+                className="journey-card"
+                style={{
+                  "--card-delay": `${index * 0.1}s`,
+                }}
+              >
+                <div className="journey-card-inner">
+
+                  {/* Top Number */}
+                  <div className="journey-card-top">
+                    <span className="journey-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span className="journey-dot"></span>
+                  </div>
+
+                  {/* Main Number */}
+                  <h3 className="journey-value">
+                    {counts[index]}
+                    <span>{item.suffix}</span>
+                  </h3>
+
+                  {/* Label */}
+                  <p className="journey-label">
+                    {item.label}
+                  </p>
+
+                  {/* Bottom Accent */}
+                  <div className="journey-card-accent"></div>
+
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

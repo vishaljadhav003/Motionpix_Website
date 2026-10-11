@@ -1,236 +1,244 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Collapse } from "bootstrap";
+import ThemeToggle from "./components/ThemeToggle";
 import "./Navbar.css";
+import "./NavbarSearch.css";
 
-const HOLIDAY_LIST = [
-  {
-    date: "2026-03-19",
-    title: "Gudhi Padwa",
-    message: "Office Closed Today • Celebrating Gudhi Padwa",
-  },
-  {
-    date: "2026-05-01",
-    title: "Labour Day",
-    message: "Office Closed Today • Celebrating Labour Day",
-  },
-  {
-    date: "2026-08-15",
-    title: "Independence Day",
-    message: "Office Closed Today • Celebrating Independence Day",
-  },
-  {
-    date: "2026-10-02",
-    title: "Gandhi Jayanti",
-    message: "Office Closed Today • Celebrating Gandhi Jayanti",
-  },
-  {
-    date: "2027-01-26",
-    title: "Republic Day",
-    message: "Office Closed Today • Celebrating Republic Day",
-  },
+// Search Dataset
+const searchData = [
+  { title: "Home", path: "/" },
+  { title: "About Us", path: "/about" },
+  { title: "Services", path: "/services" },
+  { title: "Animation & Visualization", path: "/services/animation-visualization" },
+  { title: "2D Animation", path: "/services/2d-animation" },
+  { title: "3D Animation", path: "/services/3d-animation" },
+  // { title: "Digital Marketing", path: "/services/digitalmarketing" },
+  { title: "Web Design", path: "/services/web-design" },
+  { title: "UI/UX Design", path: "/services/ui-ux-design" },
+  { title: "Website Design", path: "/services/web-design" },
+  { title: "Careers", path: "/careers" },
+  { title: "Contact Us - Enquiry", path: "/contact" },
+  { title: "Graphics Design", path: "/services/graphicsdesign" },
+  { title: "E Learning", path: "/services/e-learning" },
+  { title: "Motion Graphics", path: "/services/motiongraphics" },
+  { title: "Product Visualization", path: "/services/product-visualization" },
+  { title: "Technical Visualization", path: "/services/technical-visualization" },
+  { title: "Engineering & Industrial Animation", path: "/services/engineering-industrial-animation" },
+  { title: "Explainer Content", path: "/services/explainer-content" },
+  { title: "Corporate & Brand Films", path: "/services/corporate-brand-films" },
+  { title: "Product & Industrial Films", path: "/services/product-industrial-films" },
+  { title: "Promotional Videos", path: "/services/promotional-videos" },
+  { title: "Photography & Videography", path: "/services/photography-videography" },
+  { title: "Editing & VFX", path: "/services/editing-vfx" },
+  { title: "Brand Identity", path: "/services/brand-identity" },
+  { title: "Landing Pages", path: "/services/landing-pages" },
+  { title: "Mobile App Design", path: "/services/mobile-app-design" },
+  { title: "Digital Presentations", path: "/services/digital-presentations" },
+  { title: "Digital Product Experiences", path: "/services/digital-product-experiences" },
+  { title: "Articulate Storyline", path: "/services/articulate-storyline" },
+  { title: "Interactive Learning", path: "/services/interactive-learning" },
+  { title: "Product Training", path: "/services/product-training" },
+  { title: "Employee & Safety Training", path: "/services/employee-safety-training" },
+  { title: "Simulation & Assessment", path: "/services/simulation-assessment" },
+  { title: "AR|VR|MR|XR Experiences", path: "/services/ar-vr-mr-xr" },
+  { title: "Virtual ShowRooms", path: "/services/virtual-showrooms" },
+  { title: "Interactive 3D", path: "/services/interactive-3d" },
+  { title: "Immersive Training", path: "/services/immersive-training" },
+  { title: "Exhibition Creative", path: "/services/exhibition-creative" },
+  { title: "Exhibition 3D Design", path: "/services/exhibition-3d-design" },
+  { title: "Interactive Displays", path: "/services/interactive-displays" },
+  { title: "Digital Installations", path: "/services/digital-installations" },
+  { title: "Event Content", path: "/services/event-content" },
+  { title: "Product Experiences", path: "/services/product-experiences" },
+  { title: "Campaign Creatives", path: "/services/campaign-creatives" },
+  { title: "Presentation & Infographic Design", path: "/services/presentation-infographic-design" },
+  { title: "Film & Visual Content", path: "/services/film-visual-content" },
+  { title: "Animation & Visualization", path: "/services/animation-visualization" },
+  { title: "Branding & Creative", path: "/services/branding-creative" },
+  { title: "Learning & Training", path: "/services/learning-training" },
+  { title: "Immersive Technology", path: "/services/immersive-technology" },
+  { title: "Exhibition Experiences", path: "/services/exhibition-experiences" },
+  { title: "Web & Mobile Interface Design", path: "/services/web-mobile-interface-design" }
 ];
 
-const getFormattedDateKey = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+// Services Dropdown Dataset (parent categories -> child items)
+// Fill each `path` with the route slug. Final link becomes: /services/<path>
+// A category can also have its own `path` (its own overview page).
+const servicesMenu = [
+  {
+    title: "Animation & Visualization",
+    path: "animation-visualization",
+    items: [
+      { title: "3D Animation", path: "3d-animation" },
+      { title: "2D Animation", path: "2d-animation" },
+      { title: "Product Visualization", path: "product-visualization" },
+      { title: "Engineering & Industrial Animation", path: "engineering-industrial-animation" },
+      { title: "Technical Visualization", path: "technical-visualization" },
+      { title: "Motion Graphics", path: "motiongraphics" },
+      { title: "Explainer Content", path: "explainer-content" },
+    ],
+  },
+  {
+    title: "Film & Visual Content",
+    path: "film-visual-content",
+    items: [
+      { title: "Corporate & Brand Films", path: "corporate-brand-films" },
+      { title: "Product & Industrial Films", path: "product-industrial-films" },
+      { title: "Promotional Videos", path: "promotional-videos" },
+      // { title: "Social & Digital Content", path: "" },
+      { title: "Photography & Videography", path: "photography-videography" },
+      { title: "Editing & VFX", path: "editing-vfx" },
+    ],
+  },
+  {
+    title: "Branding & Creative",
+    path: "branding-creative",
+    items: [
+      { title: "Brand Identity", path: "brand-identity" },
+      // { title: "Logo & Brand Systems", path: "" },
+      { title: "Graphic Design", path: "graphicsdesign" },
+      { title: "Marketing Collaterals", path: "marketing-collaterals" },
+      { title: "Presentation & Infographic Design", path: "presentation-infographic-design" },
+      { title: "Campaign Creatives", path: "campaign-creatives" },
+    ],
+  },
+  {
+    title: "Web,Mobile & Interface Design",
+    path:"web-mobile-interface-design",
+    items: [
+      { title: "Website Design", path: "web-design" },
+      { title: "Mobile App Design (iOS & Android)", path: "mobile-app-design" },
+      { title: "UI/UX Design", path: "ui-ux-design" },
+      { title: "Landing Pages", path: "landing-pages" },
+      { title: "Digital Presentations", path: "digital-presentations" },
+      { title: "Digital Product Experiences", path: "digital-product-experiences" },
+    ],
+  },
+  {
+    title: "Learning & Training",
+    path:"learning-training",
+    items: [
+      { title: "E-Learning Development", path: "e-learning" },
+      { title: "Interactive Learning", path: "interactive-learning" },
+      { title: "Articulate Storyline", path: "articulate-storyline" },
+      { title: "Product Training", path: "product-training" },
+      { title: "Employee & Safety Training", path: "employee-safety-training" },
+      { title: "Simulation & Assessment", path: "simulation-assessment" },
+    ],
+  },
+  {
+    title: "Immersive Technology",
+    path:"immersive-technology",
+    items: [
+      { title: "AR|VR|MR|XR Experineces", path: "ar-vr-mr-xr" },
+      { title: "Virtual Showrooms", path: "virtual-showrooms" },
+      { title: "Interactive 3D", path: "interactive-3d" },
+      { title: "Immersive Training", path: "immersive-training" },
+    ],
+  },
+  {
+    title: "Exhibition & Experiences",
+    path:"exhibition-experiences",
+    items: [
+      { title: "Exhibition Creative", path: "exhibition-creative" },
+      { title: "Exhibition 3D Design", path: "exhibition-3d-design" },
+      { title: "Interactive Displays", path: "interactive-displays" },
+      { title: "Digital Installations", path: "digital-installations" },
+      { title: "Product Experiences", path: "product-experiences" },
+      { title: "Event Content", path: "event-content" },
+    ],
+  },
+  // {
+  //   title: "Custom Creative",
+  //   items: [
+  //     { title: "Creative Concepts", path: "" },
+  //     { title: "Campaign Development", path: "" },
+  //     { title: "Sales Enablement", path: "" },
+  //     { title: "Custom Multimedia", path: "" },
+  //     { title: "Interactive Experiences", path: "" },
+  //     { title: "Bespoke Solutions", path: "" },
+  //   ],
+  // },
+];
 
-const format12HourTime = (hours24, minutes) => {
-  const suffix = hours24 >= 12 ? "PM" : "AM";
-  const hours12 = hours24 % 12 || 12;
-  const minutesText = String(minutes).padStart(2, "0");
-  return `${hours12}:${minutesText}${suffix}`;
-};
+// A category is active when the page that is currently open belongs to it
+// (its own overview page or any of its items).
+// Items without a page yet (empty path) are ignored.
+const isCategoryActive = (category, pathname) => {
+  const currentPath = pathname.toLowerCase().replace(/\/+$/, "");
 
-const Navbar = () => {
-  const [search, setSearch] = useState("");
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const [dataOpen, setDataOpen] = useState(false);
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [dateTime, setDateTime] = useState(new Date());
-  const [location, setLocation] = useState("Detecting location...");
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDateTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const getUserLocation = async () => {
-      if (!("geolocation" in navigator)) {
-        setLocation("Location not supported");
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          try {
-            const res = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,
-              {
-                headers: {
-                  Accept: "application/json",
-                },
-              }
-            );
-
-            if (!res.ok) {
-              throw new Error("Failed to fetch location");
-            }
-
-            const data = await res.json();
-            const address = data?.address || {};
-
-            const cityName =
-              address.city ||
-              address.town ||
-              address.village ||
-              address.hamlet ||
-              address.suburb ||
-              address.neighbourhood ||
-              address.city_district ||
-              address.state_district ||
-              address.county ||
-              address.municipality ||
-              address.state ||
-              "";
-
-            const countryName = address.country || "";
-
-            if (cityName && countryName) {
-              setLocation(`${cityName}, ${countryName}`);
-            } else if (cityName) {
-              setLocation(cityName);
-            } else if (countryName) {
-              setLocation(countryName);
-            } else {
-              setLocation("Location unavailable");
-            }
-          } catch {
-            setLocation("Location unavailable");
-          }
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            setLocation("Location permission denied");
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            setLocation("Location unavailable");
-          } else if (error.code === error.TIMEOUT) {
-            setLocation("Location request timed out");
-          } else {
-            setLocation("Location unavailable");
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        }
-      );
-    };
-
-    getUserLocation();
-  }, []);
-
-  const getDaySuffix = (day) => {
-    if (day > 3 && day < 21) return "th";
-
-    switch (day % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  };
-
-  const day = dateTime.getDate();
-  const daySuffix = getDaySuffix(day);
-
-  const month = dateTime.toLocaleString("en-IN", {
-    month: "short",
-  });
-
-  const year = dateTime.getFullYear();
-
-  const formattedTime = dateTime.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-
-  const currentHour = dateTime.getHours();
-  const currentMinute = dateTime.getMinutes();
-  const currentDay = dateTime.getDay();
-
-  const currentTotalMinutes = currentHour * 60 + currentMinute;
-
-  const openingMinutes = 9 * 60 + 30;
-  const closingMinutes = 18 * 60 + 30;
-
-  const isSunday = currentDay === 0;
-
-  const isBusinessHours =
-    !isSunday &&
-    currentTotalMinutes >= openingMinutes &&
-    currentTotalMinutes < closingMinutes;
-
-  const openingTimeLabel = format12HourTime(9, 30);
-  const closingTimeLabel = format12HourTime(18, 30);
-
-  const todayKey = getFormattedDateKey(dateTime);
-
-  const todayHoliday = HOLIDAY_LIST.find(
-    (holiday) => holiday.date === todayKey
-  );
-
-  const isHolidayToday = Boolean(todayHoliday);
-
-  let liveStatusText = "";
-  let liveStatusClass = "";
-
-  if (isHolidayToday) {
-    liveStatusText = todayHoliday.message;
-    liveStatusClass = "status-closed";
-  } else if (isBusinessHours) {
-    liveStatusText = `Open Until ${closingTimeLabel}`;
-    liveStatusClass = "status-open";
-  } else if (isSunday) {
-    liveStatusText = `Closed • Opens Monday at ${openingTimeLabel}`;
-    liveStatusClass = "status-closed";
-  } else if (currentTotalMinutes < openingMinutes) {
-    liveStatusText = `Opens Today at ${openingTimeLabel}`;
-    liveStatusClass = "status-closed";
-  } else if (currentDay === 6) {
-    liveStatusText = `Closed • Opens Monday at ${openingTimeLabel}`;
-    liveStatusClass = "status-closed";
-  } else {
-    liveStatusText = `Closed • Opens Tomorrow at ${openingTimeLabel}`;
-    liveStatusClass = "status-closed";
+  if (category.path && currentPath === `/services/${category.path}`) {
+    return true;
   }
 
-  const handleSearchEnter = (e) => {
-    if (e.key === "Enter" && search.trim()) {
-      e.preventDefault();
-      navigate(`/search?q=${encodeURIComponent(search.trim())}`);
-      setSearch("");
-      closeNavbar();
+  return category.items.some(
+    (item) => item.path && currentPath === `/services/${item.path}`
+  );
+};
+
+// Desktop (>= lg): the dropdown opens on hover, so a click can navigate.
+// Mobile: a tap opens the accordion, the overview page is reached through "View All".
+const isDesktopView = () => window.matchMedia("(min-width: 992px)").matches;
+
+const Navbar = () => {
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState(null);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Search Modal state
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  // Scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle mobile active overlay
+  useEffect(() => {
+    if (isNavOpen) {
+      document.body.classList.add("mobile-nav-active");
+    } else {
+      document.body.classList.remove("mobile-nav-active");
     }
-  };
+    return () => {
+      document.body.classList.remove("mobile-nav-active");
+    };
+  }, [isNavOpen]);
+
+  // Search modal: the page does not scroll behind it (small devices, see
+  // NavbarSearch.css) and Escape closes it
+  useEffect(() => {
+    if (!isSearchModalOpen) {
+      return undefined;
+    }
+
+    document.body.classList.add("search-modal-open");
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsSearchModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.classList.remove("search-modal-open");
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isSearchModalOpen]);
 
   const closeNavbar = () => {
     const navbar = document.getElementById("mainNavbar");
@@ -241,7 +249,7 @@ const Navbar = () => {
 
     bsCollapse.hide();
     setServicesOpen(false);
-    setDataOpen(false);
+    setOpenCategory(null);
     setIsNavOpen(false);
   };
 
@@ -267,392 +275,345 @@ const Navbar = () => {
     setServicesOpen((prev) => !prev);
   };
 
-  const toggleDataDropdown = (e) => {
+  // Mobile accordion: open one category at a time
+  const toggleCategory = (title) => {
+    setOpenCategory((prev) => (prev === title ? null : title));
+  };
+
+  // Category with its own page: navigate on desktop, open the accordion on mobile.
+  // Category without a page: always only toggles.
+  const handleCategoryClick = (event, category) => {
+    if (category.path && isDesktopView()) {
+      closeNavbar();
+      return;
+    }
+
+    if (category.path) {
+      event.preventDefault();
+    }
+
+    toggleCategory(category.title);
+  };
+
+  // Search functionality
+  const filteredSuggestions = searchQuery.trim()
+    ? searchData.filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  const handleSelectSuggestion = (path) => {
+    navigate(path);
+    setIsSearchModalOpen(false);
+    setSearchQuery("");
+    closeNavbar();
+  };
+
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    setDataOpen((prev) => !prev);
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchModalOpen(false);
+      setSearchQuery("");
+      closeNavbar();
+    }
   };
 
   return (
     <>
-      <div className="top-datetime-bar">
-        <div className="container-fluid top-datetime-inner">
-          <div
-            className="top-working-badge"
-            aria-label="Working time and live status"
-          >
-            <div className="top-working-content">
-              <div className="top-working-row">
-                <span className="working-icon">🕒</span>
-                <span className="top-working-text">
-                  Working Time: 09:30AM - 06:30PM • Mon - Sat
-                </span>
-              </div>
+      <div className={`navbar-wrapper fixed-top ${isScrolled ? "scrolled" : ""}`}>
+        <nav className="navbar navbar-expand-lg px-3">
+          <div className="container-fluid d-flex align-items-center justify-content-between">
+            {/* Logo Section */}
+            <NavLink
+              to="/"
+              className="navbar-brand d-flex align-items-center"
+              onClick={closeNavbar}
+            >
+              <img
+                src="/Logo1.png"
+                alt="Logo"
+                className="navbar-logo me-2 rounded"
+              />
+            </NavLink>
 
-              <div className="top-status-row ms-1">
-                <span className={`status-dot ${liveStatusClass}`}></span>
-                <span className={`top-status-text ${liveStatusClass}`}>
-                  {liveStatusText}
-                </span>
+            {/* Mobile Right Controls: Search Icon + Theme Toggle + Toggler */}
+            <div className="navbar-mobile-actions d-flex align-items-center d-lg-none gap-2">
+              <button
+                type="button"
+                className="btn-search-trigger"
+                onClick={() => setIsSearchModalOpen(true)}
+                aria-label="Open Search"
+              >
+                <i className="bi bi-search"></i>
+              </button>
+
+              <ThemeToggle />
+
+              <button
+                className={`navbar-toggler custom-navbar-toggler ${
+                  isNavOpen ? "open" : ""
+                }`}
+                type="button"
+                onClick={toggleNavbar}
+                aria-controls="mainNavbar"
+                aria-expanded={isNavOpen}
+                aria-label="Toggle navigation"
+              >
+                <span className="toggler-line"></span>
+                <span className="toggler-line"></span>
+                <span className="toggler-line"></span>
+              </button>
+            </div>
+
+            {/* Navbar Content */}
+            <div className="collapse navbar-collapse" id="mainNavbar">
+              <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2 text-center align-items-center">
+                <li className="nav-item">
+                  <NavLink className="nav-link fw-bold" to="/" onClick={closeNavbar}>
+                    Home
+                  </NavLink>
+                </li>
+
+                <li className="nav-item">
+                  <NavLink to="/about" className="nav-link fw-bold" onClick={closeNavbar}>
+                    About Us
+                  </NavLink>
+                </li>
+
+                <li className="nav-item dropdown">
+                  <NavLink
+                    to="/services"
+                    className="nav-link fw-bold d-inline-flex align-items-center"
+                    onClick={closeNavbar}
+                  >
+                    Our Services
+                  </NavLink>
+                  <button
+                    className="dropdown-toggle-icon"
+                    onClick={toggleServicesDropdown}
+                    aria-expanded={servicesOpen}
+                    type="button"
+                  >
+                    <i
+                      className={`bi ${
+                        servicesOpen ? "bi-chevron-up" : "bi-chevron-down"
+                      } `}
+                    ></i>
+                  </button>
+
+                  <ul
+                    className={`dropdown-menu text-light mobile-dropdown-menu services-menu ${
+                      servicesOpen ? "show" : ""
+                    }`}
+                  >
+                    {servicesMenu.map((category) => {
+                      const categoryClass = `dropdown-item category-toggle d-flex align-items-center justify-content-between ${
+                        isCategoryActive(category, pathname) ? "active" : ""
+                      }`;
+
+                      const categoryLabel = (
+                        <>
+                          <span>{category.title}</span>
+                          <i className="bi bi-chevron-right"></i>
+                        </>
+                      );
+
+                      return (
+                        <li
+                          key={category.title}
+                          className={`dropdown-submenu-item ${
+                            openCategory === category.title ? "open" : ""
+                          }`}
+                        >
+                          {category.path ? (
+                            <NavLink
+                              end
+                              to={`/services/${category.path}`}
+                              className={categoryClass}
+                              onClick={(event) => handleCategoryClick(event, category)}
+                              aria-expanded={openCategory === category.title}
+                            >
+                              {categoryLabel}
+                            </NavLink>
+                          ) : (
+                            <button
+                              type="button"
+                              className={categoryClass}
+                              onClick={(event) => handleCategoryClick(event, category)}
+                              aria-expanded={openCategory === category.title}
+                            >
+                              {categoryLabel}
+                            </button>
+                          )}
+
+                          <ul className="submenu-panel">
+                            {/* Mobile only: link to the category page */}
+                            {category.path && (
+                              <li className="d-lg-none">
+                                <NavLink
+                                  end
+                                  className="dropdown-item"
+                                  to={`/services/${category.path}`}
+                                  onClick={closeNavbar}
+                                >
+                                  View All
+                                </NavLink>
+                              </li>
+                            )}
+
+                            {category.items.map((item) => (
+                              <li key={item.title}>
+                                <NavLink
+                                  end
+                                  className="dropdown-item"
+                                  to={`/services/${item.path}`}
+                                  onClick={closeNavbar}
+                                >
+                                  {item.title}
+                                </NavLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+
+                <li className="nav-item">
+                  <NavLink className="nav-link fw-bold" to="/industries" onClick={closeNavbar}>
+                    Industries
+                  </NavLink>
+                </li>
+
+                {/* <li className="nav-item">
+                  <NavLink to="/gallery" className="nav-link fw-bold" onClick={closeNavbar}>
+                    Our Work
+                  </NavLink>
+                </li> */}
+
+                <li className="nav-item">
+                  <NavLink className="nav-link fw-bold" to="/careers" onClick={closeNavbar}>
+                    Careers
+                  </NavLink>
+                </li>
+
+                {/* Contact Pill Button */}
+                <li className="nav-item ms-lg-1 my-2 my-lg-0">
+                  <NavLink className="nav-link nav-contact-btn" to="/contact" onClick={closeNavbar}>
+                    Contact Us
+                  </NavLink>
+                </li>
+              </ul>
+
+              {/* Right Side Desktop Elements */}
+              <div className="d-none d-lg-flex align-items-center gap-3">
+                <ThemeToggle />
+
+                <button
+                  type="button"
+                  className="btn-search-trigger"
+                  onClick={() => setIsSearchModalOpen(true)}
+                  title="Search site"
+                  aria-label="Search"
+                >
+                  <i className="bi bi-search"></i>
+                </button>
               </div>
             </div>
           </div>
-
-          <div className="top-strip-tagline" aria-label="Brand tagline">
-            <span className="top-strip-tagline-text">
-              2D • 3D • AR/VR • Web Design • Motion Graphics
-            </span>
-          </div>
-
-          <div
-            className="top-datetime-badge"
-            aria-label="Current date, time and location"
-          >
-            <div className="top-datetime-content">
-              <div className="top-datetime-row">
-                <span className="live-dot"></span>
-                <span className="top-datetime-text">
-                  {day}
-                  <sup>{daySuffix}</sup> {month} {year} | {formattedTime}
-                </span>
-              </div>
-
-              <div className="top-location-row">
-                <span className="top-location-text">📍 {location}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        </nav>
       </div>
 
-      <nav className="navbar navbar-expand-lg navbar-dark bg-black sticky-top px-3 navbar-disable-cursor">
-        <div className="container-fluid">
-          <NavLink
-            to="/"
-            className="navbar-brand d-flex align-items-center"
-            onClick={closeNavbar}
+      {/* Search Modal (centered on large screens, full screen on small devices) */}
+      {isSearchModalOpen && (
+        <div className="search-modal-backdrop" onClick={() => setIsSearchModalOpen(false)}>
+          <div
+            className="search-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Search"
+            onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src="/Logo1.png"
-              alt="Logo"
-              className="navbar-logo me-2 rounded"
-              style={{ width: "150px", height: "55px", objectFit: "contain" }}
-            />
-          </NavLink>
-
-          <button
-            className={`navbar-toggler custom-navbar-toggler ${
-              isNavOpen ? "open" : ""
-            }`}
-            type="button"
-            onClick={toggleNavbar}
-            aria-controls="mainNavbar"
-            aria-expanded={isNavOpen}
-            aria-label="Toggle navigation"
-          >
-            <span className="toggler-line"></span>
-            <span className="toggler-line"></span>
-            <span className="toggler-line"></span>
-          </button>
-
-          <div className="collapse navbar-collapse" id="mainNavbar">
-            <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3 text-center">
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link fw-bold"
-                  to="/"
-                  onClick={closeNavbar}
-                >
-                  Home
-                </NavLink>
-              </li>
-
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link fw-bold"
-                  to="/about"
-                  onClick={closeNavbar}
-                >
-                  About Us
-                </NavLink>
-              </li>
-
-              <li className="nav-item dropdown">
-                <NavLink
-                  to="/services"
-                  className="nav-link fw-bold"
-                  onClick={closeNavbar}
-                >
-                  Services
-                </NavLink>
-
-                <button
-                  className="dropdown-toggle-icon"
-                  onClick={toggleServicesDropdown}
-                  aria-expanded={servicesOpen}
-                  type="button"
-                >
-                  <i
-                    className={`bi ${
-                      servicesOpen ? "bi-chevron-up" : "bi-chevron-down"
-                    }`}
-                  ></i>
-                </button>
-
-                <ul
-                  className={`dropdown-menu text-light mobile-dropdown-menu ${
-                    servicesOpen ? "show" : ""
-                  }`}
-                >
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/2d-animation"
-                      onClick={closeNavbar}
-                    >
-                      2D Animation
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/3d-animation"
-                      onClick={closeNavbar}
-                    >
-                      3D Animation
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/ar-vr"
-                      onClick={closeNavbar}
-                    >
-                      AR / VR
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/digitalmarketing"
-                      onClick={closeNavbar}
-                    >
-                      Digital Marketing
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/web-design"
-                      onClick={closeNavbar}
-                    >
-                      Website Design
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/liveshoots"
-                      onClick={closeNavbar}
-                    >
-                      Live Shoots
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/e-learning"
-                      onClick={closeNavbar}
-                    >
-                      E-Learning
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/sop"
-                      onClick={closeNavbar}
-                    >
-                      SOP Digitization
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/graphicsdesign"
-                      onClick={closeNavbar}
-                    >
-                      Graphics Design
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/motiongraphics"
-                      onClick={closeNavbar}
-                    >
-                      Motion Graphics
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/print-media"
-                      onClick={closeNavbar}
-                    >
-                      Print Media
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/services/product-branding"
-                      onClick={closeNavbar}
-                    >
-                      Branding
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-
-              <li className="nav-item fw-bold">
-                <NavLink
-                  className="nav-link"
-                  to="/gallery"
-                  onClick={closeNavbar}
-                >
-                  Gallery
-                </NavLink>
-              </li>
-
-              <li className="nav-item dropdown">
-                <NavLink
-                  to="/data"
-                  className="nav-link fw-bold"
-                  onClick={closeNavbar}
-                >
-                  Data
-                </NavLink>
-
-                <button
-                  className="dropdown-toggle-icon"
-                  onClick={toggleDataDropdown}
-                  aria-expanded={dataOpen}
-                  type="button"
-                >
-                  <i
-                    className={`bi ${
-                      dataOpen ? "bi-chevron-up" : "bi-chevron-down"
-                    }`}
-                  ></i>
-                </button>
-
-                <ul
-                  className={`dropdown-menu text-light mobile-dropdown-menu ${
-                    dataOpen ? "show" : ""
-                  }`}
-                >
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/blogs"
-                      onClick={closeNavbar}
-                    >
-                      Blogs
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/news"
-                      onClick={closeNavbar}
-                    >
-                      News
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/faq"
-                      onClick={closeNavbar}
-                    >
-                      FAQ&apos;S
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/testimonials"
-                      onClick={closeNavbar}
-                    >
-                      Testimonials
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/testcases"
-                      onClick={closeNavbar}
-                    >
-                      TestCases
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/data/whitepapers"
-                      onClick={closeNavbar}
-                    >
-                      WhitePapers
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-
-              <li className="nav-item fw-bold">
-                <NavLink
-                  className="nav-link"
-                  to="/careers"
-                  onClick={closeNavbar}
-                >
-                  Careers
-                </NavLink>
-              </li>
-
-              <li className="nav-item fw-bold">
-                <NavLink
-                  className="nav-link"
-                  to="/contact"
-                  onClick={closeNavbar}
-                >
-                  Contact
-                </NavLink>
-              </li>
-            </ul>
-
-            <div className="ms-lg-3 mt-3 mt-lg-0">
-              <input
-                type="search"
-                className="form-control form-control-sm fw-bold"
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={handleSearchEnter}
-              />
+            <div className="search-modal-header">
+              <form onSubmit={handleSearchSubmit} className="search-input-wrapper">
+                <i className="bi bi-search search-input-icon"></i>
+                <input
+                  type="text"
+                  className="search-modal-input"
+                  placeholder="Search services, pages, topics..."
+                  aria-label="Search"
+                  autoComplete="off"
+                  enterKeyHint="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="btn-clear-search"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                  >
+                    <i className="bi bi-x-circle-fill"></i>
+                  </button>
+                )}
+              </form>
+              <button
+                type="button"
+                className="btn-close-modal"
+                onClick={() => setIsSearchModalOpen(false)}
+                aria-label="Close search"
+              >
+                <i className="bi bi-x-lg"></i>
+              </button>
             </div>
 
-            <div className="ms-lg-3 mt-3 mt-lg-0">
-              <NavLink
-                to="/contact"
-                className="btn glass-btn btn-outline-light px-4 fw-bold"
-                onClick={closeNavbar}
-              >
-                Get A Quote
-              </NavLink>
+            <div className="search-modal-body">
+              {searchQuery.trim() !== "" ? (
+                filteredSuggestions.length > 0 ? (
+                  <ul className="search-suggestions-list">
+                    {filteredSuggestions.map((item, idx) => (
+                      <li key={idx}>
+                        <button
+                          type="button"
+                          className="suggestion-item"
+                          onClick={() => handleSelectSuggestion(item.path)}
+                        >
+                          <i className="bi bi-arrow-right-short me-2"></i>
+                          <span>{item.title}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="search-no-results">
+                    <p>No results found for "<strong>{searchQuery}</strong>"</p>
+                  </div>
+                )
+              ) : (
+                <div className="search-popular-tags">
+                  <span className="tags-label fw-bold">Popular Searches:</span>
+                  <div className="d-flex flex-wrap gap-2 mt-2">
+                    {["3D Animation", "2D Animation", "Web Development", "Careers", "Video Editing"].map((tag, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className="search-tag-pill fw-semibold"
+                        onClick={() => setSearchQuery(tag)}
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </nav>
+      )}
     </>
   );
 };

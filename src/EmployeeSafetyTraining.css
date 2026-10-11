@@ -1,0 +1,3098 @@
+/* =========================================================
+   EMPLOYEE & SAFETY TRAINING
+   Fully scoped styles — no global CSS changes required
+   Uses existing index.css light/dark theme variables
+========================================================= */
+
+.employee-safety-page {
+  width: 100%;
+  min-height: 100%;
+  overflow: clip;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.employee-safety-page *,
+.employee-safety-page *::before,
+.employee-safety-page *::after {
+  box-sizing: border-box;
+}
+
+.employee-safety-page button {
+  font: inherit;
+}
+
+.employee-safety-container {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+/* =========================================================
+   BIDIRECTIONAL SCROLL REVEAL
+========================================================= */
+
+.employee-safety-reveal {
+  min-width: 0;
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--employee-safety-reveal-delay, 0ms);
+}
+
+.employee-safety-reveal--up {
+  transform: translate3d(0, 42px, 0);
+}
+
+.employee-safety-reveal--left {
+  transform: translate3d(-48px, 0, 0);
+}
+
+.employee-safety-reveal--right {
+  transform: translate3d(48px, 0, 0);
+}
+
+.employee-safety-reveal.employee-safety-is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   EYEBROWS AND SECTION HEADINGS
+========================================================= */
+
+.employee-safety-eyebrow,
+.employee-safety-section-heading > span,
+.employee-safety-process-intro > span,
+.employee-safety-final-inner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.employee-safety-eyebrow::before,
+.employee-safety-section-heading > span::before,
+.employee-safety-process-intro > span::before,
+.employee-safety-final-inner > span::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  flex: 0 0 28px;
+  background: var(--accent-color);
+}
+
+.employee-safety-section-heading {
+  max-width: 760px;
+  margin-bottom: 58px;
+}
+
+.employee-safety-section-heading h2,
+.employee-safety-process-intro h2 {
+  margin: 19px 0 20px;
+  color: var(--text-primary);
+  font-size: clamp(2.25rem, 4.5vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+  overflow-wrap: anywhere;
+}
+
+.employee-safety-section-heading h2 strong,
+.employee-safety-process-intro h2 strong {
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.employee-safety-section-heading p,
+.employee-safety-process-intro p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+.employee-safety-section-heading--wide {
+  max-width: 880px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.employee-safety-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 690px;
+  padding: 110px 0 90px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 78% 45%,
+      color-mix(in srgb, var(--accent-color) 10%, transparent),
+      transparent 32%
+    ),
+    var(--bg-primary);
+}
+
+.employee-safety-hero::before {
+  content: "";
+  position: absolute;
+  right: -130px;
+  top: 10%;
+  width: 420px;
+  height: 420px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.employee-safety-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.96fr);
+  align-items: center;
+  gap: clamp(35px, 6vw, 85px);
+  width: min(1280px, calc(100% - 80px));
+  margin-inline: auto;
+}
+
+.employee-safety-hero-content {
+  min-width: 0;
+}
+
+.employee-safety-hero-content h1 {
+  margin: 25px 0 25px;
+  color: var(--text-primary);
+  font-size: clamp(3.15rem, 5.8vw, 6.15rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+}
+
+.employee-safety-hero-content h1 span {
+  color: var(--accent-color);
+}
+
+.employee-safety-hero-content > p {
+  max-width: 590px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+.employee-safety-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  color: var(--text-secondary);
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+.employee-safety-hero-meta i {
+  width: 4px;
+  height: 4px;
+  flex: 0 0 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* =========================================================
+   CSS-ILLUSTRATED HERO STAGE
+========================================================= */
+
+.employee-safety-hero-visual {
+  min-width: 0;
+}
+
+.employee-safety-hero-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.98;
+  min-height: 440px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      ellipse at 52% 45%,
+      color-mix(in srgb, var(--accent-color) 15%, transparent),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      var(--bg-secondary),
+      var(--bg-card)
+    );
+}
+
+.employee-safety-hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 13% 13% 16%;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 32%, transparent);
+  border-radius: 50%;
+  animation: employee-safety-orbit 12s linear infinite;
+}
+
+.employee-safety-hero-stage::after {
+  content: "";
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 18%;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.es-stage-topline {
+  position: absolute;
+  z-index: 8;
+  top: 22px;
+  left: 22px;
+  right: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.es-stage-topline strong {
+  color: var(--accent-color);
+}
+
+.es-stage-orbit {
+  position: absolute;
+  z-index: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.es-stage-orbit--one {
+  top: 20%;
+  left: 15%;
+  width: 70%;
+  height: 55%;
+  transform: rotate(-22deg);
+}
+
+.es-stage-orbit--two {
+  top: 23%;
+  left: 24%;
+  width: 53%;
+  height: 48%;
+  transform: rotate(28deg);
+}
+
+.es-stage-board {
+  position: absolute;
+  z-index: 2;
+  top: 15%;
+  right: 7%;
+  width: 57%;
+  min-height: 42%;
+  padding: 0 15px 17px;
+  border: 1px solid var(--border-color);
+  border-top: 5px solid var(--accent-color);
+  border-radius: 9px;
+  background: var(--bg-card);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.12);
+  transform: perspective(700px) rotateY(-5deg);
+  animation: employee-safety-board-float 5s ease-in-out infinite;
+}
+
+.es-board-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 35px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.49rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.es-board-top > span:last-child {
+  margin-left: 5px;
+}
+
+.es-board-light {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.es-board-shield {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 54px;
+  margin: 15px auto 12px;
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+  clip-path: polygon(50% 0, 94% 16%, 88% 68%, 50% 100%, 12% 68%, 6% 16%);
+}
+
+.es-board-shield::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 2px solid var(--accent-color);
+  clip-path: polygon(50% 0, 94% 16%, 88% 68%, 50% 100%, 12% 68%, 6% 16%);
+}
+
+.es-board-shield-check {
+  position: relative;
+  width: 15px;
+  height: 8px;
+  margin-top: -4px;
+  border-left: 3px solid var(--accent-color);
+  border-bottom: 3px solid var(--accent-color);
+  transform: rotate(-45deg);
+}
+
+.es-board-lines {
+  display: grid;
+  gap: 8px;
+}
+
+.es-board-lines span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-secondary);
+  font-size: 0.59rem;
+  line-height: 1.4;
+}
+
+.es-board-lines i {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border: 1px solid var(--accent-color);
+  border-radius: 2px;
+}
+
+.es-board-lines span:first-child i,
+.es-board-lines span:nth-child(3) i {
+  background: var(--accent-color);
+  box-shadow: inset 0 0 0 2px var(--bg-card);
+}
+
+/* Trainer figure */
+
+.es-training-person {
+  position: absolute;
+  z-index: 5;
+  left: 34%;
+  bottom: 17%;
+  width: 112px;
+  height: 238px;
+  animation: employee-safety-person-float 4s ease-in-out infinite;
+}
+
+.es-person-head {
+  position: absolute;
+  z-index: 3;
+  top: 3px;
+  left: 33px;
+  width: 48px;
+  height: 56px;
+  border: 2px solid var(--text-primary);
+  border-radius: 44% 44% 48% 48%;
+  background: var(--bg-secondary);
+}
+
+.es-person-hair {
+  position: absolute;
+  top: -5px;
+  left: -3px;
+  width: 50px;
+  height: 19px;
+  border: 2px solid var(--text-primary);
+  border-radius: 50% 50% 18% 18%;
+  background: var(--accent-color);
+}
+
+.es-person-eye {
+  position: absolute;
+  top: 26px;
+  right: 10px;
+  width: 4px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-primary);
+}
+
+.es-person-smile {
+  position: absolute;
+  right: 8px;
+  bottom: 11px;
+  width: 12px;
+  height: 5px;
+  border-bottom: 2px solid var(--text-primary);
+  border-radius: 50%;
+}
+
+.es-person-neck {
+  position: absolute;
+  z-index: 2;
+  top: 51px;
+  left: 49px;
+  width: 17px;
+  height: 18px;
+  background: var(--bg-secondary);
+}
+
+.es-person-body {
+  position: absolute;
+  z-index: 3;
+  top: 65px;
+  left: 21px;
+  width: 76px;
+  height: 105px;
+  overflow: hidden;
+  border: 2px solid var(--text-primary);
+  border-radius: 16px 16px 7px 7px;
+  background: var(--accent-color);
+}
+
+.es-person-vest-line {
+  position: absolute;
+  top: -8px;
+  width: 10px;
+  height: 120px;
+  background: #f3f4f6;
+  opacity: 0.9;
+}
+
+.es-person-vest-line--one {
+  left: 15px;
+  transform: rotate(-8deg);
+}
+
+.es-person-vest-line--two {
+  right: 15px;
+  transform: rotate(8deg);
+}
+
+.es-person-arm {
+  position: absolute;
+  z-index: 2;
+  top: 78px;
+  width: 17px;
+  height: 72px;
+  border: 2px solid var(--text-primary);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  transform-origin: top center;
+}
+
+.es-person-arm--left {
+  left: 12px;
+  transform: rotate(24deg);
+}
+
+.es-person-arm--right {
+  right: 5px;
+  height: 78px;
+  transform: rotate(-47deg);
+}
+
+.es-person-tablet {
+  position: absolute;
+  z-index: 4;
+  right: -18px;
+  top: 114px;
+  width: 37px;
+  height: 30px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  transform: rotate(-10deg);
+}
+
+.es-person-tablet::before,
+.es-person-tablet::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background: var(--accent-color);
+}
+
+.es-person-tablet::before {
+  top: 8px;
+}
+
+.es-person-tablet::after {
+  top: 15px;
+}
+
+/* Seated workers */
+
+.es-stage-worker {
+  position: absolute;
+  z-index: 6;
+  bottom: 8%;
+  width: 76px;
+  height: 112px;
+}
+
+.es-stage-worker--one {
+  left: 5%;
+}
+
+.es-stage-worker--two {
+  left: 63%;
+}
+
+.es-stage-worker--three {
+  right: 1%;
+  transform: scale(0.88);
+}
+
+.es-worker-helmet {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 15px;
+  width: 44px;
+  height: 21px;
+  border: 2px solid var(--text-primary);
+  border-radius: 26px 26px 6px 6px;
+  background: var(--accent-color);
+}
+
+.es-worker-helmet::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: -5px;
+  width: 50px;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--accent-color);
+}
+
+.es-worker-head {
+  position: absolute;
+  top: 13px;
+  left: 22px;
+  width: 30px;
+  height: 35px;
+  border: 2px solid var(--text-primary);
+  border-radius: 45%;
+  background: var(--bg-secondary);
+}
+
+.es-worker-body {
+  position: absolute;
+  top: 43px;
+  left: 4px;
+  width: 67px;
+  height: 69px;
+  border: 2px solid var(--text-primary);
+  border-radius: 22px 22px 0 0;
+  background: var(--bg-secondary);
+}
+
+.es-worker-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  width: 8px;
+  background: var(--accent-color);
+}
+
+.es-stage-callout {
+  position: absolute;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 190px;
+  padding: 11px 13px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-card);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.es-stage-callout--one {
+  top: 48%;
+  left: 4%;
+  animation: employee-safety-callout-float 4.5s ease-in-out infinite;
+}
+
+.es-stage-callout--two {
+  right: 4%;
+  bottom: 25%;
+  animation: employee-safety-callout-float 5s ease-in-out infinite reverse;
+}
+
+.es-callout-check,
+.es-callout-dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--accent-color);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.es-callout-dot {
+  width: 9px;
+  height: 9px;
+  flex-basis: 9px;
+  margin: 0 7px;
+}
+
+.es-stage-callout strong,
+.es-stage-callout small {
+  display: block;
+}
+
+.es-stage-callout strong {
+  color: var(--text-primary);
+  font-size: 0.65rem;
+}
+
+.es-stage-callout small {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 0.57rem;
+}
+
+.es-stage-footer {
+  position: absolute;
+  z-index: 8;
+  right: 20px;
+  bottom: 17px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--text-muted);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.es-stage-footer i {
+  width: 4px;
+  height: 4px;
+  flex: 0 0 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* =========================================================
+   GENERAL SECTIONS
+========================================================= */
+
+.employee-safety-section {
+  position: relative;
+  padding: 115px 0;
+  background: var(--bg-primary);
+}
+
+.employee-safety-areas,
+.employee-safety-benefits {
+  background: var(--bg-secondary);
+}
+
+/* =========================================================
+   TRAINING AREA CARDS
+========================================================= */
+
+.employee-safety-services-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.employee-safety-service-wrap {
+  min-width: 0;
+}
+
+.employee-safety-service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 260px;
+  padding: 27px 28px 30px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 19px;
+  background: var(--bg-card);
+  transition:
+    transform 0.4s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.employee-safety-service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--accent-color);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s ease;
+}
+
+.employee-safety-service-card:hover {
+  transform: translateY(-5px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 55%,
+    var(--border-color)
+  );
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.1);
+}
+
+.employee-safety-service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.employee-safety-service-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 28px;
+}
+
+.employee-safety-service-number {
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.employee-safety-service-content {
+  flex: 1;
+  min-width: 0;
+  padding-right: 18px;
+}
+
+.employee-safety-service-content h3 {
+  margin: 0 0 12px;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+}
+
+.employee-safety-service-content p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.91rem;
+  line-height: 1.8;
+}
+
+.employee-safety-service-mark {
+  position: absolute;
+  right: 22px;
+  bottom: 23px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease,
+    background 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.employee-safety-service-card:hover .employee-safety-service-mark {
+  transform: rotate(45deg);
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+}
+
+/* =========================================================
+   CUSTOM TRAINING ICONS
+========================================================= */
+
+.employee-safety-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 61px;
+  height: 61px;
+  flex: 0 0 61px;
+  overflow: hidden;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--accent-color) 35%,
+    var(--border-color)
+  );
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent-color) 9%, var(--bg-secondary));
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.employee-safety-service-card:hover .employee-safety-icon,
+.employee-safety-benefit:hover .employee-safety-icon {
+  transform: perspective(500px) rotateY(-10deg) rotateX(5deg);
+  border-color: var(--accent-color);
+}
+
+.es-icon-hardhat {
+  position: absolute;
+  top: 17px;
+  left: 15px;
+  width: 29px;
+  height: 19px;
+  border: 2px solid var(--text-primary);
+  border-radius: 18px 18px 4px 4px;
+  background: var(--accent-color);
+}
+
+.es-icon-hardhat::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 9px;
+  width: 6px;
+  height: 8px;
+  border: 2px solid var(--text-primary);
+  border-bottom: 0;
+}
+
+.es-icon-hardhat-brim {
+  position: absolute;
+  top: 33px;
+  left: 10px;
+  width: 39px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--text-primary);
+}
+
+.es-icon-hardhat-stripe {
+  position: absolute;
+  top: 18px;
+  left: 28px;
+  width: 3px;
+  height: 14px;
+  background: var(--text-primary);
+}
+
+.es-icon-person {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--text-primary);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+
+.es-icon-person--one {
+  top: 13px;
+  left: 24px;
+}
+
+.es-icon-person--two {
+  top: 20px;
+  left: 11px;
+  transform: scale(0.8);
+}
+
+.es-icon-person--three {
+  top: 20px;
+  right: 11px;
+  transform: scale(0.8);
+}
+
+.es-icon-team-base {
+  position: absolute;
+  bottom: 12px;
+  left: 15px;
+  width: 31px;
+  height: 18px;
+  border: 2px solid var(--text-primary);
+  border-radius: 12px 12px 4px 4px;
+  background: var(--accent-color);
+}
+
+.es-icon-team-base::before,
+.es-icon-team-base::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: 12px;
+  height: 14px;
+  border: 2px solid var(--text-primary);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: var(--bg-secondary);
+}
+
+.es-icon-team-base::before {
+  left: -11px;
+}
+
+.es-icon-team-base::after {
+  right: -11px;
+}
+
+.es-icon-shield {
+  position: absolute;
+  top: 11px;
+  left: 14px;
+  width: 33px;
+  height: 39px;
+  border: 2px solid var(--text-primary);
+  background: var(--accent-color);
+  clip-path: polygon(50% 0, 95% 16%, 88% 68%, 50% 100%, 12% 68%, 5% 16%);
+}
+
+.es-icon-shield-check {
+  position: absolute;
+  z-index: 2;
+  top: 25px;
+  left: 24px;
+  width: 14px;
+  height: 8px;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  transform: rotate(-45deg);
+}
+
+.es-icon-alert-ring {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 37px;
+  height: 37px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+}
+
+.es-icon-alert-mark {
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  width: 4px;
+  height: 13px;
+  border-radius: 3px;
+  background: var(--text-primary);
+}
+
+.es-icon-alert-dot {
+  position: absolute;
+  top: 37px;
+  left: 28px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-primary);
+}
+
+.es-icon-hazard-triangle {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 37px;
+  height: 36px;
+  border: 2px solid var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+  clip-path: polygon(50% 0, 100% 94%, 0 94%);
+}
+
+.es-icon-hazard-mark {
+  position: absolute;
+  top: 22px;
+  left: 29px;
+  width: 3px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--text-primary);
+}
+
+.es-icon-hazard-dot {
+  position: absolute;
+  top: 36px;
+  left: 29px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-primary);
+}
+
+.es-icon-document {
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  width: 29px;
+  height: 40px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+}
+
+.es-icon-document-line {
+  position: absolute;
+  left: 22px;
+  width: 15px;
+  height: 2px;
+  background: var(--text-muted);
+}
+
+.es-icon-document-line--one {
+  top: 22px;
+}
+
+.es-icon-document-line--two {
+  top: 29px;
+  width: 11px;
+}
+
+.es-icon-document-check {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  width: 17px;
+  height: 17px;
+  border: 1px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+
+.es-icon-document-check::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 7px;
+  height: 4px;
+  border-bottom: 2px solid var(--accent-color);
+  border-left: 2px solid var(--accent-color);
+  transform: rotate(-45deg);
+}
+
+/* Benefit icons */
+
+.es-icon-mini-shield {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  width: 29px;
+  height: 35px;
+  border: 2px solid var(--text-primary);
+  background: var(--accent-color);
+  clip-path: polygon(50% 0, 95% 16%, 88% 68%, 50% 100%, 12% 68%, 5% 16%);
+}
+
+.es-icon-mini-check {
+  position: absolute;
+  top: 25px;
+  left: 26px;
+  width: 12px;
+  height: 7px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+}
+
+.es-icon-mini-person {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--text-primary);
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.es-icon-mini-person--one {
+  top: 12px;
+  left: 24px;
+}
+
+.es-icon-mini-person--two {
+  top: 19px;
+  left: 11px;
+}
+
+.es-icon-mini-person--three {
+  top: 19px;
+  right: 11px;
+}
+
+.es-icon-mini-person--one::after,
+.es-icon-mini-person--two::after,
+.es-icon-mini-person--three::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: -6px;
+  width: 18px;
+  height: 15px;
+  border: 2px solid var(--text-primary);
+  border-radius: 9px 9px 3px 3px;
+  background: var(--bg-secondary);
+}
+
+.es-icon-culture-circle {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 37px;
+  height: 37px;
+  border: 1px solid var(--text-primary);
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.es-icon-culture-star {
+  position: absolute;
+  top: 17px;
+  left: 22px;
+  color: #fff;
+  font-size: 1.35rem;
+}
+
+.es-icon-check-ring {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  width: 39px;
+  height: 39px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+}
+
+.es-icon-check-mark {
+  position: absolute;
+  top: 23px;
+  left: 22px;
+  width: 17px;
+  height: 10px;
+  border-bottom: 3px solid var(--text-primary);
+  border-left: 3px solid var(--text-primary);
+  transform: rotate(-45deg);
+}
+
+/* =========================================================
+   INTERACTIVE DEMO
+========================================================= */
+
+.employee-safety-demo-section {
+  background: var(--bg-primary);
+}
+
+.employee-safety-demo {
+  display: grid;
+  grid-template-columns: 265px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 22px;
+  background: var(--bg-card);
+}
+
+.employee-safety-demo-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 25px 17px;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.es-demo-sidebar-label {
+  margin: 0 0 10px 6px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.es-demo-nav-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 6px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 9px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.es-demo-nav-item:hover,
+.es-demo-nav-item.is-active {
+  border-color: var(--border-color);
+  background: var(--bg-card);
+}
+
+.es-demo-nav-number {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  color: var(--accent-color);
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.es-demo-nav-item.is-active .es-demo-nav-number {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.es-demo-nav-item strong,
+.es-demo-nav-item small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.es-demo-nav-item strong {
+  font-size: 0.77rem;
+  line-height: 1.45;
+}
+
+.es-demo-nav-item small {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  line-height: 1.4;
+}
+
+.es-demo-nav-item > i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-color);
+}
+
+.es-demo-nav-item.is-active > i {
+  background: var(--accent-color);
+}
+
+.es-demo-sidebar-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: auto;
+  padding: 16px 7px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.es-demo-note-icon {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.es-demo-sidebar-note p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.7;
+}
+
+.employee-safety-demo-main {
+  min-width: 0;
+  padding: 26px;
+}
+
+.es-demo-main-header,
+.es-demo-main-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.es-demo-main-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--accent-color);
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.es-demo-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 0.59rem;
+}
+
+.es-demo-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.es-demo-content {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.76fr) minmax(0, 1.24fr);
+  align-items: center;
+  gap: 28px;
+  padding: 28px 0;
+}
+
+.es-demo-illustration {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 300px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 17px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-color) 11%, transparent),
+      transparent 65%
+    ),
+    var(--bg-secondary);
+}
+
+.es-demo-illustration-ring {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+  border-radius: 50%;
+  animation: employee-safety-orbit 18s linear infinite;
+}
+
+.es-demo-question {
+  min-width: 0;
+}
+
+.es-demo-kicker {
+  color: var(--accent-color);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.es-demo-question h3 {
+  margin: 12px 0;
+  color: var(--text-primary);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.es-demo-question > p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.75;
+}
+
+.es-demo-quiz {
+  margin-top: 24px;
+}
+
+.es-demo-quiz > strong {
+  display: block;
+  margin-bottom: 13px;
+  color: var(--text-primary);
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+
+.es-demo-options {
+  display: grid;
+  gap: 8px;
+}
+
+.es-demo-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.77rem;
+  line-height: 1.55;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.es-demo-option-letter {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.es-demo-option.is-correct {
+  border-color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+}
+
+.es-demo-option.is-correct .es-demo-option-letter {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.es-demo-option > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.es-demo-option > b {
+  color: var(--accent-color);
+}
+
+.es-demo-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid var(--accent-color);
+  border-radius: 10px;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    filter 0.25s ease,
+    transform 0.25s ease;
+}
+
+.es-demo-action:hover {
+  filter: brightness(1.08);
+}
+
+.es-demo-action:active {
+  transform: scale(0.99);
+}
+
+.es-demo-action span {
+  font-size: 1.1rem;
+}
+
+.es-demo-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 12px 0 0 !important;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-secondary) !important;
+  font-size: 0.77rem !important;
+  line-height: 1.7 !important;
+}
+
+.es-demo-feedback > span {
+  color: var(--accent-color);
+  font-weight: 900;
+}
+
+.es-demo-main-footer {
+  padding-top: 17px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.57rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+/* Demo illustration: hazard */
+
+.es-demo-hazard-scene,
+.es-demo-ppe-scene,
+.es-demo-emergency-scene {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 260px;
+}
+
+.es-demo-exit-sign {
+  position: absolute;
+  top: 32px;
+  right: 17px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.es-demo-exit-sign i {
+  color: var(--accent-color);
+  font-size: 1.15rem;
+  font-style: normal;
+}
+
+.es-demo-door {
+  position: absolute;
+  top: 75px;
+  right: 23px;
+  width: 82px;
+  height: 120px;
+  border: 3px solid var(--text-primary);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+}
+
+.es-demo-door span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  border-left: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+}
+
+.es-demo-door i {
+  position: absolute;
+  top: 57px;
+  right: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.es-demo-box {
+  position: absolute;
+  z-index: 2;
+  right: 25px;
+  bottom: 52px;
+  width: 95px;
+  height: 67px;
+  border: 2px solid var(--text-primary);
+  background: var(--bg-secondary);
+  transform: rotate(-5deg);
+}
+
+.es-demo-box span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--border-color);
+}
+
+.es-demo-box span:last-child {
+  top: 50%;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  width: auto;
+  height: 1px;
+}
+
+.es-demo-warning {
+  position: absolute;
+  z-index: 4;
+  bottom: 64px;
+  left: 22px;
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--accent-color);
+  font-size: 1.4rem;
+  font-weight: 900;
+  animation: employee-safety-warning-pulse 2s ease-in-out infinite;
+}
+
+.es-demo-floor-line {
+  position: absolute;
+  right: 12px;
+  bottom: 47px;
+  left: 12px;
+  height: 1px;
+  background: var(--border-color);
+}
+
+/* Demo illustration: PPE */
+
+.es-demo-helmet {
+  position: absolute;
+  top: 43px;
+  left: 50%;
+  width: 105px;
+  height: 57px;
+  border: 3px solid var(--text-primary);
+  border-radius: 60px 60px 8px 8px;
+  background: var(--accent-color);
+  transform: translateX(-50%);
+}
+
+.es-demo-helmet::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 3px;
+  height: 42px;
+  background: var(--text-primary);
+}
+
+.es-demo-helmet span {
+  position: absolute;
+  right: -12px;
+  bottom: -7px;
+  left: -12px;
+  height: 9px;
+  border: 2px solid var(--text-primary);
+  border-radius: 6px;
+  background: var(--accent-color);
+}
+
+.es-demo-vest {
+  position: absolute;
+  top: 118px;
+  left: 50%;
+  width: 96px;
+  height: 94px;
+  border: 3px solid var(--text-primary);
+  border-radius: 16px 16px 6px 6px;
+  background: var(--accent-color);
+  transform: translateX(-50%);
+}
+
+.es-demo-vest span,
+.es-demo-vest i {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 11px;
+  background: #f3f4f6;
+}
+
+.es-demo-vest span {
+  left: 18px;
+}
+
+.es-demo-vest i {
+  right: 18px;
+}
+
+.es-demo-vest b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--text-primary);
+}
+
+.es-demo-glove {
+  position: absolute;
+  right: 15px;
+  bottom: 37px;
+  width: 31px;
+  height: 37px;
+  border: 2px solid var(--text-primary);
+  border-radius: 14px 14px 8px 8px;
+  background: var(--bg-card);
+  transform: rotate(15deg);
+}
+
+.es-demo-glove span {
+  position: absolute;
+  top: -10px;
+  left: 3px;
+  width: 7px;
+  height: 16px;
+  border: 1px solid var(--text-primary);
+  border-radius: 5px;
+  background: var(--bg-secondary);
+}
+
+.es-demo-ppe-label {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  color: var(--accent-color);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+/* Demo illustration: emergency */
+
+.es-demo-alarm {
+  position: absolute;
+  top: 39px;
+  left: 26px;
+  width: 67px;
+  height: 67px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+}
+
+.es-demo-alarm::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 19px;
+  width: 25px;
+  height: 30px;
+  border: 2px solid var(--text-primary);
+  border-radius: 16px 16px 5px 5px;
+  background: var(--accent-color);
+}
+
+.es-demo-alarm span {
+  position: absolute;
+  top: 11px;
+  left: 31px;
+  width: 2px;
+  height: 7px;
+  background: var(--text-primary);
+}
+
+.es-demo-emergency-arrow {
+  position: absolute;
+  top: 116px;
+  left: 50%;
+  color: var(--accent-color);
+  font-size: 2.1rem;
+  transform: translateX(-50%);
+  animation: employee-safety-arrow-pulse 1.5s ease-in-out infinite;
+}
+
+.es-demo-assembly {
+  position: absolute;
+  right: 20px;
+  bottom: 47px;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 83px;
+  border: 2px solid var(--text-primary);
+  border-radius: 12px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.es-demo-assembly span {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.es-demo-assembly i {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 1rem;
+  font-style: normal;
+}
+
+.es-demo-emergency-label {
+  position: absolute;
+  bottom: 17px;
+  left: 14px;
+  color: var(--text-muted);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   TRAINING PROCESS
+========================================================= */
+
+.employee-safety-process {
+  background: var(--bg-secondary);
+}
+
+.employee-safety-process-intro {
+  max-width: 790px;
+  margin-bottom: 70px;
+}
+
+.employee-safety-process-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.employee-safety-process-line::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  left: 28px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-color) 15%,
+    var(--border-color) 85%,
+    transparent
+  );
+}
+
+.employee-safety-process-item {
+  position: relative;
+  min-width: 0;
+  padding-left: 72px;
+}
+
+.employee-safety-process-marker {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 57px;
+  height: 57px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-primary);
+  color: var(--accent-color);
+  font-size: 0.75rem;
+  font-weight: 850;
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+.employee-safety-process-item:hover .employee-safety-process-marker {
+  transform: scale(1.08);
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.employee-safety-process-copy {
+  min-height: 190px;
+  padding: 23px;
+  border: 1px solid var(--border-color);
+  border-radius: 17px;
+  background: var(--bg-card);
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.employee-safety-process-copy:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 45%,
+    var(--border-color)
+  );
+}
+
+.es-process-label {
+  color: var(--accent-color);
+  font-size: 0.63rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+}
+
+.employee-safety-process-copy h3 {
+  margin: 13px 0 10px;
+  color: var(--text-primary);
+  font-size: 1.16rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.employee-safety-process-copy p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.8;
+}
+
+/* Process note */
+
+.employee-safety-process-note {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  margin-top: 55px;
+  padding: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-primary);
+}
+
+.es-process-note-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 145px;
+  overflow: hidden;
+}
+
+.es-process-note-shield {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 91px;
+  border: 2px solid var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 10%, transparent);
+  clip-path: polygon(50% 0, 96% 16%, 88% 68%, 50% 100%, 12% 68%, 4% 16%);
+}
+
+.es-process-note-shield i {
+  width: 26px;
+  height: 14px;
+  margin-top: -9px;
+  border-left: 4px solid var(--accent-color);
+  border-bottom: 4px solid var(--accent-color);
+  transform: rotate(-45deg);
+}
+
+.es-process-note-ring {
+  position: absolute;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+}
+
+.es-process-note-ring--one {
+  width: 130px;
+  height: 130px;
+}
+
+.es-process-note-ring--two {
+  width: 155px;
+  height: 155px;
+  border-color: color-mix(in srgb, var(--accent-color) 25%, transparent);
+}
+
+.employee-safety-process-note > div:last-child > span {
+  color: var(--accent-color);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.employee-safety-process-note h3 {
+  margin: 11px 0;
+  color: var(--text-primary);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.employee-safety-process-note p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.employee-safety-benefit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-safety-benefit {
+  display: grid;
+  grid-template-columns: 45px 61px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 24px;
+  min-height: 125px;
+  padding: 22px 0;
+  border-top: 1px solid var(--border-color);
+  transition:
+    padding 0.35s ease,
+    background 0.35s ease;
+}
+
+.employee-safety-benefit:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.employee-safety-benefit:hover {
+  padding-right: 12px;
+  padding-left: 12px;
+  background: color-mix(in srgb, var(--accent-color) 3%, transparent);
+}
+
+.employee-safety-benefit-number {
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.employee-safety-benefit-content {
+  min-width: 0;
+}
+
+.employee-safety-benefit-content h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary);
+  font-size: 1.17rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.employee-safety-benefit-content p {
+  max-width: 730px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.employee-safety-benefit-arrow {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  transition:
+    transform 0.35s ease,
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.employee-safety-benefit:hover .employee-safety-benefit-arrow {
+  transform: rotate(45deg);
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+}
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+.employee-safety-faq {
+  background: var(--bg-primary);
+}
+
+.employee-safety-faq-list {
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.employee-safety-faq-item {
+  border-top: 1px solid var(--border-color);
+}
+
+.employee-safety-faq-item:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.employee-safety-faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  width: 100%;
+  min-height: 86px;
+  padding: 20px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.employee-safety-faq-question:focus-visible,
+.es-demo-nav-item:focus-visible,
+.es-demo-action:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+}
+
+.es-faq-question-text {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.es-faq-question-text small {
+  flex: 0 0 auto;
+  color: var(--accent-color);
+  font-size: 0.67rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.es-faq-toggle {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 400;
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.employee-safety-faq-item.is-active .es-faq-toggle {
+  transform: rotate(180deg);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.employee-safety-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.employee-safety-faq-answer p {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0 58px;
+  color: var(--text-muted);
+  font-size: 0.93rem;
+  line-height: 1.85;
+}
+
+.employee-safety-faq-item.is-active .employee-safety-faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.employee-safety-faq-item.is-active .employee-safety-faq-answer p {
+  padding-bottom: 27px;
+}
+
+/* =========================================================
+   FINAL STATEMENT — NO CTA
+========================================================= */
+
+.employee-safety-final {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
+  padding: 100px 24px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  text-align: center;
+}
+
+.employee-safety-final::before,
+.employee-safety-final::after {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.employee-safety-final::before {
+  top: 50%;
+  left: -250px;
+  width: 490px;
+  height: 490px;
+  transform: translateY(-50%);
+}
+
+.employee-safety-final::after {
+  top: 50%;
+  right: -220px;
+  width: 430px;
+  height: 430px;
+  transform: translateY(-50%);
+}
+
+.employee-safety-final-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+}
+
+.employee-safety-final-inner > span {
+  justify-content: center;
+}
+
+.employee-safety-final-inner h2 {
+  margin: 25px 0;
+  color: var(--text-primary);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.employee-safety-final-inner h2 strong {
+  color: var(--accent-color);
+}
+
+.employee-safety-final-inner p {
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+.employee-safety-final-line {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 37px;
+}
+
+.employee-safety-final-line span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  animation: employee-safety-dot-pulse 1.6s ease-in-out infinite;
+}
+
+.employee-safety-final-line span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.employee-safety-final-line span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.employee-safety-final-line span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.employee-safety-final-line span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+
+@keyframes employee-safety-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes employee-safety-board-float {
+  0%,
+  100% {
+    transform: perspective(700px) rotateY(-5deg) translateY(0);
+  }
+
+  50% {
+    transform: perspective(700px) rotateY(-3deg) translateY(-7px);
+  }
+}
+
+@keyframes employee-safety-person-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes employee-safety-callout-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@keyframes employee-safety-warning-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+@keyframes employee-safety-arrow-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+
+  50% {
+    transform: translate(-50%, 6px);
+  }
+}
+
+@keyframes employee-safety-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
+  .employee-safety-hero {
+    min-height: auto;
+    padding: 100px 0 80px;
+  }
+
+  .employee-safety-hero-inner {
+    width: min(100% - 48px, 850px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .employee-safety-hero-content {
+    max-width: 760px;
+  }
+
+  .employee-safety-hero-content h1 {
+    font-size: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .employee-safety-hero-visual {
+    width: min(100%, 640px);
+    margin-inline: auto;
+  }
+
+  .employee-safety-hero-stage {
+    min-height: 450px;
+  }
+
+  .employee-safety-services-list {
+    gap: 14px;
+  }
+
+  .employee-safety-service-card {
+    padding: 24px;
+  }
+
+  .employee-safety-demo {
+    grid-template-columns: 225px minmax(0, 1fr);
+  }
+
+  .employee-safety-demo-main {
+    padding: 22px;
+  }
+
+  .es-demo-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .es-demo-illustration {
+    min-height: 245px;
+  }
+
+  .es-demo-hazard-scene,
+  .es-demo-ppe-scene,
+  .es-demo-emergency-scene {
+    max-width: 320px;
+    margin-inline: auto;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — SMALL TABLET / LARGE MOBILE
+========================================================= */
+
+@media (max-width: 760px) {
+  .employee-safety-container {
+    width: calc(100% - 36px);
+  }
+
+  .employee-safety-section {
+    padding: 82px 0;
+  }
+
+  .employee-safety-hero {
+    padding: 85px 0 70px;
+  }
+
+  .employee-safety-hero-inner {
+    width: calc(100% - 36px);
+    gap: 36px;
+  }
+
+  .employee-safety-hero-content h1 {
+    font-size: clamp(3rem, 9vw, 4.7rem);
+  }
+
+  .employee-safety-hero-content > p {
+    font-size: 0.95rem;
+  }
+
+  .employee-safety-hero-stage {
+    min-height: 390px;
+  }
+
+  .employee-safety-section-heading {
+    margin-bottom: 38px;
+  }
+
+  .employee-safety-section-heading h2,
+  .employee-safety-process-intro h2 {
+    font-size: clamp(2.25rem, 6.5vw, 3.7rem);
+  }
+
+  .employee-safety-services-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .employee-safety-service-card {
+    min-height: 0;
+    padding: 23px;
+  }
+
+  .employee-safety-service-top {
+    margin-bottom: 20px;
+  }
+
+  .employee-safety-service-content {
+    padding-right: 26px;
+  }
+
+  .employee-safety-process-line {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .employee-safety-process-line::before {
+    left: 25px;
+  }
+
+  .employee-safety-process-item {
+    padding-left: 65px;
+  }
+
+  .employee-safety-process-marker {
+    width: 51px;
+    height: 51px;
+  }
+
+  .employee-safety-process-copy {
+    min-height: 0;
+    padding: 22px;
+  }
+
+  .employee-safety-process-note {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 35px;
+    padding: 24px;
+  }
+
+  .es-process-note-visual {
+    min-height: 120px;
+  }
+
+  .employee-safety-benefit {
+    grid-template-columns: 36px 52px minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .employee-safety-benefit .employee-safety-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .employee-safety-benefit-arrow {
+    display: none;
+  }
+
+  .employee-safety-demo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .employee-safety-demo-sidebar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 17px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .es-demo-sidebar-label {
+    grid-column: 1 / -1;
+    margin: 0 0 4px;
+  }
+
+  .es-demo-nav-item {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 7px;
+    padding: 11px;
+  }
+
+  .es-demo-nav-item > i {
+    display: none;
+  }
+
+  .es-demo-nav-item strong {
+    font-size: 0.71rem;
+  }
+
+  .es-demo-nav-item small {
+    font-size: 0.62rem;
+  }
+
+  .es-demo-sidebar-note {
+    grid-column: 1 / -1;
+    margin-top: 5px;
+  }
+
+  .employee-safety-demo-main {
+    padding: 20px;
+  }
+
+  .es-demo-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .es-demo-illustration {
+    min-height: 250px;
+  }
+
+  .employee-safety-final {
+    min-height: 400px;
+    padding: 85px 20px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .employee-safety-container,
+  .employee-safety-hero-inner {
+    width: calc(100% - 30px);
+  }
+
+  .employee-safety-section {
+    padding: 68px 0;
+  }
+
+  .employee-safety-hero {
+    padding: 72px 0 60px;
+  }
+
+  .employee-safety-eyebrow,
+  .employee-safety-section-heading > span,
+  .employee-safety-process-intro > span,
+  .employee-safety-final-inner > span {
+    gap: 7px;
+    font-size: 0.61rem;
+    letter-spacing: 0.12em;
+  }
+
+  .employee-safety-eyebrow::before,
+  .employee-safety-section-heading > span::before,
+  .employee-safety-process-intro > span::before,
+  .employee-safety-final-inner > span::before {
+    width: 19px;
+    flex-basis: 19px;
+  }
+
+  .employee-safety-hero-content h1 {
+    margin: 21px 0;
+    font-size: clamp(2.75rem, 12vw, 3.65rem);
+    letter-spacing: -0.06em;
+  }
+
+  .employee-safety-hero-content > p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  .employee-safety-hero-meta {
+    gap: 8px;
+    margin-top: 24px;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .employee-safety-hero-stage {
+    min-height: 340px;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+  }
+
+  .es-stage-topline {
+    top: 16px;
+    left: 15px;
+    right: 15px;
+    font-size: 0.52rem;
+  }
+
+  .es-stage-board {
+    top: 17%;
+    right: 5%;
+    width: 59%;
+    padding-inline: 10px;
+  }
+
+  .es-board-top {
+    font-size: 0.39rem;
+  }
+
+  .es-board-shield {
+    width: 38px;
+    height: 43px;
+    margin: 10px auto;
+  }
+
+  .es-board-lines {
+    gap: 6px;
+  }
+
+  .es-board-lines span {
+    gap: 5px;
+    font-size: 0.48rem;
+  }
+
+  .es-board-lines i {
+    width: 7px;
+    height: 7px;
+    flex-basis: 7px;
+  }
+
+  .es-training-person {
+    left: 31%;
+    bottom: 17%;
+    transform: scale(0.8);
+    transform-origin: bottom center;
+  }
+
+  .es-stage-worker {
+    transform: scale(0.76);
+    transform-origin: bottom center;
+  }
+
+  .es-stage-worker--one {
+    left: -3%;
+  }
+
+  .es-stage-worker--two {
+    left: 60%;
+  }
+
+  .es-stage-worker--three {
+    right: -6%;
+    transform: scale(0.68);
+  }
+
+  .es-stage-callout {
+    gap: 6px;
+    max-width: 138px;
+    padding: 8px;
+  }
+
+  .es-stage-callout--one {
+    top: 47%;
+    left: 3%;
+  }
+
+  .es-stage-callout--two {
+    right: 2%;
+    bottom: 28%;
+  }
+
+  .es-callout-check {
+    width: 19px;
+    height: 19px;
+    flex-basis: 19px;
+    font-size: 0.68rem;
+  }
+
+  .es-callout-dot {
+    margin-inline: 5px;
+  }
+
+  .es-stage-callout strong {
+    font-size: 0.55rem;
+  }
+
+  .es-stage-callout small {
+    font-size: 0.48rem;
+  }
+
+  .es-stage-footer {
+    right: 10px;
+    left: 10px;
+    gap: 6px;
+    font-size: 0.45rem;
+  }
+
+  .employee-safety-section-heading {
+    margin-bottom: 30px;
+  }
+
+  .employee-safety-section-heading h2,
+  .employee-safety-process-intro h2 {
+    margin: 16px 0;
+    font-size: clamp(2.1rem, 9vw, 2.8rem);
+  }
+
+  .employee-safety-section-heading p,
+  .employee-safety-process-intro p {
+    font-size: 0.88rem;
+    line-height: 1.8;
+  }
+
+  .employee-safety-service-card {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .employee-safety-service-top {
+    margin-bottom: 18px;
+  }
+
+  .employee-safety-service-content h3 {
+    font-size: 1.15rem;
+  }
+
+  .employee-safety-service-content p {
+    font-size: 0.85rem;
+  }
+
+  .employee-safety-service-mark {
+    right: 15px;
+    bottom: 16px;
+    width: 29px;
+    height: 29px;
+  }
+
+  .employee-safety-demo-sidebar {
+    padding: 12px;
+  }
+
+  .es-demo-nav-item {
+    padding: 9px 7px;
+  }
+
+  .es-demo-nav-number {
+    width: 25px;
+    height: 25px;
+    font-size: 0.6rem;
+  }
+
+  .es-demo-nav-item strong {
+    font-size: 0.64rem;
+    line-height: 1.4;
+  }
+
+  .es-demo-nav-item small {
+    font-size: 0.57rem;
+    line-height: 1.4;
+  }
+
+  .es-demo-sidebar-note p {
+    font-size: 0.65rem;
+  }
+
+  .employee-safety-demo-main {
+    padding: 15px;
+  }
+
+  .es-demo-main-header {
+    align-items: flex-start;
+    font-size: 0.59rem;
+  }
+
+  .es-demo-status {
+    font-size: 0.52rem;
+  }
+
+  .es-demo-illustration {
+    min-height: 225px;
+  }
+
+  .es-demo-question h3 {
+    font-size: 1.45rem;
+  }
+
+  .es-demo-question > p,
+  .es-demo-option {
+    font-size: 0.79rem;
+  }
+
+  .es-demo-main-footer {
+    font-size: 0.49rem;
+  }
+
+  .employee-safety-process-intro {
+    margin-bottom: 42px;
+  }
+
+  .employee-safety-process-item {
+    padding-left: 57px;
+  }
+
+  .employee-safety-process-marker {
+    width: 45px;
+    height: 45px;
+    font-size: 0.67rem;
+  }
+
+  .employee-safety-process-line::before {
+    left: 22px;
+  }
+
+  .employee-safety-process-copy {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .employee-safety-process-copy h3 {
+    font-size: 1.03rem;
+  }
+
+  .employee-safety-process-copy p {
+    font-size: 0.82rem;
+  }
+
+  .employee-safety-process-note {
+    padding: 19px;
+    border-radius: 15px;
+  }
+
+  .employee-safety-process-note h3 {
+    font-size: 1.35rem;
+  }
+
+  .employee-safety-process-note p {
+    font-size: 0.83rem;
+  }
+
+  .employee-safety-benefit {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 9px 13px;
+    padding: 20px 0;
+  }
+
+  .employee-safety-benefit-number {
+    align-self: start;
+    padding-top: 7px;
+    font-size: 0.65rem;
+  }
+
+  .employee-safety-benefit .employee-safety-icon {
+    display: none;
+  }
+
+  .employee-safety-benefit-content {
+    grid-column: 2;
+  }
+
+  .employee-safety-benefit-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .employee-safety-benefit-content p {
+    font-size: 0.83rem;
+  }
+
+  .employee-safety-faq-question {
+    min-height: 75px;
+    gap: 12px;
+    padding: 17px 0;
+  }
+
+  .es-faq-question-text {
+    gap: 12px;
+    font-size: 0.87rem;
+  }
+
+  .es-faq-toggle {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+    font-size: 1.1rem;
+  }
+
+  .employee-safety-faq-answer p {
+    padding-right: 0;
+    padding-left: 32px;
+    font-size: 0.84rem;
+  }
+
+  .employee-safety-faq-item.is-active .employee-safety-faq-answer p {
+    padding-bottom: 22px;
+  }
+
+  .employee-safety-final {
+    min-height: 350px;
+    padding: 70px 18px;
+  }
+
+  .employee-safety-final-inner h2 {
+    margin: 22px 0;
+    font-size: clamp(2.65rem, 11vw, 3.5rem);
+  }
+
+  .employee-safety-final-inner p {
+    font-size: 0.87rem;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY — REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .employee-safety-page *,
+  .employee-safety-page *::before,
+  .employee-safety-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .employee-safety-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

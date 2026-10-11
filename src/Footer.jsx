@@ -1,7 +1,8 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import "./Footer.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -10,12 +11,19 @@ import {
   faTelegram,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import Logo from "../public/Logo.png";
+
+import Logo from "/Logo.png";
 import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   const [dateTime, setDateTime] = useState(new Date());
   const [location, setLocation] = useState("Detecting location...");
+
+  const footerRef = useRef(null);
+
+  /* ============================================================
+     LIVE DATE & TIME
+     ============================================================ */
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -24,6 +32,10 @@ const Footer = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  /* ============================================================
+     USER LOCATION
+     ============================================================ */
 
   useEffect(() => {
     const getUserLocation = async () => {
@@ -105,10 +117,43 @@ const Footer = () => {
     getUserLocation();
   }, []);
 
+  /* ============================================================
+     BIDIRECTIONAL SCROLL REVEAL
+     ============================================================ */
+
+  useEffect(() => {
+    const footer = footerRef.current;
+
+    if (!footer) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        footer.classList.toggle("footer-visible", entry.isIntersecting);
+      },
+      {
+        threshold: 0.12,
+      }
+    );
+
+    observer.observe(footer);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  /* ============================================================
+     DATE FORMATTING
+     ============================================================ */
+
   const currentYear = dateTime.getFullYear();
 
   const getDaySuffix = (day) => {
-    if (day > 3 && day < 21) return "th";
+    if (day > 3 && day < 21) {
+      return "th";
+    }
 
     switch (day % 10) {
       case 1:
@@ -138,142 +183,248 @@ const Footer = () => {
   });
 
   return (
-    <footer className="footer bg-black text-light">
-      <div className="container py-4">
-        <div className="row gy-4">
-          <div className="col-lg-6 col-md-12">
-            <div className="map-responsive rounded overflow-hidden">
+    <footer ref={footerRef} className="footer">
+      {/* Top CTA */}
+      <div className="footer-hero">
+        <div className="footer-hero-line"></div>
+
+        <div className="footer-hero-content">
+          <span className="footer-eyebrow">
+            LET&apos;S CREATE SOMETHING
+          </span>
+
+          <h2>
+            Turn Ideas Into <span>Visual Experiences.</span>
+          </h2>
+
+          <p>
+            From concept to execution, we create powerful digital and
+            visual experiences that move people and businesses forward.
+          </p>
+
+          <NavLink to="/contact" className="footer-main-cta">
+            <span className="fw-bold">Start a Project</span>
+
+            <span className="footer-main-cta-icon">
+              <i className="bi bi-arrow-up-right"></i>
+            </span>
+          </NavLink>
+        </div>
+
+        <div className="footer-hero-line"></div>
+      </div>
+
+      {/* Main Footer — simple, borderless columns (no card chrome) */}
+      <div className="container footer-main-container">
+        <div className="footer-columns">
+          {/* Brand */}
+          <div className="footer-col footer-reveal-left">
+            <div className="footer-brand-logo">
+              <img src={Logo} alt="MotionPix Logo" />
+            </div>
+
+            <h3 className="footer-col-heading">
+              Visualizing
+              <br />
+              <span>Possibilities.</span>
+            </h3>
+
+            <p className="footer-col-text">
+              Creative technology, visual storytelling, animation and
+              immersive digital experiences built for modern businesses.
+            </p>
+
+            <div className="footer-status">
+              <span className="footer-live-dot"></span>
+              <span>AVAILABLE FOR PROJECTS</span>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="footer-col footer-reveal-up">
+            <span className="footer-col-label">GET IN TOUCH</span>
+            <h3 className="footer-col-heading">Let&apos;s <span className="fw-bold">Connect</span></h3>
+
+            <div className="footer-contact-list">
+              <a
+                href="tel:+919822055205"
+                className="footer-contact-item"
+                aria-label="Call MotionPix"
+              >
+                <i className="bi bi-telephone-fill"></i>
+                <span>
+                  <small>PHONE</small>
+                  +91 98220 55205
+                </span>
+              </a>
+
+              <a
+                href="mailto:info@motionpixindia.com"
+                className="footer-contact-item"
+                aria-label="Email MotionPix"
+              >
+                <i className="bi bi-envelope-fill"></i>
+                <span>
+                  <small>EMAIL</small>
+                  info@motionpixindia.com
+                </span>
+              </a>
+            </div>
+
+            <div className="footer-social-section">
+              <span className="footer-col-label">FOLLOW US</span>
+
+              <div className="social-links-wrapper">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61578380430447"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-tooltip"
+                  data-tooltip="Facebook"
+                  aria-label="Facebook"
+                >
+                  <FontAwesomeIcon
+                    icon={faFacebook}
+                    className="social-link facebook"
+                  />
+                </a>
+
+                <a
+                  href="https://www.instagram.com/motionpixindia/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-tooltip"
+                  data-tooltip="Instagram"
+                  aria-label="Instagram"
+                >
+                  <FontAwesomeIcon
+                    icon={faInstagram}
+                    className="social-link instagram"
+                  />
+                </a>
+
+                <a
+                  href="https://www.telegram.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-tooltip"
+                  data-tooltip="Telegram"
+                  aria-label="Telegram"
+                >
+                  <FontAwesomeIcon
+                    icon={faTelegram}
+                    className="social-link telegram"
+                  />
+                </a>
+
+                <a
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-tooltip"
+                  data-tooltip="LinkedIn"
+                  aria-label="LinkedIn"
+                >
+                  <FontAwesomeIcon
+                    icon={faLinkedin}
+                    className="social-link linkedin"
+                  />
+                </a>
+
+                <a
+                  href="https://www.youtube.com/channel/UCI0DaU_jECXW-gAsbk7_JGA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-tooltip"
+                  data-tooltip="YouTube"
+                  aria-label="YouTube"
+                >
+                  <FontAwesomeIcon
+                    icon={faYoutube}
+                    className="social-link youtube"
+                  />
+                </a>
+              </div>
+            </div>
+
+            <NavLink to="/contact" className="footer-enquire-link">
+              <span>Enquire Now</span>
+              <i className="bi bi-arrow-up-right"></i>
+            </NavLink>
+          </div>
+
+          {/* Map */}
+          <div className="footer-col footer-reveal-right">
+            <span className="footer-col-label">OUR LOCATION</span>
+            <h3 className="footer-col-heading">Visit <span className="fw-bold">MotionPix</span></h3>
+
+            <div className="map-responsive">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d236.52442882554354!2d73.85562401782451!3d18.4659464140141!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2eb1046c3f119%3A0xa381cdde8e2900d7!2s54%2FB%2C%20opposite%20Modi%20Clinic%2C%20Rakshalekha%20Society%2C%20New%20Nurses%20Town%20Co%20Operative%20Society%2C%20Dhankawadi%2C%20Pune%2C%20Maharashtra%20411043!5e0!3m2!1sen!2sin!4v1767693656640!5m2!1sen!2sin"
                 loading="lazy"
                 allowFullScreen
-                title="Location Map"
+                title="MotionPix Location Map"
                 className="map"
               />
             </div>
-          </div>
 
-          <div className="col-lg-3 col-md-6 col-12">
-            <h5 className="fw-bold mb-3">📍 Address</h5>
-            <p className="fs-6 mb-0 fw-bold">
-              54/A, Rakshalekha Society,
-              <br />
-              Dhankawadi, Pune – 411043
-            </p>
-          </div>
-
-          <div className="col-lg-3 col-md-6 col-12">
-            <h5 className="fw-bold mb-3">📞 Contact</h5>
-
-            <a
-              href="tel:+919822055205"
-              className="d-flex align-items-center fw-bold text-decoration-none text-light mb-2"
-              aria-label="Call us"
-            >
-              <i className="bi bi-telephone-fill text-success me-2"></i>
-              +91 98220 55205
-            </a>
-
-            <a
-              href="mailto:info@motionpixindia.com"
-              className="d-flex align-items-center fw-bold text-decoration-none text-light mb-4"
-              aria-label="Email us"
-            >
-              <i className="bi bi-envelope-fill text-info me-2"></i>
-              info@motionpixindia.com
-            </a>
-
-            <h6 className="fw-bold fs-5 mb-3">Follow Us</h6>
-            <div className="d-flex gap-3">
-              <NavLink
-                to="https://www.facebook.com/profile.php?id=61578380430447"
-                className="nav-link"
-              >
-                <FontAwesomeIcon
-                  icon={faFacebook}
-                  className="fs-3 text-primary social-link"
-                />
-              </NavLink>
-
-              <NavLink
-                to="https://www.instagram.com/motionpixindia/"
-                className="nav-link"
-              >
-                <FontAwesomeIcon
-                  icon={faInstagram}
-                  className="fs-3 instagram social-link"
-                />
-              </NavLink>
-
-              <NavLink to="https://www.telegram.org" className="nav-link">
-                <FontAwesomeIcon
-                  icon={faTelegram}
-                  className="fs-3 telegram social-link"
-                />
-              </NavLink>
-
-              <NavLink to="https://www.linkedin.com" className="nav-link">
-                <FontAwesomeIcon
-                  icon={faLinkedin}
-                  className="fs-3 threads social-link"
-                />
-              </NavLink>
-
-              <NavLink
-                to="https://www.youtube.com/channel/UCI0DaU_jECXW-gAsbk7_JGA"
-                className="nav-link"
-              >
-                <FontAwesomeIcon
-                  icon={faYoutube}
-                  className="fs-3 youtube social-link"
-                />
-              </NavLink>
-            </div>
-
-            <div className="glass-cta mt-4 text-center">
-              <NavLink
-                to="/contact"
-                className="btn glass-btn footer-enquire-btn fw-bold px-4 py-3 w-100 w-lg-auto btn-outline-dark"
-              >
-                <span className="footer-enquire-text">Enquire Now...</span>
-                <i className="bi bi-arrow-right footer-enquire-icon"></i>
-              </NavLink>
+            <div className="footer-map-address">
+              <span className="footer-live-dot"></span>
+              <p>
+                54/A, Rakshalekha Society,
+                <br />
+                Dhankawadi, Pune – 411043
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="footer-bottom bg-dark py-3">
+      {/* Bottom Bar */}
+      <div className="footer-bottom">
         <div className="container">
-          <div className="row align-items-center text-center text-md-start gy-2">
-            <div className="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-              <img src={Logo} alt="MotionPix Logo" style={{ height: "50px" }} />
-              <span className="fs-5 text-light">
-                Motion<span className="text-danger">Pix</span> India
+          <div className="footer-bottom-main">
+            <div className="footer-bottom-brand">
+              <img src={Logo} alt="MotionPix Logo" />
+
+              <span>
+                Motion<span>Pix</span> India
               </span>
             </div>
 
-            <div className="col-md-6 d-flex flex-column align-items-center align-items-md-end mt-2 mt-md-0">
-              <p className="fs-5 mb-1">
+            <div className="footer-bottom-center">
+              <p>
                 © {currentYear} MotionPix Cinematix India Pvt Ltd.
               </p>
-         <p className="footer-credit mb-0 footer-credit-premium">
-  Designed & Developed with{" "}
-  <span className="heart-beat">❤</span> by{" "}
-  <a
-    href="https://www.linkedin.com/in/your-linkedin-vishaljadhav"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="designer-link premium-link"
-  >
-    Vishal Jadhav
-  </a>
-</p>        <span className="footer-datetime">
+
+              <p className="footer-credit">
+                Designed &amp; Developed with{" "}
+                <span className="heart-beat">❤</span> by{" "}
+                <a
+                  href="https://www.linkedin.com/in/vishal-jadhav-43390b260/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="premium-link"
+                >
+                  Vishal Jadhav
+                </a>
+              </p>
+            </div>
+
+            <div className="footer-bottom-meta">
+              <span className="footer-datetime">
                 {day}
-                <sup>{daySuffix}</sup> {month} {year} | {formattedTime}
+                <sup>{daySuffix}</sup> {month} {year}
               </span>
 
-              <span className="footer-location">📍 {location}</span>
+              <span className="footer-time">
+                {formattedTime}
+              </span>
+
+              <span className="footer-location">
+                <i className="bi bi-geo-alt-fill"></i>
+                {location}
+              </span>
             </div>
           </div>
         </div>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Admin Panel</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+
+/* ===== GLOBAL (same theme as the Career dashboard) ===== */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #020617;
+  color: #e2e8f0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  background: linear-gradient(180deg,#020617,#0f172a);
+  padding: 20px;
+  transition: 0.4s;
+  z-index: 10;
+}
+
+.sidebar.closed {
+  width: 80px;
+}
+
+.sidebar h4 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: 0.3s;
+}
+
+.sidebar a i {
+  font-size: 18px;
+}
+
+.sidebar.closed a span {
+  display: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #1e293b;
+  color: #fff;
+}
+
+/* ===== MAIN ===== */
+.main {
+  margin-left: 240px;
+  padding: 25px;
+  transition: 0.4s;
+}
+
+.main.full {
+  margin-left: 80px;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: rgba(30,41,59,0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.stat h2 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.total { color: #38bdf8; }
+
+/* ===== TABLE ===== */
+.table {
+  color: #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: rgba(255,255,255,0.08);
+}
+
+.table-hover tbody tr:hover {
+  background: rgba(255,255,255,0.06);
+  transition: 0.3s;
+}
+
+.member-photo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+
+/* ===== BUTTONS ===== */
+.btn-action {
+  border-radius: 50%;
+}
+
+.btn-success {
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  border: none;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg,#ef4444,#dc2626);
+  border: none;
+}
+
+/* ===== LOGOUT ===== */
+.logout-btn {
+  background: linear-gradient(135deg,#ef4444,#b91c1c);
+  border-radius: 25px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Modal form fields on the dark theme */
+.modal-content {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.modal-content input,
+.modal-content textarea {
+  background: #0b1220;
+  color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.closed { transform: translateX(0); width: 240px; }
+  .sidebar.closed a span { display: inline; }
+  .main, .main.full { margin-left: 0; }
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+  z-index: 1050;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar.closed {
+  overflow-x: hidden;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+  min-width: 0;
+  width: auto;
+  max-width: 100%;
+}
+
+.main > * {
+  max-width: 100%;
+}
+
+/* ================= TOPBAR ================= */
+
+.topbar {
+  min-width: 0;
+}
+
+.topbar > * {
+  min-width: 0;
+}
+
+.topbar h4 {
+  overflow-wrap: anywhere;
+}
+
+/* ================= TABLE ================= */
+
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  min-width: 700px;
+  margin-bottom: 0;
+}
+
+.table th,
+.table td {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.member-photo {
+  flex-shrink: 0;
+}
+
+/* ================= MODALS ================= */
+
+.modal-dialog {
+  width: auto;
+  max-width: 500px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.modal-content form {
+  min-width: 0;
+}
+
+.modal-content .form-control {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ================= TABLET ================= */
+
+@media (max-width: 991.98px) {
+
+  .main {
+    padding: 20px;
+  }
+
+  .topbar {
+    gap: 12px;
+  }
+
+  .topbar h4 {
+    font-size: 20px;
+  }
+
+  .card {
+    border-radius: 16px;
+  }
+
+  .stat h2 {
+    font-size: 28px;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 767.98px) {
+
+  .sidebar {
+    width: 240px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.closed {
+    width: 240px;
+    transform: translateX(0);
+  }
+
+  .sidebar.closed a span {
+    display: inline;
+  }
+
+  .main,
+  .main.full {
+    margin-left: 0;
+    padding: 14px;
+    width: 100%;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar > div {
+    width: 100%;
+  }
+
+  .topbar > .btn {
+    width: 100%;
+  }
+
+  .topbar .d-flex {
+    width: 100%;
+    gap: 10px !important;
+  }
+
+  .topbar .d-flex .btn {
+    flex-shrink: 0;
+  }
+
+  .topbar h4 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .stat {
+    padding: 18px !important;
+  }
+
+  .stat h2 {
+    font-size: 26px;
+  }
+
+  .table-responsive > .table {
+    min-width: 700px;
+  }
+
+  .modal-dialog {
+    max-width: none;
+    width: auto;
+    margin: 12px;
+  }
+
+  .modal-content {
+    border-radius: 16px;
+  }
+
+  .modal-content.p-3 {
+    padding: 16px !important;
+  }
+}
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 575.98px) {
+
+  .main,
+  .main.full {
+    padding: 10px;
+  }
+
+  .topbar .d-flex {
+    align-items: flex-start !important;
+  }
+
+  .topbar h4 {
+    font-size: 17px;
+  }
+
+  .stat {
+    padding: 15px !important;
+  }
+
+  .stat h2 {
+    font-size: 24px;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+
+  .modal-dialog {
+    margin: 8px;
+  }
+
+  .modal-content.p-3 {
+    padding: 14px !important;
+  }
+}
+
+/* ================= VERY SMALL ================= */
+
+@media (max-width: 380px) {
+
+  .main,
+  .main.full {
+    padding: 8px;
+  }
+
+  .topbar h4 {
+    font-size: 16px;
+  }
+
+  .topbar .d-flex {
+    flex-wrap: wrap;
+  }
+
+  .stat h2 {
+    font-size: 22px;
+  }
+
+  .table-responsive > .table {
+    min-width: 680px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+  <h4>🚀</h4>
+
+  <a href="/api/admin">
+    <i class="bi bi-envelope"></i> <span class="fw-bold">Contact</span>
+  </a>
+
+  <a href="/api/admin/careers">
+    <i class="bi bi-briefcase"></i> <span class="fw-bold">Careers</span>
+  </a>
+
+  <a href="/api/admin/content">
+    <i class="bi bi-pencil-square"></i> <span class="fw-bold">Content</span>
+  </a>
+
+  <a href="/api/admin/team" class="active">
+    <i class="bi bi-people"></i> <span class="fw-bold">Team</span>
+  </a>
+
+  <a href="/api/logout" class="logout-btn">
+    <i class="bi bi-box-arrow-right"></i> <span class="fw-bold">Logout</span>
+  </a>
+</div>
+
+<!-- MAIN -->
+<div id="main" class="main">
+
+  <div class="topbar mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-dark" onclick="toggleSidebar()">☰</button>
+      <h4 class="fw-bold mb-0">👥 Team Dashboard</h4>
+    </div>
+
+    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addModal">
+      <i class="bi bi-plus-lg"></i> Add Member
+    </button>
+  </div>
+
+  <!-- STATS -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card text-center p-4 stat">
+        <small class="text-light fw-bold">Total Members</small>
+        <h2 class="total"><%= data.length %></h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card p-3">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle text-center">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Order</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach((member) => { %>
+            <tr>
+              <td>
+                <% if (member.photo) { %>
+                  <img src="/uploads/<%= member.photo %>" class="member-photo" alt="<%= member.name %>">
+                <% } else { %>
+                  <i class="bi bi-person-circle fs-3 text-secondary"></i>
+                <% } %>
+              </td>
+              <td><strong><%= member.name %></strong></td>
+              <td><%= member.role %></td>
+              <td class="text-muted"><%= member.location %></td>
+              <td><%= member.display_order %></td>
+              <td>
+                <button class="btn btn-success btn-sm btn-action mb-1"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal<%= member.id %>">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <a href="/api/admin/team/delete/<%= member.id %>"
+                   class="btn btn-danger btn-sm btn-action mb-1"
+                   onclick="return confirm('Delete this team member?')">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <h5 class="mb-3">Add Team Member</h5>
+      <form action="/api/admin/team" method="POST" enctype="multipart/form-data">
+        <div class="mb-2">
+          <label class="form-label">Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Role</label>
+          <input type="text" name="role" class="form-control">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Location</label>
+          <input type="text" name="location" class="form-control">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">About</label>
+          <textarea name="about" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Display Order</label>
+          <input type="number" name="display_order" class="form-control" value="0">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Photo</label>
+          <input type="file" name="photo" class="form-control" accept="image/*">
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Add Member</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ONE EDIT MODAL PER MEMBER (pre-filled with current values) -->
+<% data.forEach((member) => { %>
+  <div class="modal fade" id="editModal<%= member.id %>">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        <h5 class="mb-3">Edit — <%= member.name %></h5>
+        <form action="/api/admin/team/update/<%= member.id %>" method="POST" enctype="multipart/form-data">
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="<%= member.name %>" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Role</label>
+            <input type="text" name="role" class="form-control" value="<%= member.role || '' %>">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control" value="<%= member.location || '' %>">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">About</label>
+            <textarea name="about" class="form-control" rows="3"><%= member.about || '' %></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Display Order</label>
+            <input type="number" name="display_order" class="form-control" value="<%= member.display_order %>">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Replace Photo (optional)</label>
+            <input type="file" name="photo" class="form-control" accept="image/*">
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+<% }) %>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+window.onload = () => {
+  document.body.classList.add("loaded");
+};
+
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("closed");
+  document.getElementById("main").classList.toggle("full");
+}
+</script>
+
+</body>
+</html>

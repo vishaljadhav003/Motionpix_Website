@@ -1,392 +1,687 @@
-/* PAGE */
-.services-page {
-  min-height: 100vh;
-  background:black;
-  color: #fff;
+/* ============================================================
+   SERVICES SECTION & COVERFLOW CAROUSEL
+============================================================ */
+
+.services-carousel-section {
+  position: relative;
+  width: 100%;
+  padding: 80px 0;
+  background-color: var(--bg-primary);
+  overflow: hidden;
+
+  transition: background-color 0.4s ease;
 }
 
-/* HERO */
-.services-hero {
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  padding: 0 20px;
+/* ============================================================
+   BIDIRECTIONAL SCROLL REVEAL
+   Heading first, then the carousel
+============================================================ */
+
+.services-carousel-section .services-heading,
+.services-carousel-section .coverflow-carousel-wrapper {
+  opacity: 0;
+  transform: translateY(40px);
+
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.services-hero span{
-  color: #e50914;
+
+.services-carousel-section .coverflow-carousel-wrapper {
+  transform: translateY(60px) scale(0.96);
 }
-.services-hero h1 {
+
+.services-carousel-section.reveal-active .services-heading,
+.services-carousel-section.reveal-active .coverflow-carousel-wrapper {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.services-carousel-section.reveal-active .coverflow-carousel-wrapper {
+  transition-delay: 0.15s;
+}
+
+/* ============================================================
+   SERVICES HEADING
+============================================================ */
+
+.services-heading h2 {
+  margin: 0;
   font-size: 3rem;
   font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.4s ease;
 }
 
-.services-hero p {
-  max-width: 620px;
-  margin: 16px auto 0;
-  color: #b0b0b0;
+.services-heading h2 span {
+  color: var(--accent-color);
 }
 
-/* CARD */
-.service-card-15 {
-  display: block;
-  height: 100%;
-  border-radius: 22px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-  text-decoration: none;
-  color: #fff;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-  transition: all 0.4s ease;
-}
+/* ============================================================
+   COVERFLOW WRAPPER
+============================================================ */
 
-.service-card-15:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 35px 80px rgba(212, 0, 0, 0.76);
-}
-
-/* MEDIA */
-.service-media-page {
-  height: 220px;
-  overflow: hidden;
+.coverflow-carousel-wrapper {
   position: relative;
-}
-
-.service-media-page img,
-.service-media-page video {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
+  max-width: 1100px;
+  min-height: 480px;
+  margin: 0 auto;
 
-.service-card-15:hover .service-media-page img,
-.service-card-15:hover .service-media-page video {
-  transform: scale(1.08);
-}
-
-/* CONTENT */
-.service-content {
-  padding: 24px;
-}
-
-.service-content h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.service-content p {
-  font-size: 0.95rem;
-  color: #cfd8dc;
-  margin-bottom: 15px;
-  line-height: 1.6;
-}
-
-.service-link {
-  font-weight: 600;
-  color: red;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .services-hero h1 {
-    font-size: 2.2rem;
-  }
-
-  .service-media-page {
-    height: 180px;
-  }
-}
-
-@media (max-width: 480px) {
-  .service-media-page {
-    height: 160px;
-  }
-}
-/* SCROLL REVEAL BASE */
-/* SCROLL REVEAL */
-.scroll-card {
-  opacity: 0;
-  transform: translateY(50px) scale(0.96);
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-.scroll-card.reveal {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-
-
-
-
-/* STAGGER EFFECT (OPTIONAL BUT NICE) */
-.col-xl-4:nth-child(1) .scroll-card { transition-delay: 0.1s; }
-.col-xl-4:nth-child(2) .scroll-card { transition-delay: 0.2s; }
-.col-xl-4:nth-child(3) .scroll-card { transition-delay: 0.3s; }
-.col-xl-4:nth-child(4) .scroll-card { transition-delay: 0.1s; }
-.col-xl-4:nth-child(5) .scroll-card { transition-delay: 0.2s; }
-.col-xl-4:nth-child(6) .scroll-card { transition-delay: 0.3s; }
-/* ===== DIAGONAL DESKTOP SECTION ===== */
-.diagonal-wrapper {
-  overflow: hidden;
-  padding: 140px 0 160px;
-  /* background: transparent;*/
-  margin-top:-100px; 
-   position: relative;
-  isolation: isolate;
-    perspective: 1400px;
-}
-
-.diagonal-track {
   display: flex;
-  gap: 40px;
-  /* transform: skewY(-8deg); */
-  will-change: transform;
-   /* transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); */
-   cursor:grab;
-   margin-bottom:50px;
-    transform-style: preserve-3d;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.diagonal-track:active {
-  cursor: grabbing;
-}
-.diagonal-track {
-  touch-action: none;
-  user-select: none;
-}
-.diagonal-track {
-  cursor: grab;
-  user-select: none;
-}
+/* ============================================================
+   COVERFLOW TRACK
+============================================================ */
 
-.diagonal-track.dragging * {
-  pointer-events: none !important;
-} 
-
-
-/* CARD */
-.diagonal-card {
-  width: 340px;
-  height: 400px;
-  flex: 0 0 auto;
+.coverflow-track {
   position: relative;
-  overflow: hidden;
-  border-radius: 22px;
-  /* transform: skewY(8deg); */
-  background: #000;
-  transform-origin: center center;
-  backface-visibility: hidden;
-}
-
-
-/* IMAGE */
-.diagonal-card img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display:block;
-  transition: transform 0.6s ease;
-}
-/* 
-.diagonal-card:hover img {
-  transform: scale(1.06);
-} */
+  height: 480px;
 
-/* HOVER OVERLAY */
-/* .diagonal-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.55),
-    rgba(0, 0, 0, 0)
-  );
-  opacity: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px;
-  transition: opacity 0.4s ease;
-} */
-
-
-.diagonal-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0)
-  );
-  color:white;
-
-  opacity: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px;
-
-  transition: opacity 0.35s ease;
-  pointer-events: none;
-}
-
-
-.diagonal-card:hover .diagonal-overlay {
-  opacity: 1;
-}
-
-.diagonal-card:hover .diagonal-overlay h3 {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  filter: blur(0);
-  transition-delay: 0.05s;
-}
-
-.diagonal-card:hover .diagonal-overlay p {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  filter: blur(0);
-  transition-delay: 0.12s;
-}
-
-/* .diagonal-track:active .diagonal-card img {
-  transform: scale(1.03);
-} */
-
-
-/* .diagonal-overlay h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.diagonal-overlay p {
-  font-size: 0.95rem;
-  color: #ddd;
-  margin-top: 6px;
-} */
-.diagonal-overlay h3,
-.diagonal-overlay p {
-  transform: translateY(22px) scale(0.96);
-  opacity: 0;
-  filter: blur(4px);
-
-  transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.35s ease,
-    filter 0.35s ease;
-}
-
-/* PREVENT OVERLAPS */
-.services-hero {
-  position: relative;
-  z-index: 2;
-}
-
-footer {
-  position: relative;
-  z-index: 2;
-}
-@media (max-width: 992px) {
-  .diagonal-wrapper {
-    display: none;
-  }
-}
-.diagonal-media {
-  width: 100%;
-  height: 100%;
-}
-
-.diagonal-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.diagonal-skew {
-  transform: none;   /* ← removes diagonal */
-  overflow: hidden;
-}
-/* ===== DRAG TOOLTIP (PREMIUM STYLE) ===== */
-.drag-tooltip {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 130px;
-  height: 125px;
-  border-radius: 50%;
-
-  /* Brand-aligned background */
-  background: radial-gradient(
-    circle at top left,
-    #1a1a1a,
-    #000000
-  );
-
-  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  perspective: 1000px;
+
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.coverflow-track:active {
+  cursor: grabbing;
+}
+
+/* ============================================================
+   COVERFLOW CARD
+============================================================ */
+
+.coverflow-card-wrapper {
+  position: absolute;
+
+  width: 300px;
+  height: 420px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.5s ease,
+    filter 0.5s ease;
+
+  transform:
+    translateX(calc(var(--coverflow-offset) * 180px))
+    scale(calc(1 - var(--coverflow-abs-offset) * 0.15))
+    rotateY(calc(var(--coverflow-offset) * -12deg));
+
+  opacity: calc(1 - var(--coverflow-abs-offset) * 0.3);
+
+  filter: brightness(
+    calc(1 - var(--coverflow-abs-offset) * 0.25)
+  );
+}
+
+.coverflow-card-wrapper.active {
+  transform: translateX(0) scale(1.1) rotateY(0deg);
+  opacity: 1;
+  filter: brightness(1);
+}
+
+/* ============================================================
+   HIDE FAR CARDS
+============================================================ */
+
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 3"],
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 4"],
+.coverflow-card-wrapper[style*="--coverflow-abs-offset: 5"] {
+  opacity: 0;
   pointer-events: none;
+}
 
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+/* ============================================================
+   NAVIGATION BUTTONS
+============================================================ */
+
+.coverflow-nav-btn {
+  position: relative;
+  z-index: 30;
+
+  width: 50px;
+  height: 50px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.coverflow-nav-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.coverflow-nav-btn:hover {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.coverflow-prev-btn:hover svg {
+  transform: translateX(-2px);
+}
+
+.coverflow-next-btn:hover svg {
+  transform: translateX(2px);
+}
+
+.coverflow-nav-btn:active {
+  transform: translateY(0) scale(0.92);
+}
+
+.coverflow-nav-btn:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   SERVICE CARD
+============================================================ */
+
+.service-card {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+
+  background-color: var(--bg-card);
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* ============================================================
+   CARD BACKGROUND
+============================================================ */
+
+.service-card-bg {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: #0d0d0d;
+}
+
+.service-card-bg img.service-img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  transition:
+    transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    filter 0.5s ease;
+}
+
+/* ============================================================
+   CARD IMAGE HOVER / TAP
+   Hover on devices that have it, tap (.is-revealed) on touch screens
+============================================================ */
+
+@media (hover: hover) {
+  .service-card:hover .service-card-bg img.service-img {
+    transform: scale(1.06);
+    filter: brightness(0.25) blur(2px);
+  }
+}
+
+.coverflow-card-wrapper.is-revealed .service-card-bg img.service-img {
+  transform: scale(1.06);
+  filter: brightness(0.25) blur(2px);
+}
+
+/* ============================================================
+   DEFAULT TITLE OVERLAY
+============================================================ */
+
+.service-card-default-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+
+  padding: 24px 16px;
+
+  text-align: center;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  z-index: 2;
+
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+}
+
+.service-default-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 1.4rem;
   font-weight: 700;
-  font-size: 13.5px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
 
-  /* Gap from cursor */
-  transform: translate3d(-50%, -50%, 0) translate(18px, 18px) scale(0.7);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+@media (hover: hover) {
+  .service-card:hover .service-card-default-overlay {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.coverflow-card-wrapper.is-revealed .service-card-default-overlay {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ============================================================
+   HOVER OVERLAY
+============================================================ */
+
+.service-card-hover-overlay {
+  position: absolute;
+  inset: 0;
+
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px 16px;
+
+  text-align: center;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  backdrop-filter: blur(4px);
 
   opacity: 0;
+  visibility: hidden;
+
   transition:
-    opacity 0.25s ease,
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-
-  z-index: 9999;
-
-  /* Premium shadow */
-  box-shadow:
-    0 22px 50px rgba(0, 0, 0, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    opacity 0.4s ease,
+    visibility 0.4s ease;
 }
 
-/* Show state */
-.drag-tooltip.show {
+@media (hover: hover) {
+  .service-card:hover .service-card-hover-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.coverflow-card-wrapper.is-revealed .service-card-hover-overlay {
   opacity: 1;
-  transform: translate3d(-50%, -50%, 0) translate(18px, 18px) scale(1);
+  visibility: visible;
 }
 
-/* Tooltip text */
-.tooltip-text {
-  user-select: none;
-  white-space: nowrap;
+/* ============================================================
+   HOVER CONTENT
+============================================================ */
+
+.service-hover-title {
+  margin: 0 0 12px;
+
+  color: #ffffff;
+
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.service-hover-desc {
+  margin: 0 0 20px;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   VIEW SERVICES BUTTON
+============================================================ */
+
+.service-hover-btn {
+  width: 100px;
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  border-radius: 50%;
+
+  background-color: #ffffff;
+  color: #000000;
+
+  text-decoration: none;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  transition:
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.service-hover-btn span {
+  display: block;
+  line-height: 1.2;
+}
+
+.service-hover-btn:hover {
+  transform: scale(1.08);
+
+  background-color: var(--accent-color);
   color: #ffffff;
 }
 
-/* MotionPix red accent ring */
-.drag-tooltip::after {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border-radius: 50%;
-  /* border: 1px solid #e50914; MotionPix red */
-  opacity: 0.9;
+/* ============================================================
+   TABLET - 991px
+============================================================ */
+
+@media (max-width: 991px) {
+  .services-carousel-section {
+    padding: 70px 0;
+  }
+
+  .coverflow-carousel-wrapper {
+    min-height: 420px;
+  }
+
+  .coverflow-track {
+    height: 420px;
+  }
+
+  .coverflow-card-wrapper {
+    width: 240px;
+    height: 350px;
+
+    transform:
+      translateX(calc(var(--coverflow-offset) * 130px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.15))
+      rotateY(calc(var(--coverflow-offset) * -10deg));
+  }
+
+  .coverflow-nav-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .coverflow-nav-btn svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
-/* Disable on mobile */
-@media (max-width: 991px) {
-  .drag-tooltip {
-    display: none;
+/* ============================================================
+   MOBILE TABLET - 768px
+============================================================ */
+
+@media (max-width: 768px) {
+  .services-carousel-section {
+    padding: 60px 0;
+  }
+
+  .coverflow-carousel-wrapper {
+    position: relative;
+
+    min-height: 380px;
+
+    padding: 0 10px;
+  }
+
+  .coverflow-track {
+    height: 380px;
+  }
+
+  .coverflow-nav-btn {
+    position: absolute;
+
+    top: 50%;
+
+    width: 40px;
+    height: 40px;
+
+    z-index: 40;
+
+    transform: translateY(-50%);
+  }
+
+  .coverflow-nav-btn:hover {
+    transform: translateY(-50%);
+  }
+
+  .coverflow-nav-btn:active {
+    transform: translateY(-50%) scale(0.92);
+  }
+
+  .coverflow-prev-btn {
+    left: 0;
+  }
+
+  .coverflow-next-btn {
+    right: 0;
+  }
+
+  .coverflow-card-wrapper {
+    width: 210px;
+    height: 320px;
+
+    transform:
+      translateX(calc(var(--coverflow-offset) * 100px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.16))
+      rotateY(calc(var(--coverflow-offset) * -8deg));
+  }
+}
+
+/* ============================================================
+   MOBILE - 576px
+============================================================ */
+
+@media (max-width: 576px) {
+  .services-carousel-section {
+    padding: 50px 0;
+  }
+
+  .services-heading {
+    margin-bottom: 2rem !important;
+  }
+
+  .services-heading h2 {
+    font-size: 2rem;
+  }
+
+  .coverflow-carousel-wrapper {
+    min-height: 350px;
+
+    padding: 0 8px;
+  }
+
+  .coverflow-track {
+    height: 350px;
+  }
+
+  .coverflow-card-wrapper {
+    width: 190px;
+    height: 300px;
+
+    transform:
+      translateX(calc(var(--coverflow-offset) * 75px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.18))
+      rotateY(calc(var(--coverflow-offset) * -6deg));
+  }
+
+  .service-hover-title {
+    font-size: 1.1rem;
+  }
+
+  .service-hover-desc {
+    margin-bottom: 12px;
+
+    font-size: 0.78rem;
+  }
+
+  .service-hover-btn {
+    width: 75px;
+    height: 75px;
+
+    font-size: 0.7rem;
+  }
+
+  .coverflow-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .coverflow-nav-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE - 400px
+============================================================ */
+
+@media (max-width: 400px) {
+  .services-carousel-section {
+    padding: 45px 0;
+  }
+
+  .services-heading h2 {
+    font-size: 1.8rem;
+  }
+
+  .coverflow-carousel-wrapper {
+    padding: 0 5px;
+  }
+
+  .coverflow-card-wrapper {
+    width: 175px;
+    height: 285px;
+
+    transform:
+      translateX(calc(var(--coverflow-offset) * 68px))
+      scale(calc(1 - var(--coverflow-abs-offset) * 0.18))
+      rotateY(calc(var(--coverflow-offset) * -5deg));
+  }
+
+  .coverflow-nav-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .coverflow-nav-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .service-default-title {
+    font-size: 1.15rem;
+  }
+
+  .service-hover-title {
+    font-size: 1rem;
+  }
+
+  .service-hover-desc {
+    font-size: 0.72rem;
+  }
+
+  .service-hover-btn {
+    width: 68px;
+    height: 68px;
+
+    font-size: 0.65rem;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .services-carousel-section,
+  .coverflow-card-wrapper,
+  .service-card-bg img.service-img,
+  .service-card-default-overlay,
+  .service-card-hover-overlay,
+  .service-hover-btn,
+  .coverflow-nav-btn,
+  .coverflow-nav-btn svg {
+    transition: none;
+  }
+
+  .services-carousel-section .services-heading,
+  .services-carousel-section .coverflow-carousel-wrapper {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

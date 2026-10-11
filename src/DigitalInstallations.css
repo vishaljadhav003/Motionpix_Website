@@ -1,0 +1,3043 @@
+/* =========================================================
+   DIGITAL INSTALLATIONS PAGE
+   Scoped with unique digitalInstallations- class names.
+   Uses existing theme variables from index.css.
+   No external assets or CTA buttons.
+========================================================= */
+
+.digitalInstallations-page {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.digitalInstallations-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ==================== BIDIRECTIONAL REVEAL ==================== */
+
+.digitalInstallations-reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--digitalInstallations-reveal-delay, 0ms);
+}
+
+.digitalInstallations-reveal--up {
+  transform: translate3d(0, 55px, 0);
+}
+
+.digitalInstallations-reveal--left {
+  transform: translate3d(-65px, 0, 0);
+}
+
+.digitalInstallations-reveal--right {
+  transform: translate3d(65px, 0, 0);
+}
+
+.digitalInstallations-reveal.digitalInstallations-is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ==================== EYEBROWS ==================== */
+
+.digitalInstallations-eyebrow,
+.digitalInstallations-section-heading > span,
+.digitalInstallations-process-intro > span,
+.digitalInstallations-explorer-intro > span,
+.digitalInstallations-final-inner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.digitalInstallations-eyebrow::before,
+.digitalInstallations-section-heading > span::before,
+.digitalInstallations-process-intro > span::before,
+.digitalInstallations-explorer-intro > span::before,
+.digitalInstallations-final-inner > span::before {
+  content: "";
+  flex: 0 0 27px;
+  width: 27px;
+  height: 1px;
+  background: var(--accent-color);
+}
+
+/* ==================== HERO ==================== */
+
+.digitalInstallations-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 92vh;
+  padding: 112px 0 88px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 78% 48%,
+      color-mix(in srgb, var(--accent-color) 8%, transparent),
+      transparent 35%
+    ),
+    var(--bg-primary);
+}
+
+.digitalInstallations-hero::before {
+  content: "";
+  position: absolute;
+  top: 7%;
+  right: -150px;
+  width: 400px;
+  height: 400px;
+  border: 1px solid
+    color-mix(in srgb, var(--text-primary) 7%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.digitalInstallations-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(38px, 6vw, 78px);
+  width: min(1280px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+.digitalInstallations-hero-content {
+  flex: 1 1 51%;
+  min-width: 0;
+  max-width: 650px;
+}
+
+.digitalInstallations-hero-content h1 {
+  margin: 24px 0;
+  color: var(--text-primary);
+  font-size: clamp(3rem, 6.1vw, 6.25rem);
+  font-weight: 850;
+  letter-spacing: -0.06em;
+  line-height: 0.96;
+  overflow-wrap: anywhere;
+}
+
+.digitalInstallations-hero-content h1 span {
+  color: var(--accent-color);
+}
+
+.digitalInstallations-hero-content > p {
+  max-width: 625px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+.digitalInstallations-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  margin-top: 30px;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.digitalInstallations-hero-meta i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  max-width: 610px;
+  margin-top: 38px;
+  padding-top: 21px;
+  border-top: 1px solid var(--border-color);
+}
+
+.digitalInstallations-hero-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.digitalInstallations-hero-stats strong {
+  color: var(--accent-color);
+  font-size: 1.08rem;
+  font-weight: 850;
+}
+
+.digitalInstallations-hero-stats span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.digitalInstallations-hero-visual {
+  flex: 0 1 530px;
+  min-width: 0;
+}
+
+/* ==================== HERO SPATIAL INSTALLATION VISUAL ==================== */
+
+.digitalInstallations-stage {
+  position: relative;
+  width: 100%;
+  min-height: 430px;
+  aspect-ratio: 1 / 1.02;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 27px;
+  background:
+    radial-gradient(
+      ellipse at 50% 58%,
+      color-mix(in srgb, var(--accent-color) 12%, transparent),
+      transparent 57%
+    ),
+    linear-gradient(145deg, var(--bg-secondary), var(--bg-card));
+  perspective: 1100px;
+}
+
+.digitalInstallations-stage::before {
+  content: "";
+  position: absolute;
+  inset: 13% 7% 17%;
+  border: 1px solid
+    color-mix(in srgb, var(--text-primary) 7%, transparent);
+  border-radius: 50%;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.digitalInstallations-stage::after {
+  content: "";
+  position: absolute;
+  right: 7%;
+  bottom: 13%;
+  left: 7%;
+  height: 1px;
+  background: var(--border-color);
+  transform: rotate(-11deg);
+}
+
+.digitalInstallations-stage-topline {
+  position: absolute;
+  z-index: 15;
+  top: 20px;
+  left: 21px;
+  right: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.57rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.digitalInstallations-stage-topline strong {
+  color: var(--accent-color);
+  font-size: 0.66rem;
+}
+
+.digitalInstallations-stage-orbit {
+  position: absolute;
+  z-index: 0;
+  border: 1px solid
+    color-mix(in srgb, var(--accent-color) 26%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.digitalInstallations-stage-orbit.digitalInstallations-orbit-one {
+  top: 14%;
+  right: 7%;
+  width: 43%;
+  aspect-ratio: 1;
+  animation: digitalInstallations-orbit 12s ease-in-out infinite;
+}
+
+.digitalInstallations-stage-orbit.digitalInstallations-orbit-two {
+  top: 21%;
+  right: 14%;
+  width: 29%;
+  aspect-ratio: 1;
+  border-style: dashed;
+  animation: digitalInstallations-orbit 16s linear infinite reverse;
+}
+
+/* Ceiling structure */
+
+.digitalInstallations-stage-ceiling {
+  position: absolute;
+  z-index: 2;
+  top: 17%;
+  left: 24%;
+  width: 52%;
+  height: 10%;
+  border: 1px solid var(--text-secondary);
+  border-bottom: 0;
+  transform: skewY(-22deg);
+  opacity: 0.7;
+}
+
+.digitalInstallations-stage-ceiling span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 55%,
+    var(--text-secondary)
+  );
+}
+
+.digitalInstallations-stage-ceiling span:nth-child(1) {
+  left: 20%;
+}
+
+.digitalInstallations-stage-ceiling span:nth-child(2) {
+  left: 40%;
+}
+
+.digitalInstallations-stage-ceiling span:nth-child(3) {
+  left: 60%;
+}
+
+.digitalInstallations-stage-ceiling span:nth-child(4) {
+  left: 80%;
+}
+
+/* Main projection wall */
+
+.digitalInstallations-stage-backwall {
+  position: absolute;
+  z-index: 3;
+  top: 28%;
+  left: 22%;
+  width: 55%;
+  height: 41%;
+  overflow: hidden;
+  border: 2px solid color-mix(
+    in srgb,
+    var(--text-primary) 65%,
+    transparent
+  );
+  background: var(--bg-secondary);
+  box-shadow:
+    9px 12px 0 color-mix(in srgb, var(--accent-color) 16%, transparent),
+    inset 0 0 28px color-mix(in srgb, var(--accent-color) 7%, transparent);
+  transform: skewY(-17deg);
+  transform-origin: bottom left;
+}
+
+.digitalInstallations-stage-backwall::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid
+    color-mix(in srgb, var(--text-primary) 10%, transparent);
+  pointer-events: none;
+}
+
+.digitalInstallations-stage-visual {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 33.333%;
+  overflow: hidden;
+  border-right: 1px solid var(--border-color);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent-color) 29%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-stage-visual > span {
+  position: absolute;
+  top: 14%;
+  left: 16%;
+  width: 65%;
+  height: 59%;
+  border: 1px solid
+    color-mix(in srgb, var(--accent-color) 65%, var(--text-secondary));
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--accent-color) 25%, transparent),
+    transparent
+  );
+  transform: skewY(10deg);
+}
+
+.digitalInstallations-stage-visual > i {
+  position: absolute;
+  right: 15%;
+  bottom: 15%;
+  left: 15%;
+  height: 2px;
+  background: var(--text-secondary);
+  opacity: 0.55;
+}
+
+.digitalInstallations-stage-visual > b {
+  position: absolute;
+  bottom: 26%;
+  left: 22%;
+  width: 27%;
+  height: 25%;
+  border: 1px solid var(--accent-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 15%,
+    var(--bg-secondary)
+  );
+  transform: skewY(-12deg);
+}
+
+.digitalInstallations-stage-visual.digitalInstallations-visual-one {
+  left: 0;
+}
+
+.digitalInstallations-stage-visual.digitalInstallations-visual-two {
+  left: 33.333%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--text-primary) 9%, var(--bg-secondary)),
+    color-mix(in srgb, var(--accent-color) 18%, var(--bg-secondary))
+  );
+}
+
+.digitalInstallations-stage-visual.digitalInstallations-visual-three {
+  right: 0;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--accent-color) 19%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-stage-content {
+  position: absolute;
+  z-index: 4;
+  top: 28%;
+  left: 7%;
+  width: 47%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.digitalInstallations-stage-content > span {
+  color: var(--accent-color);
+  font-size: clamp(0.32rem, 0.7vw, 0.48rem);
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.digitalInstallations-stage-content > i {
+  width: 88%;
+  height: 4px;
+  background: var(--text-primary);
+  opacity: 0.8;
+}
+
+.digitalInstallations-stage-content > i:nth-of-type(2) {
+  width: 65%;
+  height: 3px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-stage-content > b {
+  width: 41%;
+  height: 2px;
+  margin-top: 3px;
+  background: var(--text-muted);
+}
+
+/* Side projection surface */
+
+.digitalInstallations-stage-sidewall {
+  position: absolute;
+  z-index: 2;
+  top: 31%;
+  left: 14%;
+  width: 10%;
+  height: 35%;
+  overflow: hidden;
+  border: 1px solid var(--text-secondary);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-color) 22%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+  transform: skewY(34deg);
+  transform-origin: right bottom;
+}
+
+.digitalInstallations-stage-sidewall > span,
+.digitalInstallations-stage-sidewall > i {
+  position: absolute;
+  left: 17%;
+  width: 66%;
+  height: 2px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-stage-sidewall > span {
+  top: 24%;
+}
+
+.digitalInstallations-stage-sidewall > i {
+  top: 34%;
+  width: 45%;
+  background: var(--text-secondary);
+}
+
+.digitalInstallations-stage-sidewall > b {
+  position: absolute;
+  right: 15%;
+  bottom: 15%;
+  width: 65%;
+  height: 26%;
+  border: 1px solid var(--accent-color);
+}
+
+/* Projected floor */
+
+.digitalInstallations-stage-floor {
+  position: absolute;
+  z-index: 1;
+  right: 7%;
+  bottom: 15%;
+  left: 7%;
+  height: 23%;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--accent-color) 10%, transparent),
+    transparent 75%
+  );
+  clip-path: polygon(18% 0, 100% 0, 83% 100%, 0 100%);
+}
+
+.digitalInstallations-stage-floor > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--accent-color) 35%, transparent);
+  transform: skewX(-32deg);
+}
+
+.digitalInstallations-stage-floor > span:nth-child(1) {
+  left: 30%;
+}
+
+.digitalInstallations-stage-floor > span:nth-child(2) {
+  left: 53%;
+}
+
+.digitalInstallations-stage-floor > span:nth-child(3) {
+  left: 75%;
+}
+
+/* Projection beams */
+
+.digitalInstallations-stage-projection {
+  position: absolute;
+  z-index: 2;
+  bottom: 19%;
+  width: 22%;
+  height: 20%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-color) 21%, transparent),
+    transparent
+  );
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.digitalInstallations-stage-projection.digitalInstallations-projection-one {
+  left: 22%;
+  transform: rotate(7deg);
+  animation: digitalInstallations-projection-pulse 4s ease-in-out infinite;
+}
+
+.digitalInstallations-stage-projection.digitalInstallations-projection-two {
+  right: 20%;
+  transform: rotate(-7deg);
+  animation: digitalInstallations-projection-pulse 4s ease-in-out infinite -2s;
+}
+
+/* Visitor silhouette */
+
+.digitalInstallations-stage-visitor {
+  position: absolute;
+  z-index: 8;
+  bottom: 15%;
+  left: 48%;
+  width: 30px;
+  height: 90px;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  animation: digitalInstallations-visitor-float 4s ease-in-out infinite;
+}
+
+.digitalInstallations-visitor-head {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  width: 15px;
+  height: 17px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+
+.digitalInstallations-visitor-body {
+  position: absolute;
+  top: 17px;
+  left: 4px;
+  width: 23px;
+  height: 36px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 8px 8px 3px 3px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-visitor-leg {
+  position: absolute;
+  top: 51px;
+  width: 7px;
+  height: 35px;
+  border-radius: 5px;
+  background: var(--text-secondary);
+  transform-origin: top center;
+}
+
+.digitalInstallations-visitor-leg.digitalInstallations-visitor-leg-one {
+  left: 8px;
+  transform: rotate(4deg);
+}
+
+.digitalInstallations-visitor-leg.digitalInstallations-visitor-leg-two {
+  right: 8px;
+  transform: rotate(-4deg);
+}
+
+/* Hero labels */
+
+.digitalInstallations-stage-marker {
+  position: absolute;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 23px rgba(0, 0, 0, 0.08);
+  animation: digitalInstallations-marker-float 5s ease-in-out infinite;
+}
+
+.digitalInstallations-stage-marker.digitalInstallations-stage-marker-one {
+  top: 39%;
+  left: 3%;
+}
+
+.digitalInstallations-stage-marker.digitalInstallations-stage-marker-two {
+  right: 3%;
+  bottom: 29%;
+  animation-delay: -2s;
+}
+
+.digitalInstallations-stage-marker > span {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-stage-caption {
+  position: absolute;
+  z-index: 14;
+  right: 17px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+.digitalInstallations-stage-caption b {
+  color: var(--accent-color);
+  font-size: inherit;
+}
+
+.digitalInstallations-stage-live-dot {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+/* ==================== SECTION FRAMEWORK ==================== */
+
+.digitalInstallations-section {
+  position: relative;
+  padding: 125px 0;
+  background: var(--bg-primary);
+}
+
+.digitalInstallations-services,
+.digitalInstallations-benefits {
+  background: var(--bg-secondary);
+}
+
+.digitalInstallations-section-heading,
+.digitalInstallations-process-intro,
+.digitalInstallations-explorer-intro {
+  max-width: 820px;
+  margin-bottom: 65px;
+}
+
+.digitalInstallations-section-heading h2,
+.digitalInstallations-process-intro h2,
+.digitalInstallations-explorer-intro h2 {
+  margin: 18px 0 20px;
+  color: var(--text-primary);
+  font-size: clamp(2.35rem, 4.7vw, 4.65rem);
+  font-weight: 850;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.digitalInstallations-section-heading h2 strong,
+.digitalInstallations-process-intro h2 strong,
+.digitalInstallations-explorer-intro h2 strong {
+  color: var(--accent-color);
+  font-weight: 850;
+}
+
+.digitalInstallations-section-heading p,
+.digitalInstallations-process-intro p,
+.digitalInstallations-explorer-intro p {
+  max-width: 710px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+/* ==================== SERVICE CARDS ==================== */
+
+.digitalInstallations-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.digitalInstallations-service-wrap {
+  width: 100%;
+}
+
+.digitalInstallations-service-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  min-height: 150px;
+  padding: 27px 32px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 19px;
+  background: var(--bg-card);
+  transition:
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.digitalInstallations-service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--accent-color);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.4s ease;
+}
+
+.digitalInstallations-service-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 53%,
+    var(--border-color)
+  );
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.11);
+}
+
+.digitalInstallations-service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.digitalInstallations-service-number {
+  align-self: flex-start;
+  min-width: 35px;
+  padding-top: 5px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.digitalInstallations-service-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.digitalInstallations-service-content h3 {
+  margin: 0 0 9px;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 760;
+  letter-spacing: -0.025em;
+}
+
+.digitalInstallations-service-content p {
+  max-width: 780px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
+.digitalInstallations-service-arrow {
+  display: grid;
+  flex: 0 0 43px;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.digitalInstallations-service-card:hover
+  .digitalInstallations-service-arrow {
+  color: #fff;
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: rotate(45deg);
+}
+
+/* ==================== SERVICE ICONS ==================== */
+
+.digitalInstallations-icon {
+  position: relative;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.digitalInstallations-service-card:hover .digitalInstallations-icon {
+  transform: perspective(500px) rotateY(-9deg) rotateX(5deg);
+  border-color: var(--accent-color);
+}
+
+/* Projection projector icon */
+
+.digitalInstallations-icon-projector {
+  position: absolute;
+  top: 25px;
+  left: 11px;
+  width: 29px;
+  height: 22px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+  background: var(--bg-card);
+}
+
+.digitalInstallations-icon-projector-lens {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+
+.digitalInstallations-icon-projector-beam {
+  position: absolute;
+  top: 18px;
+  left: 39px;
+  width: 24px;
+  height: 28px;
+  border: 1px dashed var(--accent-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 9%,
+    transparent
+  );
+  clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+}
+
+.digitalInstallations-icon-projector-target {
+  position: absolute;
+  top: 12px;
+  right: 9px;
+  width: 17px;
+  height: 17px;
+  border: 1px solid var(--text-secondary);
+  transform: rotate(45deg);
+}
+
+/* LED wall icon */
+
+.digitalInstallations-icon-led-wall {
+  position: absolute;
+  inset: 13px 10px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+}
+
+.digitalInstallations-icon-led-tile {
+  position: absolute;
+  width: 17px;
+  height: 15px;
+  border: 1px solid var(--border-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 13%,
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-icon-led-tile.digitalInstallations-led-tile-one {
+  top: 17px;
+  left: 14px;
+}
+
+.digitalInstallations-icon-led-tile.digitalInstallations-led-tile-two {
+  top: 17px;
+  right: 14px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-icon-led-tile.digitalInstallations-led-tile-three {
+  bottom: 17px;
+  left: 14px;
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 34%,
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-icon-led-tile.digitalInstallations-led-tile-four {
+  right: 14px;
+  bottom: 17px;
+}
+
+/* Architectural media icon */
+
+.digitalInstallations-icon-arch-outer {
+  position: absolute;
+  top: 13px;
+  left: 18px;
+  width: 37px;
+  height: 45px;
+  border: 2px solid var(--text-primary);
+  border-bottom: 0;
+  border-radius: 23px 23px 0 0;
+}
+
+.digitalInstallations-icon-arch-inner {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  width: 23px;
+  height: 32px;
+  border: 1px solid var(--accent-color);
+  border-bottom: 0;
+  border-radius: 15px 15px 0 0;
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 12%,
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-icon-arch-light {
+  position: absolute;
+  top: 25px;
+  left: 33px;
+  width: 8px;
+  height: 19px;
+  background: var(--accent-color);
+  opacity: 0.8;
+}
+
+.digitalInstallations-icon-arch-floor {
+  position: absolute;
+  right: 8px;
+  bottom: 12px;
+  left: 8px;
+  height: 1px;
+  background: var(--text-muted);
+}
+
+/* Immersive environment icon */
+
+.digitalInstallations-icon-immersive-room {
+  position: absolute;
+  top: 16px;
+  left: 13px;
+  width: 45px;
+  height: 31px;
+  border: 2px solid var(--text-primary);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 11%,
+    var(--bg-secondary)
+  );
+  transform: skewY(-12deg);
+}
+
+.digitalInstallations-icon-immersive-wall {
+  position: absolute;
+  top: 16px;
+  right: 9px;
+  width: 10px;
+  height: 31px;
+  border: 1px solid var(--accent-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 18%,
+    var(--bg-secondary)
+  );
+  transform: skewY(33deg);
+}
+
+.digitalInstallations-icon-immersive-floor {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  left: 8px;
+  height: 14px;
+  border: 1px solid var(--text-muted);
+  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0 100%);
+}
+
+.digitalInstallations-icon-immersive-glow {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--accent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Spatial audio icon */
+
+.digitalInstallations-icon-audio-wave {
+  position: absolute;
+  top: 18px;
+  width: 5px;
+  border-radius: 5px;
+  background: var(--accent-color);
+  animation: digitalInstallations-audio-wave 1.8s ease-in-out infinite;
+}
+
+.digitalInstallations-icon-audio-wave.digitalInstallations-audio-wave-one {
+  left: 18px;
+  height: 22px;
+}
+
+.digitalInstallations-icon-audio-wave.digitalInstallations-audio-wave-two {
+  left: 29px;
+  height: 38px;
+  top: 10px;
+  animation-delay: -0.4s;
+}
+
+.digitalInstallations-icon-audio-wave.digitalInstallations-audio-wave-three {
+  left: 40px;
+  height: 27px;
+  top: 16px;
+  animation-delay: -0.8s;
+}
+
+.digitalInstallations-icon-audio-core {
+  position: absolute;
+  top: 28px;
+  right: 11px;
+  width: 8px;
+  height: 15px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 50%;
+}
+
+/* Synchronized media icon */
+
+.digitalInstallations-icon-media-screen {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--text-primary);
+  border-radius: 3px;
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 13%,
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-icon-media-screen.digitalInstallations-media-screen-one {
+  top: 13px;
+  left: 12px;
+}
+
+.digitalInstallations-icon-media-screen.digitalInstallations-media-screen-two {
+  top: 13px;
+  right: 12px;
+  border-color: var(--accent-color);
+}
+
+.digitalInstallations-icon-media-screen.digitalInstallations-media-screen-three {
+  bottom: 12px;
+  left: 26px;
+}
+
+.digitalInstallations-icon-media-node {
+  position: absolute;
+  top: 27px;
+  left: 31px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+/* ==================== INTERACTIVE INSTALLATION EXPLORER ==================== */
+
+.digitalInstallations-explorer {
+  background: var(--bg-primary);
+}
+
+.digitalInstallations-explorer-intro {
+  max-width: 850px;
+}
+
+.digitalInstallations-explorer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  align-items: stretch;
+  gap: clamp(30px, 5vw, 62px);
+}
+
+.digitalInstallations-explorer-controls {
+  min-width: 0;
+  padding-top: 24px;
+}
+
+.digitalInstallations-control-label {
+  display: block;
+  margin-bottom: 15px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.digitalInstallations-concept-tabs {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-color);
+}
+
+.digitalInstallations-concept-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 15px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition:
+    padding 0.3s ease,
+    color 0.3s ease;
+}
+
+.digitalInstallations-concept-tab > span {
+  font-size: 0.97rem;
+  font-weight: 750;
+}
+
+.digitalInstallations-concept-tab > b {
+  display: grid;
+  flex: 0 0 31px;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 400;
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.digitalInstallations-concept-tab:hover,
+.digitalInstallations-concept-tab.digitalInstallations-is-active {
+  padding-left: 10px;
+  color: var(--accent-color);
+}
+
+.digitalInstallations-concept-tab.digitalInstallations-is-active > b {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+  transform: rotate(180deg);
+}
+
+.digitalInstallations-concept-detail {
+  padding-top: 28px;
+  animation: digitalInstallations-detail-in 0.4s ease both;
+}
+
+.digitalInstallations-concept-category {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid
+    color-mix(in srgb, var(--accent-color) 45%, var(--border-color));
+  border-radius: 999px;
+  color: var(--accent-color);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+}
+
+.digitalInstallations-concept-detail h3 {
+  margin: 18px 0 10px;
+  color: var(--text-primary);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.17;
+}
+
+.digitalInstallations-concept-detail p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.91rem;
+  line-height: 1.8;
+}
+
+.digitalInstallations-concept-detail ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 17px;
+  margin: 21px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.digitalInstallations-concept-detail li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.digitalInstallations-concept-detail li > span {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* ==================== INSTALLATION PREVIEW ==================== */
+
+.digitalInstallations-preview {
+  position: relative;
+  min-height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 23px;
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--text-primary) 3%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text-primary) 3%, transparent) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--accent-color) 9%, transparent),
+      transparent 66%
+    ),
+    var(--bg-secondary);
+  background-size:
+    24px 24px,
+    24px 24px,
+    auto,
+    auto;
+  isolation: isolate;
+}
+
+.digitalInstallations-preview-topline {
+  position: absolute;
+  z-index: 12;
+  top: 19px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.54rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+}
+
+.digitalInstallations-preview-topline b {
+  color: var(--accent-color);
+  font-size: 0.54rem;
+}
+
+.digitalInstallations-preview-halo {
+  position: absolute;
+  top: 17%;
+  left: 50%;
+  width: 61%;
+  aspect-ratio: 1;
+  border: 1px solid
+    color-mix(in srgb, var(--accent-color) 23%, transparent);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  animation: digitalInstallations-orbit 15s ease-in-out infinite;
+}
+
+.digitalInstallations-preview-halo::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed var(--border-color);
+  border-radius: 50%;
+}
+
+/* Room shell */
+
+.digitalInstallations-preview-room {
+  position: absolute;
+  z-index: 3;
+  top: 19%;
+  right: 11%;
+  bottom: 20%;
+  left: 11%;
+}
+
+.digitalInstallations-preview-ceiling {
+  position: absolute;
+  top: 0;
+  left: 13%;
+  width: 74%;
+  height: 12%;
+  border: 1px solid var(--text-secondary);
+  border-bottom: 0;
+  transform: skewY(-15deg);
+  opacity: 0.7;
+}
+
+.digitalInstallations-preview-ceiling > i {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-preview-ceiling > i:nth-child(1) {
+  left: 25%;
+}
+
+.digitalInstallations-preview-ceiling > i:nth-child(2) {
+  left: 50%;
+}
+
+.digitalInstallations-preview-ceiling > i:nth-child(3) {
+  left: 75%;
+}
+
+/* Back wall */
+
+.digitalInstallations-preview-backwall {
+  position: absolute;
+  top: 13%;
+  left: 17%;
+  width: 67%;
+  height: 54%;
+  overflow: hidden;
+  border: 2px solid var(--text-secondary);
+  background: var(--bg-primary);
+  box-shadow: 7px 10px 0
+    color-mix(in srgb, var(--accent-color) 14%, transparent);
+  transform: skewY(-10deg);
+  transform-origin: bottom left;
+  transition:
+    width 0.45s ease,
+    left 0.45s ease,
+    height 0.45s ease;
+}
+
+.digitalInstallations-preview-screen {
+  position: absolute;
+  inset: 8%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-color) 11%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-preview-screen > span {
+  color: var(--accent-color);
+  font-size: clamp(0.3rem, 0.6vw, 0.44rem);
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.digitalInstallations-preview-screen > strong {
+  max-width: 90%;
+  color: var(--text-primary);
+  font-size: clamp(0.58rem, 1.1vw, 0.88rem);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.digitalInstallations-preview-screen > i {
+  display: block;
+  width: 66%;
+  height: 3px;
+  background: var(--text-secondary);
+  opacity: 0.72;
+}
+
+.digitalInstallations-preview-screen > i:nth-of-type(2) {
+  width: 42%;
+  height: 2px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-preview-screen > b {
+  width: 30%;
+  height: 2px;
+  margin-top: 2px;
+  background: var(--text-muted);
+}
+
+/* Screen art */
+
+.digitalInstallations-preview-art {
+  position: absolute;
+  right: 9%;
+  bottom: 10%;
+  width: 65%;
+  height: 34%;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 13%,
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-preview-art > span {
+  position: absolute;
+  top: 12%;
+  left: 15%;
+  width: 44%;
+  height: 76%;
+  border: 1px solid var(--accent-color);
+  border-radius: 50% 50% 0 0;
+  transform: rotate(-10deg);
+}
+
+.digitalInstallations-preview-art > i {
+  position: absolute;
+  right: 13%;
+  bottom: 14%;
+  width: 30%;
+  height: 50%;
+  border: 1px solid var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.digitalInstallations-preview-art > b {
+  position: absolute;
+  bottom: 13%;
+  left: 12%;
+  width: 45%;
+  height: 2px;
+  background: var(--accent-color);
+}
+
+/* Decorative wall panels */
+
+.digitalInstallations-preview-panels {
+  position: absolute;
+  z-index: 3;
+  top: 18%;
+  right: -9%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 10%;
+}
+
+.digitalInstallations-preview-panels > span {
+  display: block;
+  height: 23px;
+  border: 1px solid var(--accent-color);
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 12%,
+    var(--bg-secondary)
+  );
+}
+
+/* Side wall */
+
+.digitalInstallations-preview-sidewall {
+  position: absolute;
+  top: 15%;
+  left: 8%;
+  width: 13%;
+  height: 48%;
+  border: 1px solid var(--text-secondary);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent-color) 17%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+  transform: skewY(28deg);
+  transform-origin: right bottom;
+}
+
+.digitalInstallations-preview-sidewall > span {
+  position: absolute;
+  top: 15%;
+  left: 17%;
+  width: 65%;
+  height: 3px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-preview-sidewall > i {
+  position: absolute;
+  top: 25%;
+  left: 17%;
+  width: 48%;
+  height: 2px;
+  background: var(--text-muted);
+}
+
+.digitalInstallations-preview-sidewall > b {
+  position: absolute;
+  right: 15%;
+  bottom: 15%;
+  left: 15%;
+  height: 32%;
+  border: 1px solid var(--text-secondary);
+}
+
+/* Floor */
+
+.digitalInstallations-preview-floor {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 30%;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-color) 12%, transparent),
+    transparent
+  );
+  clip-path: polygon(19% 0, 100% 0, 80% 100%, 0 100%);
+}
+
+.digitalInstallations-preview-floor > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--accent-color) 35%, transparent);
+  transform: skewX(-25deg);
+}
+
+.digitalInstallations-preview-floor > i:nth-child(1) {
+  left: 30%;
+}
+
+.digitalInstallations-preview-floor > i:nth-child(2) {
+  left: 53%;
+}
+
+.digitalInstallations-preview-floor > i:nth-child(3) {
+  left: 74%;
+}
+
+.digitalInstallations-preview-floor > span {
+  position: absolute;
+  top: 30%;
+  left: 15%;
+  width: 60%;
+  height: 2px;
+  background: color-mix(
+    in srgb,
+    var(--accent-color) 60%,
+    transparent
+  );
+}
+
+/* Visitor */
+
+.digitalInstallations-preview-visitor {
+  position: absolute;
+  z-index: 7;
+  bottom: 15%;
+  left: 48%;
+  width: 27px;
+  height: 76px;
+  transform: translateX(-50%);
+}
+
+.digitalInstallations-preview-visitor > span {
+  position: absolute;
+  top: 0;
+  left: 7px;
+  width: 14px;
+  height: 15px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+
+.digitalInstallations-preview-visitor > i {
+  position: absolute;
+  top: 15px;
+  left: 3px;
+  width: 22px;
+  height: 31px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 6px 6px 3px 3px;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-preview-visitor > b {
+  position: absolute;
+  top: 44px;
+  left: 8px;
+  width: 8px;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--text-secondary);
+}
+
+/* Preview callouts */
+
+.digitalInstallations-preview-callout {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  animation: digitalInstallations-marker-float 5s ease-in-out infinite;
+}
+
+.digitalInstallations-preview-callout > span {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.digitalInstallations-preview-callout.digitalInstallations-callout-one {
+  top: 37%;
+  left: 2%;
+}
+
+.digitalInstallations-preview-callout.digitalInstallations-callout-two {
+  right: 2%;
+  bottom: 26%;
+  animation-delay: -2s;
+}
+
+.digitalInstallations-preview-legend {
+  position: absolute;
+  right: 13px;
+  bottom: 12px;
+  left: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 15px;
+  color: var(--text-muted);
+  font-size: 0.51rem;
+}
+
+.digitalInstallations-preview-legend > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.digitalInstallations-preview-legend i {
+  display: inline-block;
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--accent-color);
+  border-radius: 2px;
+}
+
+.digitalInstallations-preview-legend .digitalInstallations-legend-light {
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* Projection mapping concept */
+
+.digitalInstallations-preview--projection
+  .digitalInstallations-preview-screen {
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 55%,
+    var(--border-color)
+  );
+}
+
+.digitalInstallations-preview--projection
+  .digitalInstallations-preview-art {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-color) 23%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+}
+
+/* Immersive room concept */
+
+.digitalInstallations-preview--immersive
+  .digitalInstallations-preview-backwall {
+  left: 13%;
+  width: 75%;
+  height: 57%;
+}
+
+.digitalInstallations-preview--immersive
+  .digitalInstallations-preview-sidewall {
+  left: 3%;
+  width: 17%;
+  height: 53%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-color) 28%, var(--bg-secondary)),
+    var(--bg-secondary)
+  );
+}
+
+.digitalInstallations-preview--immersive
+  .digitalInstallations-preview-floor {
+  height: 36%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-color) 20%, transparent),
+    transparent
+  );
+}
+
+.digitalInstallations-preview--immersive
+  .digitalInstallations-preview-art {
+  right: 5%;
+  bottom: 8%;
+  width: 83%;
+  height: 42%;
+}
+
+.digitalInstallations-preview--immersive
+  .digitalInstallations-preview-panels {
+  right: -5%;
+  width: 7%;
+}
+
+/* LED environment concept */
+
+.digitalInstallations-preview--led
+  .digitalInstallations-preview-backwall {
+  top: 18%;
+  left: 10%;
+  width: 80%;
+  height: 48%;
+  transform: skewY(-4deg);
+}
+
+.digitalInstallations-preview--led
+  .digitalInstallations-preview-screen {
+  inset: 6%;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--accent-color) 20%, var(--bg-secondary)),
+    var(--bg-secondary),
+    color-mix(in srgb, var(--accent-color) 11%, var(--bg-secondary))
+  );
+}
+
+.digitalInstallations-preview--led
+  .digitalInstallations-preview-sidewall {
+  left: 5%;
+  width: 10%;
+  opacity: 0.65;
+}
+
+.digitalInstallations-preview--led
+  .digitalInstallations-preview-panels {
+  top: 23%;
+  right: -5%;
+  width: 9%;
+}
+
+/* ==================== PROCESS ==================== */
+
+.digitalInstallations-process {
+  background: var(--bg-primary);
+}
+
+.digitalInstallations-process-intro {
+  max-width: 840px;
+  margin-bottom: 77px;
+}
+
+.digitalInstallations-process-line {
+  position: relative;
+  padding-left: 88px;
+}
+
+.digitalInstallations-process-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 24px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-color) 12%,
+    var(--border-color) 88%,
+    transparent
+  );
+}
+
+.digitalInstallations-process-item {
+  position: relative;
+  margin-bottom: 56px;
+}
+
+.digitalInstallations-process-item:last-child {
+  margin-bottom: 0;
+}
+
+.digitalInstallations-process-marker {
+  position: absolute;
+  top: 0;
+  left: -88px;
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--accent-color);
+  font-size: 0.67rem;
+  font-weight: 850;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.digitalInstallations-process-item:hover
+  .digitalInstallations-process-marker {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #fff;
+  transform: scale(1.08) rotate(6deg);
+}
+
+.digitalInstallations-process-copy {
+  padding: 25px 29px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  background: var(--bg-card);
+  transition:
+    transform 0.38s ease,
+    border-color 0.38s ease;
+}
+
+.digitalInstallations-process-copy:hover {
+  transform: translateX(7px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 48%,
+    var(--border-color)
+  );
+}
+
+.digitalInstallations-process-copy h3 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 760;
+}
+
+.digitalInstallations-process-copy p {
+  max-width: 770px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+/* ==================== BENEFITS ==================== */
+
+.digitalInstallations-benefit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.digitalInstallations-benefit {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: 122px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  transition: padding 0.35s ease;
+}
+
+.digitalInstallations-benefit:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.digitalInstallations-benefit:hover {
+  padding-right: 14px;
+  padding-left: 14px;
+}
+
+.digitalInstallations-benefit > span {
+  flex: 0 0 42px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.digitalInstallations-benefit > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.digitalInstallations-benefit h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary);
+  font-size: 1.17rem;
+  font-weight: 760;
+}
+
+.digitalInstallations-benefit p {
+  max-width: 750px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.91rem;
+  line-height: 1.7;
+}
+
+.digitalInstallations-benefit > i {
+  flex: 0 0 45px;
+  width: 45px;
+  height: 1px;
+  background: var(--border-color);
+  transition:
+    width 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.digitalInstallations-benefit:hover > i {
+  width: 68px;
+  background: var(--accent-color);
+}
+
+/* ==================== FAQ ==================== */
+
+.digitalInstallations-faq {
+  background: var(--bg-primary);
+}
+
+.digitalInstallations-faq-list {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.digitalInstallations-faq-item {
+  border-top: 1px solid var(--border-color);
+}
+
+.digitalInstallations-faq-item:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.digitalInstallations-faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+  width: 100%;
+  min-height: 88px;
+  padding: 19px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.digitalInstallations-faq-question:focus-visible,
+.digitalInstallations-concept-tab:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+}
+
+.digitalInstallations-faq-question > span {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  font-size: 1rem;
+  font-weight: 680;
+  line-height: 1.45;
+}
+
+.digitalInstallations-faq-question small {
+  flex: 0 0 auto;
+  color: var(--accent-color);
+  font-size: 0.64rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.digitalInstallations-faq-question > b {
+  display: grid;
+  flex: 0 0 34px;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.16rem;
+  font-weight: 400;
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.digitalInstallations-faq-item.digitalInstallations-is-active
+  .digitalInstallations-faq-question > b {
+  transform: rotate(180deg);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.digitalInstallations-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.digitalInstallations-faq-answer p {
+  min-height: 0;
+  overflow: hidden;
+  max-width: 830px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.digitalInstallations-faq-item.digitalInstallations-is-active
+  .digitalInstallations-faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.digitalInstallations-faq-item.digitalInstallations-is-active
+  .digitalInstallations-faq-answer p {
+  padding: 0 54px 27px;
+}
+
+/* ==================== FINAL STATEMENT - NO CTA ==================== */
+
+.digitalInstallations-final {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 100px 24px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  text-align: center;
+}
+
+.digitalInstallations-final::before,
+.digitalInstallations-final::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.digitalInstallations-final::before {
+  left: -255px;
+  width: 500px;
+  height: 500px;
+}
+
+.digitalInstallations-final::after {
+  right: -215px;
+  width: 420px;
+  height: 420px;
+}
+
+.digitalInstallations-final-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.digitalInstallations-final-inner > span {
+  justify-content: center;
+}
+
+.digitalInstallations-final-inner h2 {
+  margin: 24px 0;
+  color: var(--text-primary);
+  font-size: clamp(2.9rem, 6vw, 5.8rem);
+  font-weight: 850;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+}
+
+.digitalInstallations-final-inner h2 strong {
+  color: var(--accent-color);
+}
+
+.digitalInstallations-final-inner p {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+.digitalInstallations-final-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 39px;
+}
+
+.digitalInstallations-final-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  animation: digitalInstallations-final-pulse 1.6s ease-in-out infinite;
+}
+
+.digitalInstallations-final-dots span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.digitalInstallations-final-dots span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.digitalInstallations-final-dots span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.digitalInstallations-final-dots span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes digitalInstallations-orbit {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(18deg) scale(1.05);
+  }
+}
+
+@keyframes digitalInstallations-projection-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes digitalInstallations-visitor-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+@keyframes digitalInstallations-marker-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@keyframes digitalInstallations-audio-wave {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 1 0.78;
+  }
+
+  50% {
+    opacity: 1;
+    scale: 1 1.1;
+  }
+}
+
+@keyframes digitalInstallations-detail-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes digitalInstallations-final-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-7px);
+  }
+}
+
+/* ==================== RESPONSIVE: SMALL LAPTOP ==================== */
+
+@media (max-width: 1080px) {
+  .digitalInstallations-hero-inner {
+    gap: 42px;
+  }
+
+  .digitalInstallations-hero-content h1 {
+    font-size: clamp(2.85rem, 5.7vw, 5.05rem);
+  }
+
+  .digitalInstallations-hero-visual {
+    flex-basis: 465px;
+  }
+
+  .digitalInstallations-stage {
+    min-height: 405px;
+  }
+
+  .digitalInstallations-service-card {
+    gap: 24px;
+  }
+
+  .digitalInstallations-preview {
+    min-height: 440px;
+  }
+}
+
+/* ==================== RESPONSIVE: TABLET ==================== */
+
+@media (max-width: 860px) {
+  .digitalInstallations-hero {
+    min-height: auto;
+    padding: 98px 0 80px;
+  }
+
+  .digitalInstallations-hero-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 48px;
+    width: min(100% - 44px, 700px);
+  }
+
+  .digitalInstallations-hero-content {
+    max-width: none;
+  }
+
+  .digitalInstallations-hero-content h1 {
+    max-width: 700px;
+  }
+
+  .digitalInstallations-hero-visual {
+    width: 100%;
+    flex: auto;
+  }
+
+  .digitalInstallations-stage {
+    min-height: 470px;
+    aspect-ratio: 1.08 / 1;
+  }
+
+  .digitalInstallations-section {
+    padding: 100px 0;
+  }
+
+  .digitalInstallations-section-heading,
+  .digitalInstallations-process-intro,
+  .digitalInstallations-explorer-intro {
+    margin-bottom: 52px;
+  }
+
+  .digitalInstallations-service-card {
+    padding: 25px;
+  }
+
+  .digitalInstallations-explorer-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+  }
+
+  .digitalInstallations-explorer-controls {
+    padding-top: 0;
+  }
+
+  .digitalInstallations-concept-detail {
+    max-width: 650px;
+  }
+
+  .digitalInstallations-preview {
+    min-height: 485px;
+  }
+
+  .digitalInstallations-process-line {
+    padding-left: 76px;
+  }
+
+  .digitalInstallations-process-marker {
+    left: -76px;
+  }
+}
+
+/* ==================== RESPONSIVE: MOBILE ==================== */
+
+@media (max-width: 620px) {
+  .digitalInstallations-container {
+    width: min(100% - 32px, 520px);
+  }
+
+  .digitalInstallations-hero {
+    padding: 82px 0 63px;
+  }
+
+  .digitalInstallations-hero-inner {
+    width: min(100% - 32px, 520px);
+    gap: 38px;
+  }
+
+  .digitalInstallations-eyebrow,
+  .digitalInstallations-section-heading > span,
+  .digitalInstallations-process-intro > span,
+  .digitalInstallations-explorer-intro > span,
+  .digitalInstallations-final-inner > span {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+  }
+
+  .digitalInstallations-hero-content h1 {
+    margin: 20px 0;
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .digitalInstallations-hero-content > p {
+    font-size: 0.92rem;
+    line-height: 1.75;
+  }
+
+  .digitalInstallations-hero-meta {
+    gap: 9px;
+    margin-top: 23px;
+    font-size: 0.61rem;
+  }
+
+  .digitalInstallations-hero-stats {
+    gap: 9px;
+    margin-top: 28px;
+    padding-top: 17px;
+  }
+
+  .digitalInstallations-hero-stats strong {
+    font-size: 0.95rem;
+  }
+
+  .digitalInstallations-hero-stats span {
+    font-size: 0.63rem;
+  }
+
+  .digitalInstallations-stage {
+    min-height: 350px;
+    aspect-ratio: 0.98 / 1;
+    border-radius: 20px;
+  }
+
+  .digitalInstallations-stage-topline {
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    font-size: 0.46rem;
+  }
+
+  .digitalInstallations-stage-topline strong {
+    font-size: 0.53rem;
+  }
+
+  .digitalInstallations-stage-ceiling {
+    top: 19%;
+    left: 24%;
+    width: 52%;
+    height: 9%;
+  }
+
+  .digitalInstallations-stage-backwall {
+    top: 29%;
+    left: 22%;
+    width: 55%;
+    height: 37%;
+  }
+
+  .digitalInstallations-stage-sidewall {
+    top: 32%;
+    left: 13%;
+    height: 32%;
+  }
+
+  .digitalInstallations-stage-content {
+    gap: 5px;
+  }
+
+  .digitalInstallations-stage-content > i {
+    height: 3px;
+  }
+
+  .digitalInstallations-stage-marker {
+    gap: 5px;
+    padding: 7px;
+    font-size: 0.4rem;
+  }
+
+  .digitalInstallations-stage-marker.digitalInstallations-stage-marker-one {
+    top: 40%;
+    left: 2%;
+  }
+
+  .digitalInstallations-stage-marker.digitalInstallations-stage-marker-two {
+    right: 2%;
+    bottom: 28%;
+  }
+
+  .digitalInstallations-stage-caption {
+    right: 10px;
+    bottom: 12px;
+    gap: 5px;
+    font-size: 0.4rem;
+  }
+
+  .digitalInstallations-section {
+    padding: 78px 0;
+  }
+
+  .digitalInstallations-section-heading,
+  .digitalInstallations-process-intro,
+  .digitalInstallations-explorer-intro {
+    margin-bottom: 39px;
+  }
+
+  .digitalInstallations-section-heading h2,
+  .digitalInstallations-process-intro h2,
+  .digitalInstallations-explorer-intro h2 {
+    margin: 15px 0 17px;
+    font-size: clamp(2rem, 9.8vw, 3.25rem);
+  }
+
+  .digitalInstallations-section-heading p,
+  .digitalInstallations-process-intro p,
+  .digitalInstallations-explorer-intro p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .digitalInstallations-services-list {
+    gap: 13px;
+  }
+
+  .digitalInstallations-service-card {
+    display: grid;
+    grid-template-columns: 28px 54px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    min-height: 0;
+    padding: 19px 14px;
+    border-radius: 15px;
+  }
+
+  .digitalInstallations-service-number {
+    min-width: 0;
+    padding-top: 4px;
+    font-size: 0.6rem;
+  }
+
+  .digitalInstallations-icon {
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    transform-origin: top left;
+  }
+
+  .digitalInstallations-service-content h3 {
+    margin-bottom: 7px;
+    font-size: 0.99rem;
+    line-height: 1.4;
+  }
+
+  .digitalInstallations-service-content p {
+    font-size: 0.81rem;
+    line-height: 1.65;
+  }
+
+  .digitalInstallations-service-arrow {
+    display: none;
+  }
+
+  .digitalInstallations-concept-tab {
+    min-height: 57px;
+  }
+
+  .digitalInstallations-concept-tab > span {
+    font-size: 0.9rem;
+  }
+
+  .digitalInstallations-concept-detail {
+    padding-top: 21px;
+  }
+
+  .digitalInstallations-concept-detail h3 {
+    font-size: 1.43rem;
+  }
+
+  .digitalInstallations-concept-detail p {
+    font-size: 0.86rem;
+  }
+
+  .digitalInstallations-concept-detail ul {
+    gap: 9px 13px;
+  }
+
+  .digitalInstallations-concept-detail li {
+    font-size: 0.69rem;
+  }
+
+  .digitalInstallations-preview {
+    min-height: 355px;
+    border-radius: 17px;
+    background-size:
+      20px 20px,
+      20px 20px,
+      auto,
+      auto;
+  }
+
+  .digitalInstallations-preview-topline {
+    top: 14px;
+    left: 13px;
+    right: 13px;
+    font-size: 0.43rem;
+  }
+
+  .digitalInstallations-preview-topline b {
+    font-size: 0.42rem;
+  }
+
+  .digitalInstallations-preview-room {
+    top: 21%;
+    right: 10%;
+    bottom: 21%;
+    left: 10%;
+  }
+
+  .digitalInstallations-preview-backwall {
+    top: 15%;
+    left: 17%;
+    width: 67%;
+    height: 51%;
+  }
+
+  .digitalInstallations-preview-screen {
+    gap: 5px;
+    padding: 6px;
+  }
+
+  .digitalInstallations-preview-screen > strong {
+    font-size: 0.62rem;
+  }
+
+  .digitalInstallations-preview-screen > span {
+    font-size: 0.31rem;
+  }
+
+  .digitalInstallations-preview-screen > i {
+    height: 2px;
+  }
+
+  .digitalInstallations-preview-callout {
+    gap: 5px;
+    padding: 7px;
+    font-size: 0.4rem;
+  }
+
+  .digitalInstallations-preview-callout.digitalInstallations-callout-one {
+    top: 38%;
+    left: 2%;
+  }
+
+  .digitalInstallations-preview-callout.digitalInstallations-callout-two {
+    right: 2%;
+    bottom: 26%;
+  }
+
+  .digitalInstallations-preview--immersive
+    .digitalInstallations-preview-backwall {
+    left: 13%;
+    width: 75%;
+  }
+
+  .digitalInstallations-preview--led
+    .digitalInstallations-preview-backwall {
+    left: 10%;
+    width: 80%;
+  }
+
+  .digitalInstallations-preview-legend {
+    right: 9px;
+    bottom: 10px;
+    left: 9px;
+    gap: 7px 11px;
+    font-size: 0.45rem;
+  }
+
+  .digitalInstallations-process-line {
+    padding-left: 54px;
+  }
+
+  .digitalInstallations-process-line::before {
+    left: 16px;
+  }
+
+  .digitalInstallations-process-marker {
+    left: -54px;
+    width: 34px;
+    height: 34px;
+    font-size: 0.56rem;
+  }
+
+  .digitalInstallations-process-item {
+    margin-bottom: 31px;
+  }
+
+  .digitalInstallations-process-copy {
+    padding: 19px;
+    border-radius: 14px;
+  }
+
+  .digitalInstallations-process-copy h3 {
+    font-size: 1rem;
+  }
+
+  .digitalInstallations-process-copy p {
+    font-size: 0.83rem;
+    line-height: 1.67;
+  }
+
+  .digitalInstallations-benefit {
+    align-items: flex-start;
+    gap: 13px;
+    min-height: 0;
+    padding: 21px 0;
+  }
+
+  .digitalInstallations-benefit > span {
+    flex-basis: 28px;
+    font-size: 0.63rem;
+  }
+
+  .digitalInstallations-benefit h3 {
+    font-size: 0.97rem;
+    line-height: 1.4;
+  }
+
+  .digitalInstallations-benefit p {
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  .digitalInstallations-benefit > i {
+    display: none;
+  }
+
+  .digitalInstallations-faq-question {
+    min-height: 77px;
+    gap: 13px;
+  }
+
+  .digitalInstallations-faq-question > span {
+    align-items: flex-start;
+    gap: 11px;
+    font-size: 0.87rem;
+  }
+
+  .digitalInstallations-faq-question small {
+    padding-top: 2px;
+  }
+
+  .digitalInstallations-faq-question > b {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .digitalInstallations-faq-item.digitalInstallations-is-active
+    .digitalInstallations-faq-answer p {
+    padding: 0 0 23px 37px;
+    font-size: 0.83rem;
+  }
+
+  .digitalInstallations-final {
+    min-height: 50vh;
+    padding: 78px 20px;
+  }
+
+  .digitalInstallations-final::before {
+    left: -190px;
+    width: 310px;
+    height: 310px;
+  }
+
+  .digitalInstallations-final::after {
+    right: -170px;
+    width: 270px;
+    height: 270px;
+  }
+
+  .digitalInstallations-final-inner h2 {
+    margin: 20px 0;
+    font-size: clamp(2.35rem, 11.2vw, 3.65rem);
+  }
+
+  .digitalInstallations-final-inner p {
+    font-size: 0.87rem;
+    line-height: 1.75;
+  }
+}
+
+/* ==================== RESPONSIVE: VERY SMALL MOBILE ==================== */
+
+@media (max-width: 390px) {
+  .digitalInstallations-container {
+    width: calc(100% - 24px);
+  }
+
+  .digitalInstallations-hero-inner {
+    width: calc(100% - 24px);
+  }
+
+  .digitalInstallations-hero-content h1 {
+    font-size: clamp(2.25rem, 11.5vw, 3rem);
+  }
+
+  .digitalInstallations-hero-stats {
+    gap: 7px;
+  }
+
+  .digitalInstallations-hero-stats span {
+    font-size: 0.58rem;
+  }
+
+  .digitalInstallations-stage {
+    min-height: 305px;
+  }
+
+  .digitalInstallations-stage-topline {
+    font-size: 0.4rem;
+  }
+
+  .digitalInstallations-stage-marker {
+    padding: 6px;
+    font-size: 0.35rem;
+  }
+
+  .digitalInstallations-stage-caption {
+    right: 7px;
+    bottom: 9px;
+    font-size: 0.35rem;
+  }
+
+  .digitalInstallations-service-card {
+    grid-template-columns: 23px 46px minmax(0, 1fr);
+    gap: 9px;
+    padding: 16px 11px;
+  }
+
+  .digitalInstallations-icon {
+    flex-basis: 46px;
+    width: 46px;
+    height: 46px;
+    transform: scale(0.96);
+    transform-origin: top left;
+  }
+
+  .digitalInstallations-service-content h3 {
+    font-size: 0.91rem;
+  }
+
+  .digitalInstallations-service-content p {
+    font-size: 0.76rem;
+  }
+
+  .digitalInstallations-preview {
+    min-height: 310px;
+  }
+
+  .digitalInstallations-preview-topline {
+    font-size: 0.37rem;
+  }
+
+  .digitalInstallations-preview-topline b {
+    font-size: 0.37rem;
+  }
+
+  .digitalInstallations-preview-room {
+    top: 23%;
+    right: 9%;
+    bottom: 22%;
+    left: 9%;
+  }
+
+  .digitalInstallations-preview-screen {
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .digitalInstallations-preview-screen > strong {
+    font-size: 0.54rem;
+  }
+
+  .digitalInstallations-preview-callout {
+    padding: 6px;
+    font-size: 0.34rem;
+  }
+
+  .digitalInstallations-preview-legend {
+    font-size: 0.4rem;
+  }
+
+  .digitalInstallations-process-line {
+    padding-left: 46px;
+  }
+
+  .digitalInstallations-process-line::before {
+    left: 14px;
+  }
+
+  .digitalInstallations-process-marker {
+    left: -46px;
+    width: 29px;
+    height: 29px;
+  }
+
+  .digitalInstallations-process-copy {
+    padding: 16px;
+  }
+
+  .digitalInstallations-faq-question > span {
+    font-size: 0.81rem;
+  }
+
+  .digitalInstallations-faq-item.digitalInstallations-is-active
+    .digitalInstallations-faq-answer p {
+    padding-left: 32px;
+  }
+}
+
+/* ==================== ACCESSIBILITY: REDUCED MOTION ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .digitalInstallations-reveal,
+  .digitalInstallations-stage *,
+  .digitalInstallations-icon *,
+  .digitalInstallations-preview *,
+  .digitalInstallations-final-dots span {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .digitalInstallations-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

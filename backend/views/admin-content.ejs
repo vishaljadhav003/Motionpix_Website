@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Admin Panel</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+
+/* ===== GLOBAL (same theme as the Career dashboard) ===== */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #020617;
+  color: #e2e8f0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  background: linear-gradient(180deg,#020617,#0f172a);
+  padding: 20px;
+  transition: 0.4s;
+  z-index: 10;
+}
+
+.sidebar.closed {
+  width: 80px;
+}
+
+.sidebar h4 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: 0.3s;
+}
+
+.sidebar a i {
+  font-size: 18px;
+}
+
+.sidebar.closed a span {
+  display: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #1e293b;
+  color: #fff;
+}
+
+/* ===== MAIN ===== */
+.main {
+  margin-left: 240px;
+  padding: 25px;
+  transition: 0.4s;
+}
+
+.main.full {
+  margin-left: 80px;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: rgba(30,41,59,0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.page-title {
+  text-transform: capitalize;
+  color: #38bdf8;
+}
+
+.field-row {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 0;
+}
+
+.field-row:last-child {
+  border-bottom: none;
+}
+
+.field-meta {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+textarea.form-control {
+  background: #0b1220;
+  color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+textarea.form-control:focus {
+  background: #0b1220;
+  color: #e2e8f0;
+  border-color: #38bdf8;
+  box-shadow: none;
+}
+
+.btn-save {
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  border: none;
+}
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.btn-reset:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.card,h5{
+  color:white;
+}
+
+.saved-badge {
+  display: none;
+  color: #22c55e;
+  font-size: 13px;
+}
+
+
+/* ===== LOGOUT ===== */
+.logout-btn {
+  background: linear-gradient(135deg,#ef4444,#b91c1c);
+  border-radius: 25px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.closed { transform: translateX(0); width: 240px; }
+  .sidebar.closed a span { display: inline; }
+  .main, .main.full { margin-left: 0; }
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+  z-index: 1050;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+  min-width: 0;
+  width: auto;
+  max-width: 100%;
+}
+
+.main > * {
+  max-width: 100%;
+}
+
+/* ================= TOPBAR ================= */
+
+.topbar {
+  min-width: 0;
+}
+
+.topbar h4 {
+  overflow-wrap: anywhere;
+}
+
+/* ================= CONTENT CARDS ================= */
+
+.card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.field-row {
+  min-width: 0;
+}
+
+.field-meta {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ================= TEXTAREA ================= */
+
+.field-row textarea {
+  min-width: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  resize: vertical;
+  overflow-wrap: anywhere;
+}
+
+/* ================= FIELD BUTTONS ================= */
+
+.field-row .d-flex {
+  min-width: 0;
+}
+
+.field-row .d-flex.flex-column {
+  flex-shrink: 0;
+}
+
+/* ================= ADD FORM ================= */
+
+#addFieldForm {
+  width: 100%;
+  max-width: 100%;
+}
+
+#addFieldForm .form-control {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ================= TABLET ================= */
+
+@media (max-width: 991.98px) {
+
+  .main {
+    padding: 20px;
+  }
+
+  .card {
+    border-radius: 16px;
+  }
+
+  .field-row {
+    padding: 14px 0;
+  }
+
+  .field-meta {
+    font-size: 11px;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 767.98px) {
+
+  .sidebar {
+    width: 240px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.closed {
+    width: 240px;
+    transform: translateX(0);
+  }
+
+  .sidebar.closed a span {
+    display: inline;
+  }
+
+  .main,
+  .main.full {
+    margin-left: 0;
+    padding: 14px;
+    width: 100%;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar .d-flex {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .topbar h4 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .main > p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .card {
+    padding: 16px !important;
+    border-radius: 15px;
+  }
+
+  .field-row {
+    padding: 14px 0;
+  }
+
+  .field-row > .d-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .field-row > .d-flex > textarea {
+    width: 100%;
+    flex: none !important;
+  }
+
+  .field-row > .d-flex > .d-flex {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .field-row > .d-flex > .d-flex .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  #addFieldForm .btn {
+    min-height: 44px;
+  }
+}
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 575.98px) {
+
+  .main,
+  .main.full {
+    padding: 10px;
+  }
+
+  .main > p {
+    font-size: 12px;
+  }
+
+  .topbar h4 {
+    font-size: 17px;
+  }
+
+  .card {
+    padding: 14px !important;
+    border-radius: 14px;
+  }
+
+  .field-meta {
+    font-size: 10px;
+    line-height: 1.7;
+  }
+
+  .field-row > .d-flex > .d-flex {
+    flex-direction: column;
+  }
+
+  .field-row > .d-flex > .d-flex .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ================= VERY SMALL ================= */
+
+@media (max-width: 380px) {
+
+  .main,
+  .main.full {
+    padding: 8px;
+  }
+
+  .topbar h4 {
+    font-size: 16px;
+  }
+
+  .card {
+    padding: 12px !important;
+  }
+
+  .field-row textarea {
+    font-size: 13px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+  <h4>🚀</h4>
+
+  <a href="/api/admin">
+    <i class="bi bi-envelope"></i> <span class="fw-bold">Contact</span>
+  </a>
+
+  <a href="/api/admin/careers">
+    <i class="bi bi-briefcase"></i> <span class="fw-bold">Careers</span>
+  </a>
+
+  <a href="/api/admin/content" class="active">
+    <i class="bi bi-pencil-square"></i> <span class="fw-bold">Content</span>
+  </a>
+
+  <a href="/api/admin/team">
+    <i class="bi bi-people"></i> <span class="fw-bold">Team</span>
+  </a>
+
+  <a href="/api/logout" class="logout-btn">
+    <i class="bi bi-box-arrow-right"></i> <span class="fw-bold">Logout</span>
+  </a>
+</div>
+
+<!-- MAIN -->
+<div id="main" class="main">
+
+  <div class="topbar mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-dark" onclick="toggleSidebar()">☰</button>
+      <h4 class="fw-bold mb-0">📝 Website Content</h4>
+    </div>
+  </div>
+
+  <p class="text-secondary">
+    Edit any text below and click <b>Save</b> — the live website picks it up immediately,
+    no rebuild or redeploy needed. <b>Reset</b> removes your override and brings back the
+    original site text for that field.
+  </p>
+
+  <% const pages = Object.keys(grouped); %>
+
+  <% if (pages.length === 0) { %>
+    <div class="card p-4">
+      <p class="mb-0 text-secondary">
+        No editable fields yet. Once the React site calls <code>useSiteContent()</code> on a
+        page, add matching rows here using the form below, or ask your developer to wire up
+        the next page.
+      </p>
+    </div>
+  <% } %>
+
+  <% pages.forEach((page) => { %>
+    <div class="card p-4 mb-4">
+      <h5 class="page-title mb-3"><%= page %></h5>
+
+      <% grouped[page].forEach((field) => { %>
+        <div class="field-row">
+          <div class="field-meta mb-1">
+            section: <b><%= field.section %></b> &nbsp;|&nbsp;
+            key: <b><%= field.content_key %></b> &nbsp;|&nbsp;
+            updated: <%= field.updated_at ? new Date(field.updated_at).toLocaleString() : "-" %>
+          </div>
+
+          <div class="d-flex gap-2 align-items-start flex-wrap">
+            <textarea
+              class="form-control"
+              rows="2"
+              style="min-width:280px; flex:1;"
+              data-page="<%= field.page %>"
+              data-section="<%= field.section %>"
+              data-key="<%= field.content_key %>"
+            ><%= field.content_value %></textarea>
+
+            <div class="d-flex flex-column gap-2">
+              <button class="btn btn-save btn-sm" onclick="saveField(this)">
+                <i class="bi bi-check2"></i> Save
+              </button>
+              <a href="/api/admin/content/delete/<%= field.id %>"
+                 class="btn btn-reset btn-sm"
+                 onclick="return confirm('Reset this field back to the site default?')">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+              </a>
+            </div>
+          </div>
+
+          <span class="saved-badge mt-1 d-block">✔ Saved</span>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+
+  <!-- ADD NEW FIELD -->
+  <div class="card p-4 mb-4">
+    <h5 class="mb-3">➕ Add a New Editable Field</h5>
+    <form id="addFieldForm" class="row g-2">
+      <div class="col-md-3">
+        <input type="text" name="page" class="form-control" placeholder="page (e.g. home)" required>
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="section" class="form-control" placeholder="section (e.g. hero)" required>
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="content_key" class="form-control" placeholder="key (e.g. hero_title)" required>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100 fw-bold" type="submit">Add</button>
+      </div>
+      <div class="col-12">
+        <textarea name="content_value" class="form-control" rows="2" placeholder="Text value" required></textarea>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+window.onload = () => {
+  document.body.classList.add("loaded");
+};
+
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("closed");
+  document.getElementById("main").classList.toggle("full");
+}
+
+async function saveField(btn) {
+  const row = btn.closest(".field-row");
+  const textarea = row.querySelector("textarea");
+
+  const payload = {
+    page: textarea.dataset.page,
+    section: textarea.dataset.section,
+    content_key: textarea.dataset.key,
+    content_value: textarea.value,
+  };
+
+  const res = await fetch("/api/admin/content", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (res.ok) {
+    const badge = row.querySelector(".saved-badge");
+    badge.style.display = "block";
+    setTimeout(() => (badge.style.display = "none"), 1500);
+  } else {
+    alert("Save failed — please try again.");
+  }
+}
+
+document.getElementById("addFieldForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const payload = {
+    page: form.page.value.trim(),
+    section: form.section.value.trim(),
+    content_key: form.content_key.value.trim(),
+    content_value: form.content_value.value,
+  };
+
+  const res = await fetch("/api/admin/content", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (res.ok) {
+    location.reload();
+  } else {
+    alert("Could not add this field — please try again.");
+  }
+});
+</script>
+
+</body>
+</html>

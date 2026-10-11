@@ -1,196 +1,121 @@
-/* /* =========================
-   SECTION
-========================= */
-
-.industries-stats-section {
-  background:black;
-  padding: 100px 0;
+/* ==========================================================================
+   THEME VARIABLES (Light & Dark Support)
+   ========================================================================== */
+:root {
+  --ind-bg: #000000;
+  --ind-card-bg: #0d0d0d;
+  --ind-text-primary: #ffffff;
+  --ind-text-secondary: #aaaaaa;
+  --ind-border: rgba(255, 255, 255, 0.15);
+  --ind-card-shadow: rgba(0, 0, 0, 0.45);
+  --ind-accent: #e50914;
+  --ind-stat-bg: rgba(255, 255, 255, 0.1);
+  --ind-stat-border: rgba(255, 255, 255, 0.25);
+  --ind-edge-bg: rgba(0, 0, 0, 0.7);
 }
 
-/* =========================
-   GRID
-========================= */
+/* Auto-detect system light theme preference */
+@media (prefers-color-scheme: light) {
+  :root {
+    --ind-bg: #f8f9fa;
+    --ind-card-bg: #ffffff;
+    --ind-text-primary: #111111;
+    --ind-text-secondary: #555555;
+    --ind-border: rgba(0, 0, 0, 0.12);
+    --ind-card-shadow: rgba(0, 0, 0, 0.08);
+    --ind-accent: #e50914;
+    --ind-stat-bg: rgba(0, 0, 0, 0.05);
+    --ind-stat-border: rgba(0, 0, 0, 0.15);
+    --ind-edge-bg: rgba(255, 255, 255, 0.85);
+  }
+}
 
+/* Explicit Theme Overrides (Supports attribute-based or class-based theme toggles) */
+[data-theme="light"], .light-theme {
+  --ind-bg: #f8f9fa;
+  --ind-card-bg: #ffffff;
+  --ind-text-primary: #111111;
+  --ind-text-secondary: #555555;
+  --ind-border: rgba(0, 0, 0, 0.12);
+  --ind-card-shadow: rgba(0, 0, 0, 0.08);
+  --ind-accent: #e50914;
+  --ind-stat-bg: rgba(0, 0, 0, 0.05);
+  --ind-stat-border: rgba(0, 0, 0, 0.15);
+  --ind-edge-bg: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"], .dark-theme {
+  --ind-bg: #000000;
+  --ind-card-bg: #0d0d0d;
+  --ind-text-primary: #ffffff;
+  --ind-text-secondary: #aaaaaa;
+  --ind-border: rgba(255, 255, 255, 0.15);
+  --ind-card-shadow: rgba(0, 0, 0, 0.45);
+  --ind-accent: #e50914;
+  --ind-stat-bg: rgba(255, 255, 255, 0.1);
+  --ind-stat-border: rgba(255, 255, 255, 0.25);
+  --ind-edge-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   SECTION & HEADER
+   ========================================================================== */
+.industries-stats-section {
+  background-color: var(--ind-bg);
+  padding: 100px 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.industries-title {
+  /* margin-top:50px; */
+    font-family: "Poppins", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--ind-text-primary);
+}
+
+.industries-title span {
+  color: var(--ind-accent);
+}
+
+.industries-subtitle {
+  color: var(--ind-text-secondary);
+}
+
+/* ==========================================================================
+   GRID LAYOUT & RESPONSIVENESS
+   ========================================================================== */
 .industries-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 30px;
 }
 
-/* =========================
-   CARD
-========================= */
-
+/* ==========================================================================
+   FLIP CARD STRUCTURE
+   ========================================================================== */
 .industry-card {
   position: relative;
   height: 360px;
   border-radius: 20px;
-  overflow: hidden;
-  background: #000;
+  perspective: 1200px;
   cursor: pointer;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
-  transition: transform 0.5s ease;
-   overflow: hidden;
+  background-color: var(--ind-card-bg);
+  border: 1px solid var(--ind-border);
+  box-shadow: 0 15px 35px var(--ind-card-shadow);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.3s ease, opacity 0.6s ease;
+
+  /* Bidirectional scroll-reveal starting state */
+  opacity: 0;
+  transform: translateY(40px);
 }
 
+.industry-card.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .industry-card:hover {
-  transform: translateY(-10px);
-}
-
-/* Image / Video */
-.industry-card img,
-.industry-card video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s ease;
-}
-
-.industry-card:hover img,
-.industry-card:hover video {
-  transform: scale(1.08);
-}
-
-/* =========================
-   CURSOR GLOW
-========================= */
-
-.industry-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at var(--x, 50%) var(--y, 50%),
-    rgba(229, 9, 20, 0.35),
-    transparent 55%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.industry-card:hover::after {
-  opacity: 1;
-}
-
-/* =========================
-   OVERLAY CONTENT
-========================= */
-
-.industry-overlay {
-  position: absolute;
-  inset: 0;
-  /* background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.85),
-    rgba(0, 0, 0, 0.25)
-  ); */
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 30px;
-  color: #fff;
-}
-
-.industries-stats-section span{
-
-  color:white;
-
-}
-.industry-overlay::before {
-  content: "";
-  width: 40px;
-  height: 3px;
-  background: #e50914;
-  margin-bottom: 12px;
-}
-
-.industry-overlay h4 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.industry-overlay p {
-  font-size: 0.95rem;
-  color: #ccc;
-  line-height: 1.6;
-}
-
-/* =========================
-   STATS (PPT STYLE)
-========================= */
-
-.industry-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.industry-stats span {
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  white-space: nowrap;
-}
-.text-red span {
-  color:#e50914;
-}
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-  .industry-card {
-    height: 280px;
-  }
-
-  .industry-overlay {
-    padding: 20px;
-  }
-  .industries-stats-section{
-    background:black;
-  }
-  
-}
-
-@media (max-width: 576px) {
-  .industries-stats-section {
-    padding: 70px 0;
-  }
-
-  .industry-card {
-    height: 240px;
-  }
-}
-
-/* Disable hover effects on touch devices */
-@media (hover: none) {
-  .industry-card:hover {
-    transform: none;
-  }
-
-  .industry-card::after {
-    display: none;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1280px) {
-  .industries-stats-section{
-    background:black;
-  }
-}
-/* =========================
-   FLIP CARD CORE
-========================= */
-
-.flip-card {
-  perspective: 1200px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  transform: translateY(-8px);
 }
 
 .flip-inner {
@@ -199,82 +124,188 @@
   height: 100%;
   transform-style: preserve-3d;
   transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+  border-radius: 20px;
 }
 
-/* Flip on hover (desktop only) */
-@media (hover: hover) {
+/* Hover Flip for Desktop Pointer Devices */
+@media (hover: hover) and (min-width: 1025px) {
   .flip-card:hover .flip-inner {
     transform: rotateY(180deg);
   }
 }
 
-/* =========================
-   FRONT & BACK
-========================= */
+/* Tap/Click Flip trigger for touch/mobile devices or explicit JS trigger */
+.flip-card.is-flipped .flip-inner {
+  transform: rotateY(180deg);
+}
 
+/* ==========================================================================
+   CARD SURFACES (FRONT & BACK)
+   ========================================================================== */
 .flip-front,
 .flip-back {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   border-radius: 20px;
   overflow: hidden;
 }
 
-/* FRONT */
+/* Front Face */
 .flip-front img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
-
-/* =========================
-   EDGE TITLE
-========================= */
 
 .edge-title {
   position: absolute;
-  top: 50%;
-  right: 3%;
+  top: 60%;
+  right: 18px;
   transform: translateY(-50%) rotate(90deg);
   transform-origin: right center;
-  background: rgba(0, 0, 0, 0.55);
-  padding: 8px 16px;
-  border-radius: 12px 12px 0 0;
+  background: var(--ind-edge-bg);
+  padding: 8px 18px;
+  border-radius: 10px 10px 0 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .edge-title span {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 1px;
-  color: white;
+  color: var(--ind-text-primary);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Back Face */
+.flip-back {
+  transform: rotateY(180deg);
+  background-color: var(--ind-card-bg);
+  border: 1px solid var(--ind-border);
+}
+
+.industry-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  color: var(--ind-text-primary);
+  background: linear-gradient(
+    to top,
+    var(--ind-card-bg) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+}
+
+.industry-overlay::before {
+  content: "";
+  width: 40px;
+  height: 3px;
+  background: var(--ind-accent);
+  margin-bottom: 12px;
+  border-radius: 2px;
+}
+
+.industry-overlay h4 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ind-text-primary);
+}
+
+.industry-overlay p {
+  font-size: 0.9rem;
+  color: var(--ind-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+/* Stats Badges */
+.industry-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.industry-stats span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  color: var(--ind-text-primary);
+  background: var(--ind-stat-bg);
+  border: 1px solid var(--ind-stat-border);
   white-space: nowrap;
 }
 
-/* =========================
-   BACK FACE
-========================= */
-
-.flip-back {
-  transform: rotateY(180deg);
-  background: #000;
-}
-
-/* Keep your overlay styling */
-.flip-back .industry-overlay {
+/* Dynamic Cursor Glow Effect */
+.industry-card::after {
+  content: "";
+  position: absolute;
   inset: 0;
-  height: 100%;
+  border-radius: 20px;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(229, 9, 20, 0.25),
+    transparent 60%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-/* =========================
-   MOBILE FALLBACK
-========================= */
+.industry-card:hover::after {
+  opacity: 1;
+}
 
-/* Touch + small screens flip (UP TO 1280px) */
-@media (max-width: 1280px) {
-  .flip-card.is-flipped .flip-inner {
-    transform: rotateY(180deg);
+/* ==========================================================================
+   BREAKPOINTS & ACCESSIBILITY
+   ========================================================================== */
+@media (max-width: 992px) {
+  .industries-stats-section {
+    padding: 80px 0;
   }
-  
+  .industries-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .industry-card {
+    height: 320px;
+  }
+  .industries-title{
+    margin-top: 70px;
+  }
 }
 
+@media (max-width: 576px) {
+  .industries-stats-section {
+    padding: 60px 0;
+  }
+  .industries-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .industry-card {
+    height: 280px;
+  }
+  .industry-overlay {
+    padding: 20px;
+  }
+}
+
+@media (hover: none) {
+  .industry-card:hover {
+    transform: none;
+  }
+  .industry-card::after {
+    display: none;
+  }
+}

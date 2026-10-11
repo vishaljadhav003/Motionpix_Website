@@ -1,0 +1,37 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # https + www (one redirect, so it matches the canonical URL)
+  # If the host sits behind Cloudflare / a proxy and this loops, replace the HTTPS check with:
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteRule ^ https://www.motionpixindia.com%{REQUEST_URI} [L,R=301]
+
+  # A missing file (image, js, css, ...) must return a real 404, not index.html
+  RewriteCond %{REQUEST_URI} \.(?:js|css|map|png|jpe?g|webp|gif|svg|ico|woff2?|ttf|mp4|webm|pdf|xml|txt|json)$ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ - [R=404,L]
+
+  # React Router: send all other URLs to index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ /index.html [L]
+</IfModule>
+
+# Faster loading (better Core Web Vitals, which Google uses for ranking)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

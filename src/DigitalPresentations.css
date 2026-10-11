@@ -1,0 +1,1859 @@
+/* =========================================================
+   DIGITAL PRESENTATIONS PAGE
+   Scoped only to DigitalPresentations.jsx
+   Uses existing global light/dark theme variables.
+   No global CSS changes required.
+   ========================================================= */
+
+.digitalpresentations-page {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.digitalpresentations-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   REVEAL SYSTEM
+   Bidirectional: enters + exits viewport
+   ========================================================= */
+
+.digitalpresentations-reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--digitalpresentations-reveal-delay);
+}
+
+.digitalpresentations-reveal--up {
+  transform: translate3d(0, 60px, 0);
+}
+
+.digitalpresentations-reveal--left {
+  transform: translate3d(-70px, 0, 0);
+}
+
+.digitalpresentations-reveal--right {
+  transform: translate3d(70px, 0, 0);
+}
+
+.digitalpresentations-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.digitalpresentations-hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  padding: 110px 0 90px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 75% 50%,
+      color-mix(in srgb, var(--accent-color) 8%, transparent),
+      transparent 34%
+    ),
+    var(--bg-primary);
+}
+
+.digitalpresentations-hero-inner {
+  width: min(1280px, calc(100% - 80px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.digitalpresentations-hero-content {
+  flex: 1 1 52%;
+  max-width: 650px;
+}
+
+.digitalpresentations-eyebrow,
+.digitalpresentations-section-heading > span,
+.digitalpresentations-process-intro > span,
+.digitalpresentations-final-inner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.digitalpresentations-eyebrow::before,
+.digitalpresentations-section-heading > span::before,
+.digitalpresentations-process-intro > span::before,
+.digitalpresentations-final-inner > span::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--accent-color);
+}
+
+.digitalpresentations-hero-content h1 {
+  margin: 24px 0;
+  color: var(--text-primary);
+  font-size: clamp(3.1rem, 6vw, 6.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+  font-weight: 800;
+}
+
+.digitalpresentations-hero-content h1 span {
+  color: var(--accent-color);
+}
+
+.digitalpresentations-hero-content p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.digitalpresentations-hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.digitalpresentations-hero-meta i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* =========================================================
+   HERO VISUAL
+   ========================================================= */
+
+.digitalpresentations-hero-visual {
+  flex: 0 1 520px;
+  min-width: 0;
+}
+
+.digitalpresentations-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.94;
+  min-height: 440px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--bg-secondary) 96%, transparent),
+      var(--bg-card)
+    );
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.digitalpresentations-stage::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: 70px;
+  right: 40px;
+  border: 1px solid
+    color-mix(in srgb, var(--accent-color) 30%, transparent);
+  border-radius: 50%;
+  animation: digitalpresentations-orbit 8s ease-in-out infinite;
+}
+
+.digitalpresentations-stage::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 1px;
+  left: 50%;
+  top: 50%;
+  background: var(--border-color);
+  transform: translate(-50%, -50%) rotate(-24deg);
+}
+
+.digitalpresentations-stage-label {
+  position: absolute;
+  z-index: 10;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+}
+
+.digitalpresentations-stage-label strong {
+  color: var(--accent-color);
+  font-size: 0.82rem;
+}
+
+/* =========================================================
+   PRESENTATION SLIDES
+   ========================================================= */
+
+.digitalpresentations-slide {
+  position: absolute;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.12);
+}
+
+.slide-back {
+  z-index: 2;
+  width: 210px;
+  height: 145px;
+  top: 86px;
+  right: 45px;
+  padding: 20px;
+  transform: rotate(7deg);
+  animation: digitalpresentations-slide-back 6s ease-in-out infinite;
+}
+
+.slide-back .slide-title {
+  display: block;
+  width: 60%;
+  height: 5px;
+  margin-bottom: 17px;
+  background: var(--text-primary);
+}
+
+.slide-line {
+  display: block;
+  height: 3px;
+  margin-bottom: 8px;
+  background: var(--border-color);
+}
+
+.slide-line.line-one {
+  width: 45%;
+}
+
+.slide-line.line-two {
+  width: 34%;
+}
+
+.slide-chart {
+  position: absolute;
+  bottom: 20px;
+  width: 13px;
+  background: var(--accent-color);
+}
+
+.slide-chart.chart-one {
+  left: 25px;
+  height: 25px;
+}
+
+.slide-chart.chart-two {
+  left: 44px;
+  height: 42px;
+}
+
+.slide-main {
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 210px;
+  padding: 20px;
+  transform: translate(-50%, -50%) rotate(-2deg);
+  animation: digitalpresentations-slide-main 5s ease-in-out infinite;
+}
+
+.main-slide-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.main-slide-top span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.main-slide-top strong {
+  color: var(--text-primary);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+}
+
+.main-slide-content {
+  display: flex;
+  gap: 20px;
+  margin-top: 26px;
+}
+
+.main-slide-copy {
+  flex: 1;
+  padding-top: 15px;
+}
+
+.main-slide-copy span {
+  display: block;
+  height: 4px;
+  margin-bottom: 10px;
+  background: var(--border-color);
+}
+
+.main-slide-copy span:nth-child(1) {
+  width: 88%;
+  background: var(--text-primary);
+}
+
+.main-slide-copy span:nth-child(2) {
+  width: 70%;
+}
+
+.main-slide-copy span:nth-child(3) {
+  width: 53%;
+}
+
+.main-slide-visual {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  flex: 0 0 105px;
+  border: 1px solid var(--border-color);
+}
+
+.visual-circle {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 25px;
+  top: 24px;
+  border: 8px solid var(--accent-color);
+  border-right-color: var(--border-color);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+.visual-bar {
+  position: absolute;
+  bottom: 10px;
+  width: 8px;
+  background: var(--text-primary);
+}
+
+.visual-bar.bar-one {
+  left: 13px;
+  height: 17px;
+}
+
+.visual-bar.bar-two {
+  left: 25px;
+  height: 28px;
+}
+
+.visual-bar.bar-three {
+  left: 37px;
+  height: 39px;
+  background: var(--accent-color);
+}
+
+.main-slide-footer {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.main-slide-footer span {
+  width: 18px;
+  height: 2px;
+  background: var(--border-color);
+}
+
+.main-slide-footer span:first-child {
+  width: 24px;
+  color: var(--accent-color);
+  background: var(--accent-color);
+}
+
+.slide-front {
+  z-index: 6;
+  width: 110px;
+  height: 75px;
+  left: 35px;
+  bottom: 105px;
+  padding: 17px;
+  transform: rotate(-8deg);
+  animation: digitalpresentations-slide-front 6s ease-in-out infinite;
+}
+
+.slide-front span {
+  display: block;
+  width: 70%;
+  height: 4px;
+  margin-bottom: 9px;
+  background: var(--border-color);
+}
+
+.slide-front span:first-child {
+  width: 85%;
+  background: var(--text-primary);
+}
+
+.digitalpresentations-cursor {
+  position: absolute;
+  z-index: 8;
+  right: 28%;
+  top: 39%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid var(--text-primary);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  transform: rotate(-22deg);
+  animation: digitalpresentations-cursor-move 4s ease-in-out infinite;
+}
+
+.digitalpresentations-cursor span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 5px;
+  top: -4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.digitalpresentations-flow {
+  position: absolute;
+  z-index: 3;
+  left: 19%;
+  bottom: 31%;
+  width: 130px;
+  height: 70px;
+  border-top: 1px dashed
+    color-mix(in srgb, var(--accent-color) 65%, transparent);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.digitalpresentations-flow span {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.digitalpresentations-flow span:nth-child(1) {
+  left: 0;
+  top: -3px;
+}
+
+.digitalpresentations-flow span:nth-child(2) {
+  left: 50%;
+  top: -4px;
+}
+
+.digitalpresentations-flow span:nth-child(3) {
+  right: 0;
+  top: 22px;
+}
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.digitalpresentations-section {
+  position: relative;
+  padding: 130px 0;
+  background: var(--bg-primary);
+}
+
+.digitalpresentations-section:nth-of-type(odd) {
+  background: var(--bg-secondary);
+}
+
+.digitalpresentations-section-heading {
+  max-width: 760px;
+  margin-bottom: 70px;
+}
+
+.digitalpresentations-section-heading h2,
+.digitalpresentations-process-intro h2 {
+  margin: 18px 0 20px;
+  color: var(--text-primary);
+  font-size: clamp(2.3rem, 4.7vw, 4.7rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.digitalpresentations-section-heading h2 strong,
+.digitalpresentations-process-intro h2 strong {
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.digitalpresentations-section-heading p,
+.digitalpresentations-process-intro p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   SERVICES
+   ========================================================= */
+
+.digitalpresentations-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.digitalpresentations-service-wrap {
+  width: 100%;
+}
+
+.digitalpresentations-service-card {
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  padding: 28px 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-card);
+  overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.digitalpresentations-service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--accent-color);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.4s ease;
+}
+
+.digitalpresentations-service-card:hover {
+  transform: perspective(900px) rotateX(1deg) translateY(-5px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 55%,
+    var(--border-color)
+  );
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.12);
+}
+
+.digitalpresentations-service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.digitalpresentations-service-number {
+  align-self: flex-start;
+  min-width: 38px;
+  padding-top: 5px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.digitalpresentations-service-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.digitalpresentations-service-content h3 {
+  margin: 0 0 9px;
+  color: var(--text-primary);
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+.digitalpresentations-service-content p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 0.94rem;
+}
+
+.digitalpresentations-service-arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  transition:
+    transform 0.4s ease,
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+.digitalpresentations-service-card:hover
+  .digitalpresentations-service-arrow {
+  color: #ffffff;
+  background: var(--accent-color);
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   CUSTOM PRESENTATION ICONS
+   ========================================================= */
+
+.digitalpresentations-icon {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.digitalpresentations-service-card:hover .digitalpresentations-icon {
+  transform: perspective(500px) rotateY(-12deg) rotateX(8deg);
+  border-color: var(--accent-color);
+}
+
+/* Corporate */
+
+.dp-corporate-screen {
+  position: absolute;
+  width: 42px;
+  height: 29px;
+  left: 15px;
+  top: 17px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+}
+
+.dp-corporate-screen::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  left: 11px;
+  bottom: -8px;
+  background: var(--text-primary);
+}
+
+.dp-corporate-line {
+  position: absolute;
+  height: 2px;
+  background: var(--border-color);
+}
+
+.dp-corporate-line.line-one {
+  width: 20px;
+  left: 23px;
+  top: 25px;
+}
+
+.dp-corporate-line.line-two {
+  width: 13px;
+  left: 23px;
+  top: 31px;
+}
+
+.dp-corporate-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  right: 21px;
+  top: 24px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+/* Sales */
+
+.dp-sales-bar {
+  position: absolute;
+  bottom: 18px;
+  width: 10px;
+  border: 1px solid var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.dp-sales-bar.bar-one {
+  left: 17px;
+  height: 20px;
+}
+
+.dp-sales-bar.bar-two {
+  left: 31px;
+  height: 31px;
+}
+
+.dp-sales-bar.bar-three {
+  left: 45px;
+  height: 44px;
+  background: var(--accent-color);
+}
+
+.dp-sales-arrow {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  right: 7px;
+  top: 11px;
+  border-top: 2px solid var(--accent-color);
+  border-right: 2px solid var(--accent-color);
+  transform: rotate(-12deg);
+}
+
+.dp-sales-arrow::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  right: -3px;
+  top: -2px;
+  background: var(--accent-color);
+  transform: rotate(42deg);
+}
+
+/* Product */
+
+.dp-product-screen {
+  position: absolute;
+  width: 42px;
+  height: 49px;
+  left: 15px;
+  top: 11px;
+  border: 2px solid var(--text-primary);
+  border-radius: 6px;
+}
+
+.dp-product-image {
+  position: absolute;
+  width: 24px;
+  height: 17px;
+  left: 24px;
+  top: 19px;
+  border: 2px solid var(--accent-color);
+  transform: rotate(-4deg);
+}
+
+.dp-product-image::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  right: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.dp-product-line {
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  left: 24px;
+  background: var(--border-color);
+}
+
+.dp-product-line.line-one {
+  top: 42px;
+}
+
+.dp-product-line.line-two {
+  top: 48px;
+}
+
+/* Pitch */
+
+.dp-pitch-card {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  left: 15px;
+  top: 15px;
+  border: 2px solid var(--text-primary);
+  transform: rotate(-6deg);
+}
+
+.dp-pitch-ring {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 29px;
+  top: 24px;
+  border: 5px solid var(--accent-color);
+  border-right-color: var(--border-color);
+  border-radius: 50%;
+}
+
+.dp-pitch-line {
+  position: absolute;
+  height: 2px;
+  background: var(--text-primary);
+}
+
+.dp-pitch-line.line-one {
+  width: 20px;
+  left: 22px;
+  bottom: 17px;
+}
+
+.dp-pitch-line.line-two {
+  width: 13px;
+  left: 22px;
+  bottom: 11px;
+}
+
+/* Data */
+
+.dp-data-column {
+  position: absolute;
+  bottom: 16px;
+  width: 10px;
+  border: 1px solid var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.dp-data-column.column-one {
+  left: 17px;
+  height: 21px;
+}
+
+.dp-data-column.column-two {
+  left: 31px;
+  height: 35px;
+  background: var(--accent-color);
+}
+
+.dp-data-column.column-three {
+  left: 45px;
+  height: 49px;
+}
+
+.dp-data-line {
+  position: absolute;
+  width: 42px;
+  height: 25px;
+  left: 16px;
+  top: 16px;
+  border-top: 2px solid var(--accent-color);
+  border-right: 2px solid var(--accent-color);
+  transform: skewY(-25deg);
+}
+
+/* Interactive */
+
+.dp-interactive-frame {
+  position: absolute;
+  width: 44px;
+  height: 36px;
+  left: 13px;
+  top: 16px;
+  border: 2px solid var(--text-primary);
+  border-radius: 4px;
+}
+
+.dp-interactive-cursor {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  left: 40px;
+  top: 30px;
+  border-left: 9px solid var(--accent-color);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transform: rotate(-22deg);
+}
+
+.dp-interactive-point {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.dp-interactive-point.point-one {
+  left: 21px;
+  top: 24px;
+}
+
+.dp-interactive-point.point-two {
+  right: 19px;
+  bottom: 18px;
+}
+
+/* =========================================================
+   PROCESS
+   ========================================================= */
+
+.digitalpresentations-process {
+  background: var(--bg-primary);
+}
+
+.digitalpresentations-process-intro {
+  max-width: 780px;
+  margin-bottom: 80px;
+}
+
+.digitalpresentations-process-line {
+  position: relative;
+  padding-left: 90px;
+}
+
+.digitalpresentations-process-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 24px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-color) 12%,
+    var(--border-color) 88%,
+    transparent
+  );
+}
+
+.digitalpresentations-process-item {
+  position: relative;
+  margin-bottom: 58px;
+}
+
+.digitalpresentations-process-item:last-child {
+  margin-bottom: 0;
+}
+
+.digitalpresentations-process-marker {
+  position: absolute;
+  left: -90px;
+  top: 0;
+  width: 49px;
+  height: 49px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--accent-color);
+  font-size: 0.68rem;
+  font-weight: 800;
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.digitalpresentations-process-item:hover
+  .digitalpresentations-process-marker {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: #ffffff;
+  transform: scale(1.1) rotate(8deg);
+}
+
+.digitalpresentations-process-copy {
+  padding: 26px 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  background: var(--bg-card);
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.digitalpresentations-process-copy:hover {
+  transform: translateX(8px);
+  border-color: color-mix(
+    in srgb,
+    var(--accent-color) 45%,
+    var(--border-color)
+  );
+}
+
+.digitalpresentations-process-copy h3 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.digitalpresentations-process-copy p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* =========================================================
+   BENEFITS
+   ========================================================= */
+
+.digitalpresentations-benefits {
+  background: var(--bg-secondary);
+}
+
+.digitalpresentations-section-heading--right {
+  margin-left: auto;
+  text-align: right;
+}
+
+.digitalpresentations-section-heading--right > span {
+  justify-content: flex-end;
+}
+
+.digitalpresentations-section-heading--right > span::before {
+  order: 2;
+}
+
+.digitalpresentations-section-heading--right p {
+  margin-left: auto;
+}
+
+.digitalpresentations-benefit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.digitalpresentations-benefit {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  min-height: 125px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  transition:
+    padding 0.4s ease,
+    transform 0.4s ease;
+}
+
+.digitalpresentations-benefit:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.digitalpresentations-benefit:hover {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.digitalpresentations-benefit > span {
+  flex: 0 0 45px;
+  color: var(--accent-color);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.digitalpresentations-benefit > div {
+  flex: 1;
+}
+
+.digitalpresentations-benefit h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.digitalpresentations-benefit p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-size: 0.93rem;
+}
+
+.digitalpresentations-benefit i {
+  width: 45px;
+  height: 1px;
+  flex: 0 0 45px;
+  background: var(--border-color);
+  transition:
+    width 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.digitalpresentations-benefit:hover i {
+  width: 70px;
+  background: var(--accent-color);
+}
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+
+.digitalpresentations-faq {
+  background: var(--bg-primary);
+}
+
+.digitalpresentations-faq-list {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.digitalpresentations-faq-item {
+  border-top: 1px solid var(--border-color);
+}
+
+.digitalpresentations-faq-item:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.digitalpresentations-faq-question {
+  width: 100%;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 20px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.digitalpresentations-faq-question > span {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.digitalpresentations-faq-question small {
+  color: var(--accent-color);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.digitalpresentations-faq-question b {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 35px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 400;
+  transition:
+    transform 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.digitalpresentations-faq-item.is-active
+  .digitalpresentations-faq-question
+  b {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: rotate(180deg);
+}
+
+.digitalpresentations-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.digitalpresentations-faq-answer p {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 820px;
+}
+
+.digitalpresentations-faq-item.is-active
+  .digitalpresentations-faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.digitalpresentations-faq-item.is-active
+  .digitalpresentations-faq-answer
+  p {
+  padding: 0 57px 30px;
+}
+
+/* =========================================================
+   FINAL STATEMENT
+   NO CTA BUTTON
+   ========================================================= */
+
+.digitalpresentations-final {
+  position: relative;
+  min-height: 62vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  text-align: center;
+}
+
+.digitalpresentations-final::before,
+.digitalpresentations-final::after {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.digitalpresentations-final::before {
+  width: 500px;
+  height: 500px;
+  left: -250px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.digitalpresentations-final::after {
+  width: 420px;
+  height: 420px;
+  right: -210px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.digitalpresentations-final-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+}
+
+.digitalpresentations-final-inner h2 {
+  margin: 24px 0 22px;
+  color: var(--text-primary);
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.digitalpresentations-final-inner h2 strong {
+  color: var(--accent-color);
+}
+
+.digitalpresentations-final-inner p {
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.digitalpresentations-final-line {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 42px;
+}
+
+.digitalpresentations-final-line span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  animation: digitalpresentations-final-dot 1.6s ease-in-out infinite;
+}
+
+.digitalpresentations-final-line span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.digitalpresentations-final-line span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.digitalpresentations-final-line span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.digitalpresentations-final-line span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes digitalpresentations-orbit {
+  0%,
+  100% {
+    transform: rotate(-18deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(18deg) scale(1.06);
+  }
+}
+
+@keyframes digitalpresentations-slide-back {
+  0%,
+  100% {
+    transform: rotate(7deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(4deg) translateY(-10px);
+  }
+}
+
+@keyframes digitalpresentations-slide-main {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate(-50%, calc(-50% - 8px)) rotate(1deg);
+  }
+}
+
+@keyframes digitalpresentations-slide-front {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-11deg) translateY(9px);
+  }
+}
+
+@keyframes digitalpresentations-cursor-move {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-22deg);
+  }
+
+  50% {
+    transform: translate(12px, -9px) rotate(-22deg);
+  }
+}
+
+@keyframes digitalpresentations-final-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateY(-7px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .digitalpresentations-hero-inner {
+    gap: 50px;
+  }
+
+  .digitalpresentations-hero-content h1 {
+    font-size: clamp(3rem, 7vw, 5.3rem);
+  }
+
+  .digitalpresentations-stage {
+    min-height: 400px;
+  }
+
+  .slide-main {
+    width: 270px;
+    height: 190px;
+  }
+}
+
+@media (max-width: 850px) {
+  .digitalpresentations-hero {
+    min-height: auto;
+    padding: 130px 0 80px;
+  }
+
+  .digitalpresentations-hero-inner {
+    width: min(100% - 48px, 680px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 65px;
+  }
+
+  .digitalpresentations-hero-content {
+    max-width: none;
+  }
+
+  .digitalpresentations-hero-visual {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .digitalpresentations-stage {
+    min-height: 430px;
+  }
+
+  .digitalpresentations-section {
+    padding: 100px 0;
+  }
+
+  .digitalpresentations-section-heading {
+    margin-bottom: 55px;
+  }
+
+  .digitalpresentations-service-card {
+    gap: 24px;
+    padding: 25px;
+  }
+
+  .digitalpresentations-process-intro {
+    margin-bottom: 65px;
+  }
+
+  .digitalpresentations-final {
+    min-height: 55vh;
+  }
+}
+
+@media (max-width: 620px) {
+  .digitalpresentations-container {
+    width: min(100% - 32px, 540px);
+  }
+
+  .digitalpresentations-hero {
+    padding: 105px 0 60px;
+  }
+
+  .digitalpresentations-hero-inner {
+    width: min(100% - 32px, 540px);
+    gap: 50px;
+  }
+
+  .digitalpresentations-eyebrow,
+  .digitalpresentations-section-heading > span,
+  .digitalpresentations-process-intro > span,
+  .digitalpresentations-final-inner > span {
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+  }
+
+  .digitalpresentations-hero-content h1 {
+    margin: 20px 0;
+    font-size: clamp(2.75rem, 14vw, 4.3rem);
+  }
+
+  .digitalpresentations-hero-content p {
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .digitalpresentations-hero-meta {
+    gap: 10px;
+    margin-top: 26px;
+    font-size: 0.68rem;
+  }
+
+  .digitalpresentations-stage {
+    min-height: 350px;
+    border-radius: 22px;
+  }
+
+  .digitalpresentations-stage-label {
+    top: 18px;
+    left: 18px;
+  }
+
+  .slide-back {
+    width: 160px;
+    height: 110px;
+    top: 65px;
+    right: 20px;
+    padding: 14px;
+  }
+
+  .slide-main {
+    width: 235px;
+    height: 165px;
+    padding: 15px;
+  }
+
+  .main-slide-content {
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .main-slide-visual {
+    width: 78px;
+    height: 78px;
+    flex-basis: 78px;
+  }
+
+  .visual-circle {
+    width: 35px;
+    height: 35px;
+    left: 20px;
+    top: 18px;
+    border-width: 6px;
+  }
+
+  .visual-bar {
+    bottom: 8px;
+    width: 6px;
+  }
+
+  .visual-bar.bar-one {
+    left: 9px;
+    height: 12px;
+  }
+
+  .visual-bar.bar-two {
+    left: 18px;
+    height: 21px;
+  }
+
+  .visual-bar.bar-three {
+    left: 27px;
+    height: 29px;
+  }
+
+  .slide-front {
+    width: 90px;
+    height: 62px;
+    left: 18px;
+    bottom: 75px;
+    padding: 12px;
+  }
+
+  .digitalpresentations-flow {
+    left: 12%;
+    bottom: 25%;
+  }
+
+  .digitalpresentations-cursor {
+    right: 21%;
+    top: 36%;
+  }
+
+  .digitalpresentations-section {
+    padding: 85px 0;
+  }
+
+  .digitalpresentations-section-heading {
+    margin-bottom: 45px;
+  }
+
+  .digitalpresentations-section-heading h2,
+  .digitalpresentations-process-intro h2 {
+    font-size: clamp(2.2rem, 11vw, 3.4rem);
+  }
+
+  .digitalpresentations-section-heading p,
+  .digitalpresentations-process-intro p {
+    font-size: 0.93rem;
+    line-height: 1.7;
+  }
+
+  .digitalpresentations-service-card {
+    display: grid;
+    grid-template-columns: 34px 64px 1fr;
+    gap: 15px;
+    padding: 22px 18px;
+  }
+
+  .digitalpresentations-service-number {
+    min-width: 0;
+  }
+
+  .digitalpresentations-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .digitalpresentations-service-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .digitalpresentations-service-content p {
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  .digitalpresentations-service-arrow {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    font-size: 0.9rem;
+  }
+
+  .digitalpresentations-process-line {
+    padding-left: 62px;
+  }
+
+  .digitalpresentations-process-line::before {
+    left: 18px;
+  }
+
+  .digitalpresentations-process-marker {
+    left: -62px;
+    width: 37px;
+    height: 37px;
+    font-size: 0.6rem;
+  }
+
+  .digitalpresentations-process-item {
+    margin-bottom: 35px;
+  }
+
+  .digitalpresentations-process-copy {
+    padding: 21px 18px;
+  }
+
+  .digitalpresentations-process-copy h3 {
+    font-size: 1.08rem;
+  }
+
+  .digitalpresentations-process-copy p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  .digitalpresentations-benefit {
+    align-items: flex-start;
+    gap: 18px;
+    min-height: auto;
+    padding: 22px 0;
+  }
+
+  .digitalpresentations-benefit > span {
+    flex: 0 0 32px;
+  }
+
+  .digitalpresentations-benefit h3 {
+    font-size: 1.05rem;
+  }
+
+  .digitalpresentations-benefit p {
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  .digitalpresentations-benefit i {
+    display: none;
+  }
+
+  .digitalpresentations-faq-question {
+    min-height: 78px;
+    gap: 15px;
+  }
+
+  .digitalpresentations-faq-question > span {
+    gap: 13px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .digitalpresentations-faq-question b {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+  }
+
+  .digitalpresentations-faq-item.is-active
+    .digitalpresentations-faq-answer
+    p {
+    padding: 0 44px 25px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .digitalpresentations-final {
+    min-height: 52vh;
+    padding: 80px 18px;
+  }
+
+  .digitalpresentations-final-inner h2 {
+    font-size: clamp(2.8rem, 13vw, 4.5rem);
+  }
+
+  .digitalpresentations-final-inner p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .digitalpresentations-final::before {
+    width: 330px;
+    height: 330px;
+    left: -190px;
+  }
+
+  .digitalpresentations-final::after {
+    width: 280px;
+    height: 280px;
+    right: -170px;
+  }
+}
+
+@media (max-width: 390px) {
+  .digitalpresentations-container {
+    width: calc(100% - 24px);
+  }
+
+  .digitalpresentations-hero-inner {
+    width: calc(100% - 24px);
+  }
+
+  .digitalpresentations-hero-content h1 {
+    font-size: 2.7rem;
+  }
+
+  .digitalpresentations-stage {
+    min-height: 310px;
+  }
+
+  .slide-main {
+    width: 210px;
+    height: 148px;
+  }
+
+  .slide-back {
+    width: 135px;
+    height: 92px;
+  }
+
+  .slide-front {
+    width: 78px;
+    height: 55px;
+    left: 12px;
+    bottom: 60px;
+  }
+
+  .digitalpresentations-service-card {
+    grid-template-columns: 28px 58px 1fr;
+    gap: 10px;
+    padding: 20px 13px;
+  }
+
+  .digitalpresentations-icon {
+    width: 58px;
+    height: 58px;
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+
+  .digitalpresentations-service-content h3 {
+    font-size: 1rem;
+    padding-right: 25px;
+  }
+
+  .digitalpresentations-service-content p {
+    font-size: 0.8rem;
+  }
+
+  .digitalpresentations-faq-question > span {
+    font-size: 0.86rem;
+  }
+
+  .digitalpresentations-faq-item.is-active
+    .digitalpresentations-faq-answer
+    p {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .digitalpresentations-reveal,
+  .digitalpresentations-reveal--up,
+  .digitalpresentations-reveal--left,
+  .digitalpresentations-reveal--right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .digitalpresentations-stage *,
+  .digitalpresentations-final-line span {
+    animation: none !important;
+  }
+
+  .digitalpresentations-service-card,
+  .digitalpresentations-service-arrow,
+  .digitalpresentations-icon,
+  .digitalpresentations-process-marker,
+  .digitalpresentations-process-copy,
+  .digitalpresentations-benefit {
+    transition: none;
+  }
+}

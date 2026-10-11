@@ -5,6 +5,8 @@ backend/node_modules/
 # Environment
 .env
 backend/.env
+.env.*
+!.env.example
 
 # Build
 dist/

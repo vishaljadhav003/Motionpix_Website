@@ -7,28 +7,54 @@ const data = [
   { title: "Services", path: "/services" },
   { title: "2D Animation", path: "/services/2d-animation" },
   { title: "3D Animation", path: "/services/3d-animation" },
-  { title: "AR-VR", path: "/services/ar-vr" },
-  { title: "Digital Marketing", path: "/services/digitalmarketing" },
+  { title: "AR-VR", path: "/services/ar-vr-mr-xr" },
+  // { title: "Digital Marketing", path: "/services/digitalmarketing" },
   { title: "Web Design", path: "/services/web-design" },
   { title: "Website Design", path: "/services/web-design" },
-  { title: "Live Shoots", path: "/services/liveshoots" },
-  { title: "Data", path: "/data" },
-  { title: "Gallery", path: "/gallery" },
   { title: "Careers", path: "/careers" },
   { title: "Contact Us - Enquiry", path: "/contact" },
-  { title: "Blogs", path: "/data/blogs" },
-  { title: "Testimonials", path: "/data/testimonials" },
-  { title: "Faq", path: "/data/faq" },
-  { title: "News", path: "/data/news" },
-  {title:'Graphics Design', path:"/services/graphicsdesign"},
-  {title:'Products Branding', path:"/services/product-branding"},
-  {title:'E Learning', path:"/services/e-learning"},
-  {title:'ELearning', path:"/services/e-learning"},
-  {title:'Print Media', path:"/services/print-media"},
-  {title:'Motion Graphics', path:"/services/motiongraphics"},
-  {title:'SOP', path:"/services/sop"},
-  {title:'TestCases', path:"/data/testcases"},
-  {title:'WhitePapers', path:"/data/whitepapers"},
+  { title: "Graphics Design", path: "/services/graphicsdesign" },
+  { title: "E Learning", path: "/services/e-learning" },
+  { title: "Motion Graphics", path: "/services/motiongraphics" },
+  { title: "Product Visualization", path: "/services/product-visualization" },
+  { title: "Technical Visualization", path: "/services/technical-visualization" },
+  { title: "Engineering & Industrial Animation", path: "/services/engineering-industrial-animation" },
+  { title: "Explainer Content", path: "/services/explainer-content" },
+  { title: "Corporate & Brand Films", path: "/services/corporate-brand-films" },
+  { title: "Product & Industrial Films", path: "/services/product-industrial-films" },
+  { title: "Promotional Videos", path: "/services/promotional-videos" },
+  { title: "Photography & Videography", path: "/services/photography-videography" },
+  { title: "Editing & VFX", path: "/services/editing-vfx" },
+  { title: "Brand Identity", path: "/services/brand-identity" },
+  { title: "UI/UX Design", path: "/services/ui-ux-design" },
+  { title: "Landing Pages", path: "/services/landing-pages" },
+  { title: "Mobile App Design", path: "/services/mobile-app-design" },
+  { title: "Digital Presentations", path: "/services/digital-presentations" },
+  { title: "Digital Product Experiences", path: "/services/digital-product-experiences" },
+  { title: "Articulate Storyline", path: "/services/articulate-storyline" },
+  { title: "Interactive Learning", path: "/services/interactive-learning" },
+  { title: "Product Training", path: "/services/product-training" },
+  { title: "Employee & Safety Training", path: "/services/employee-safety-training" },
+  { title: "AR|VR|MR|XR Experiences", path: "/services/ar-vr-mr-xr" },
+  { title: "Virtual Showrooms", path: "/services/virtual-showrooms" },
+  { title: "Interactive 3D", path: "/services/interactive-3d" },
+  { title: "Immersive Training", path: "/services/immersive-training" },
+  { title: "Exhibition Creative", path: "/services/exhibition-creative" },
+  { title: "Exhibition 3D Design", path: "/services/exhibition-3d-design" },
+  { title: "Interactive Displays", path: "/services/interactive-displays" },
+  { title: "Digital Installations", path: "/services/digital-installations" },
+  { title: "Event Content", path: "/services/event-content" },
+  { title: "Product Experiences", path: "/services/product-experiences" },
+  { title: "Marketing Collaterals", path: "/services/marketing-collaterals" },
+  { title: "Presentation & Infographic Design", path: "/services/presentation-infographic-design" },
+  { title: "Campaign Creatives", path: "/services/campaign-creatives" },
+  { title: "Animation & Visualization", path: "/services/animation-visualization" },
+  { title: "Film & Visual Content", path: "/services/film-visual-content" },
+  { title: "Branding & Creative", path: "/services/branding-creative" },
+  { title: "Learning & Training", path: "/services/learning-training" },
+  { title: "Immersive Technology", path: "/services/immersive-technology" },
+  { title: "Exhibition Experiences", path: "/services/exhibition-experiences" },
+  { title: "Web & Mobile Interface Design", path: "/services/web-mobile-interface-design" }
 ];
 
 const SearchResults = () => {
@@ -38,7 +64,7 @@ const SearchResults = () => {
   const query = new URLSearchParams(location.search).get("q") || "";
 
   const results = query
-    ? data.filter(item =>
+    ? data.filter((item) =>
         item.title.toLowerCase().includes(query.toLowerCase())
       )
     : [];
@@ -52,26 +78,29 @@ const SearchResults = () => {
   if (!query) return null;
 
   return (
-    <div className="container py-4">
-      <h4 className="mb-3">
-        Search results for: <strong>{query}</strong>
+    <div className="container search-result-section">
+      <h4 className="mb-4">
+        Search results for: <span className="text-danger">"{query}"</span>
       </h4>
 
-      {results.length === 0 && (
-        <div className="alert alert-danger">No results found</div>
+      {results.length === 0 ? (
+        <div className="alert alert-warning border-0 rounded-3 shadow-sm">
+          No matching pages found for your query.
+        </div>
+      ) : (
+        <div className="list-group shadow-sm border-0">
+          {results.map((item, index) => (
+            <NavLink
+              key={index}
+              to={item.path}
+              className="list-group-item list-group-item-action py-3 px-4 fw-semibold"
+            >
+              <i className="bi bi-file-earmark-text me-2 text-danger"></i>
+              {item.title}
+            </NavLink>
+          ))}
+        </div>
       )}
-
-      <div className="list-group">
-        {results.map((item, index) => (
-          <NavLink
-            key={index}
-            to={item.path}
-            className="list-group-item list-group-item-action"
-          >
-            {item.title}
-          </NavLink>
-        ))}
-      </div>
     </div>
   );
 };

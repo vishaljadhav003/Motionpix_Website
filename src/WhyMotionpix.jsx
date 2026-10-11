@@ -59,10 +59,52 @@ const WhyMotionpix = () => {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // Theme toggle — reads/writes the same global data-theme attribute
+  // that every [data-theme="light"] CSS rule in the app is keyed on.
+  const [theme, setTheme] = useState(
+    () => document.documentElement.getAttribute("data-theme") || "dark"
+  );
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+    setTheme(next);
+  };
+
+  // Clicking a row updates the highlight immediately AND moves the real
+  // page scroll position to that row's trigger zone. Without this, the
+  // window's actual scroll position stayed wherever it physically was,
+  // so scrolling after a click would resume from the old position
+  // instead of continuing on from the clicked index.
+  const handleRowClick = (index) => {
+    setActiveIndex(index);
+
+    const isDesktop = window.innerWidth > DESKTOP_BREAKPOINT;
+    const targetEl = isDesktop
+      ? desktopTriggerRefs.current[index]
+      : leftItemRefs.current[index];
+
+    if (!targetEl) return;
+
+    const rect = targetEl.getBoundingClientRect();
+    const elementCenter = rect.top + window.scrollY + rect.height / 2;
+    const targetScrollY = elementCenter - window.innerHeight / 2;
+
+    window.scrollTo({
+      top: Math.max(targetScrollY, 0),
+      behavior: "smooth"
+    });
+  };
+
   useEffect(() => {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
+      // Bidirectional scroll-reveal: toggleActions "play reverse play reverse"
+      // maps to (onEnter, onLeave, onEnterBack, onLeaveBack), so the cards
+      // fade in every time the section scrolls into view and fade back out
+      // every time it scrolls out — both scrolling down and scrolling up.
       gsap.fromTo(
         [leftCardRef.current, rightCardRef.current],
         {
@@ -74,7 +116,13 @@ const WhyMotionpix = () => {
           y: 0,
           duration: 0.9,
           ease: "power3.out",
-          stagger: 0.12
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            end: "bottom 15%",
+            toggleActions: "play reverse play reverse"
+          }
         }
       );
 
@@ -102,8 +150,8 @@ const WhyMotionpix = () => {
 
           return ScrollTrigger.create({
             trigger: item,
-            start: "top 80%",
-            end: "bottom 30%",
+            start: "top center",
+            end: "bottom center",
             onEnter: () => setActiveIndex(index),
             onEnterBack: () => setActiveIndex(index)
           });
@@ -200,6 +248,7 @@ const WhyMotionpix = () => {
                   key={i}
                   ref={(el) => (leftItemRefs.current[i] = el)}
                   className={`why-service-row ${activeIndex === i ? "active" : ""}`}
+                  onClick={() => handleRowClick(i)}
                 >
                   <span className="why-number">
                     {String(i + 1).padStart(2, "0")}

@@ -1,0 +1,2125 @@
+/* =========================================================
+   INTERACTIVE 3D PAGE
+   Matches Interactive3D.jsx
+   Scoped to interactive3d-* classes only.
+   Uses existing index.css light/dark theme variables.
+   No external images or icon libraries required.
+========================================================= */
+
+/* =========================================================
+   PAGE BASE & SHARED UTILITIES
+========================================================= */
+
+.interactive3d-page {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  background: var(--bg-primary, #0a0a0a);
+  color: var(--text-primary, #ffffff);
+  isolation: isolate;
+}
+
+.interactive3d-page *,
+.interactive3d-page *::before,
+.interactive3d-page *::after {
+  box-sizing: border-box;
+}
+
+.interactive3d-page button {
+  font: inherit;
+}
+
+.interactive3d-page button:focus-visible {
+  outline: 2px solid var(--accent-color, #e50914);
+  outline-offset: 4px;
+}
+
+.interactive3d-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   BIDIRECTIONAL SCROLL REVEAL
+========================================================= */
+
+.interactive3d-reveal {
+  min-width: 0;
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.interactive3d-reveal--up {
+  transform: translate3d(0, 55px, 0);
+}
+
+.interactive3d-reveal--left {
+  transform: translate3d(-68px, 0, 0);
+}
+
+.interactive3d-reveal--right {
+  transform: translate3d(68px, 0, 0);
+}
+
+.interactive3d-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   SECTION LABELS
+========================================================= */
+
+.interactive3d-eyebrow,
+.interactive3d-section-heading > span,
+.interactive3d-process-intro > span,
+.interactive3d-final-inner > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color, #e50914);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.interactive3d-eyebrow::before,
+.interactive3d-section-heading > span::before,
+.interactive3d-process-intro > span::before,
+.interactive3d-final-inner > span::before {
+  width: 26px;
+  height: 1px;
+  flex: 0 0 26px;
+  background: var(--accent-color, #e50914);
+  content: "";
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.interactive3d-hero {
+  position: relative;
+  display: flex;
+  min-height: 90vh;
+  align-items: center;
+  padding: 110px 0 95px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 78% 48%,
+      color-mix(in srgb, var(--accent-color, #e50914) 9%, transparent),
+      transparent 35%
+    ),
+    var(--bg-primary, #0a0a0a);
+}
+
+.interactive3d-hero::before {
+  position: absolute;
+  top: 12%;
+  left: -155px;
+  width: 310px;
+  height: 310px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.interactive3d-hero::after {
+  position: absolute;
+  right: -120px;
+  bottom: -180px;
+  width: 360px;
+  height: 360px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.interactive3d-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(1320px, calc(100% - 80px));
+  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+  align-items: center;
+  gap: clamp(38px, 6vw, 84px);
+  margin: 0 auto;
+}
+
+.interactive3d-hero-content {
+  min-width: 0;
+  max-width: 660px;
+}
+
+.interactive3d-hero-content h1 {
+  margin: 25px 0 24px;
+  color: var(--text-primary, #ffffff);
+  font-size: clamp(3.05rem, 6.2vw, 6.5rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.96;
+  overflow-wrap: anywhere;
+}
+
+.interactive3d-hero-content h1 span {
+  color: var(--accent-color, #e50914);
+}
+
+.interactive3d-hero-content > p {
+  max-width: 610px;
+  margin: 0;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+.interactive3d-hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 34px;
+  color: var(--text-secondary, #e0e0e0);
+  font-size: 0.73rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.interactive3d-hero-meta i {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+}
+
+.interactive3d-hero-visual {
+  min-width: 0;
+}
+
+/* =========================================================
+   INTERACTIVE 3D STAGE / VIEWPORT
+========================================================= */
+
+.interactive3d-stage {
+  --i3d-tone: #e50914;
+  --i3d-ink: #ffffff;
+  --i3d-size: clamp(118px, 15vw, 174px);
+  position: relative;
+  min-width: 0;
+  min-height: 505px;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 27px;
+  background:
+    radial-gradient(
+      circle at 50% 43%,
+      color-mix(in srgb, var(--i3d-tone) 12%, transparent),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--bg-secondary, #121212) 95%, transparent),
+      var(--bg-card, rgba(20, 20, 20, 0.85))
+    );
+  cursor: grab;
+  isolation: isolate;
+  perspective: 1100px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.interactive3d-stage.is-dragging {
+  cursor: grabbing;
+}
+
+.interactive3d-stage::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border-color, rgba(255, 255, 255, 0.15)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-color, rgba(255, 255, 255, 0.15)) 1px, transparent 1px);
+  background-position: center;
+  background-size: 34px 34px;
+  content: "";
+  opacity: 0.26;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
+
+.interactive3d-stage::after {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(74%, 340px);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--accent-color, #e50914) 22%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.interactive3d-hud {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.interactive3d-hud--top {
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-secondary, #e0e0e0);
+  white-space: nowrap;
+}
+
+.interactive3d-live i {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+}
+
+.interactive3d-live i::after {
+  position: absolute;
+  inset: -4px;
+  border: 1px solid color-mix(in srgb, var(--accent-color, #e50914) 65%, transparent);
+  border-radius: 50%;
+  content: "";
+  animation: interactive3d-live-pulse 2s ease-out infinite;
+}
+
+.interactive3d-readout {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.interactive3d-scene {
+  position: absolute;
+  inset: 65px 12px 82px;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.interactive3d-ring {
+  position: absolute;
+  width: min(75%, 330px);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--accent-color, #e50914) 36%, transparent);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.interactive3d-ring--one,
+.interactive3d-stage .ring-one {
+  transform: rotateX(68deg) rotateZ(-25deg);
+  animation: interactive3d-ring-spin 18s linear infinite;
+}
+
+.interactive3d-ring--two,
+.interactive3d-stage .ring-two {
+  width: min(61%, 270px);
+  border-color: var(--border-color, rgba(255, 255, 255, 0.15));
+  transform: rotateY(62deg) rotateX(24deg);
+  animation: interactive3d-ring-spin 24s linear infinite reverse;
+}
+
+.interactive3d-shadow {
+  position: absolute;
+  bottom: 10%;
+  width: calc(var(--i3d-size) * 1.55);
+  height: calc(var(--i3d-size) * 0.32);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-primary, #ffffff) 13%, transparent);
+  filter: blur(17px);
+  transform: rotateX(65deg) translateZ(-18px);
+}
+
+.interactive3d-cube {
+  position: relative;
+  z-index: 2;
+  width: var(--i3d-size);
+  height: var(--i3d-size);
+  transform: rotateX(-18deg) rotateY(32deg);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.interactive3d-face {
+  position: absolute;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--i3d-ink) 38%, transparent);
+  background: color-mix(in srgb, var(--i3d-tone) 82%, var(--bg-card, #141414));
+  color: var(--i3d-ink, #ffffff);
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+
+.interactive3d-face::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, #ffffff 24%, transparent), transparent 58%);
+  content: "";
+  pointer-events: none;
+}
+
+.interactive3d-face--front {
+  transform: translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--back {
+  background: color-mix(in srgb, var(--i3d-tone) 61%, var(--bg-secondary, #121212));
+  transform: rotateY(180deg) translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--right {
+  background: color-mix(in srgb, var(--i3d-tone) 72%, #000000);
+  transform: rotateY(90deg) translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--left {
+  background: color-mix(in srgb, var(--i3d-tone) 55%, var(--bg-secondary, #121212));
+  transform: rotateY(-90deg) translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--top {
+  background: color-mix(in srgb, var(--i3d-tone) 55%, #ffffff);
+  transform: rotateX(90deg) translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--bottom {
+  background: color-mix(in srgb, var(--i3d-tone) 50%, #000000);
+  transform: rotateX(-90deg) translateZ(calc(var(--i3d-size) / 2));
+}
+
+.interactive3d-face--front > span {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.7rem, 4vw, 3.1rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.22);
+}
+
+.interactive3d-hotspot {
+  position: absolute;
+  z-index: 2;
+  top: 23%;
+  right: 22%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-color, #e50914) 26%, transparent);
+  animation: interactive3d-hotspot-pulse 1.7s ease-out infinite;
+}
+
+.interactive3d-chip {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 999px;
+  background: var(--bg-card, rgba(20, 20, 20, 0.85));
+  color: var(--text-secondary, #e0e0e0);
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  animation: interactive3d-chip-float 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.interactive3d-chip::before {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+  content: "";
+}
+
+.interactive3d-chip.chip-one {
+  top: 28%;
+  left: 6%;
+}
+
+.interactive3d-chip.chip-two {
+  right: 5%;
+  bottom: 27%;
+  animation-delay: -2.2s;
+}
+
+.interactive3d-hud--bottom {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  left: 22px;
+  align-items: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.interactive3d-hint {
+  color: var(--text-muted, #a0a0a0);
+  white-space: nowrap;
+}
+
+.interactive3d-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.interactive3d-swatches {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.interactive3d-swatch {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  padding: 0;
+  border: 2px solid var(--bg-secondary, #121212);
+  border-radius: 50%;
+  background: var(--swatch, #e50914);
+  box-shadow: 0 0 0 1px var(--border-color, rgba(255, 255, 255, 0.15));
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.interactive3d-swatch:hover {
+  transform: scale(1.12);
+}
+
+.interactive3d-swatch.is-active {
+  box-shadow: 0 0 0 2px var(--accent-color, #e50914);
+}
+
+.interactive3d-reset {
+  min-height: 33px;
+  padding: 7px 12px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  background: var(--bg-secondary, #121212);
+  color: var(--text-primary, #ffffff);
+  font-size: 0.69rem !important;
+  font-weight: 750 !important;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.interactive3d-reset:hover {
+  border-color: var(--accent-color, #e50914);
+  background: var(--accent-color, #e50914);
+  color: #ffffff;
+}
+
+/* =========================================================
+   GENERAL SECTIONS & HEADINGS
+========================================================= */
+
+.interactive3d-section {
+  position: relative;
+  padding: 125px 0;
+  background: var(--bg-primary, #0a0a0a);
+}
+
+.interactive3d-services,
+.interactive3d-benefits {
+  background: var(--bg-secondary, #121212);
+}
+
+.interactive3d-section-heading {
+  max-width: 790px;
+  margin-bottom: 66px;
+}
+
+.interactive3d-section-heading h2,
+.interactive3d-process-intro h2 {
+  margin: 19px 0 20px;
+  color: var(--text-primary, #ffffff);
+  font-size: clamp(2.3rem, 4.7vw, 4.7rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.03;
+  overflow-wrap: anywhere;
+}
+
+.interactive3d-section-heading h2 strong,
+.interactive3d-process-intro h2 strong {
+  color: var(--accent-color, #e50914);
+  font-weight: 850;
+}
+
+.interactive3d-section-heading > p,
+.interactive3d-process-intro > p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* =========================================================
+   CUSTOM SERVICE ICONS
+========================================================= */
+
+.interactive3d-icon {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  flex: 0 0 74px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 17px;
+  background: var(--bg-secondary, #121212);
+  color: var(--accent-color, #e50914);
+  transition:
+    transform 0.4s ease,
+    border-color 0.35s ease;
+}
+
+.interactive3d-icon::before {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  content: "";
+}
+
+.interactive3d-service-card:hover .interactive3d-icon {
+  transform: perspective(500px) rotateY(-10deg) rotateX(7deg);
+  border-color: var(--accent-color, #e50914);
+}
+
+/* Mini 3D model */
+
+.interactive3d-mc {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 29px;
+  height: 29px;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  transform-style: preserve-3d;
+}
+
+.interactive3d-mc-back,
+.interactive3d-mc-front {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--text-primary, #ffffff);
+  background: color-mix(in srgb, var(--accent-color, #e50914) 25%, var(--bg-secondary, #121212));
+  transform: translateZ(-5px);
+}
+
+.interactive3d-mc-front {
+  background: color-mix(in srgb, var(--accent-color, #e50914) 58%, var(--bg-secondary, #121212));
+  transform: translateZ(5px);
+}
+
+.interactive3d-mc-line {
+  position: absolute;
+  z-index: 2;
+  width: 21px;
+  height: 1px;
+  left: 4px;
+  background: color-mix(in srgb, var(--text-primary, #ffffff) 65%, transparent);
+}
+
+.interactive3d-mc-line--a {
+  top: 8px;
+}
+
+.interactive3d-mc-line--b {
+  top: 14px;
+  width: 15px;
+}
+
+.interactive3d-mc-line--c {
+  top: 20px;
+  width: 18px;
+}
+
+.interactive3d-mc--configurator {
+  top: 34%;
+  left: 42%;
+}
+
+.interactive3d-icon-slider {
+  position: absolute;
+  left: 13px;
+  width: 47px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-icon-slider.slider-one {
+  bottom: 17px;
+}
+
+.interactive3d-icon-slider.slider-two {
+  bottom: 9px;
+}
+
+.interactive3d-icon-knob {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--text-primary, #ffffff);
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+}
+
+.interactive3d-icon-knob.knob-one {
+  bottom: 14px;
+  left: 29px;
+}
+
+.interactive3d-icon-knob.knob-two {
+  bottom: 6px;
+  left: 45px;
+}
+
+.interactive3d-icon-orbit {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--text-secondary, #e0e0e0);
+  border-radius: 50%;
+  transform: rotateX(65deg) rotateZ(-22deg);
+}
+
+.interactive3d-mc--viewer {
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%) rotate(-12deg) scale(0.9);
+}
+
+.interactive3d-icon-orbit-dot {
+  position: absolute;
+  top: 12px;
+  right: 13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color, #e50914) 16%, transparent);
+}
+
+.interactive3d-icon-window {
+  position: absolute;
+  top: 13px;
+  left: 11px;
+  width: 52px;
+  height: 43px;
+  border: 1.5px solid var(--text-secondary, #e0e0e0);
+  border-radius: 5px;
+}
+
+.interactive3d-icon-window::before {
+  position: absolute;
+  top: 9px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--border-color, rgba(255, 255, 255, 0.15));
+  content: "";
+}
+
+.interactive3d-icon-window-dot {
+  position: absolute;
+  top: 17px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+}
+
+.interactive3d-icon-window-dot.dot-one {
+  left: 17px;
+}
+
+.interactive3d-icon-window-dot.dot-two {
+  left: 25px;
+}
+
+.interactive3d-mc--web {
+  top: 44px;
+  left: 41px;
+  width: 18px;
+  height: 18px;
+  transform: rotate(-8deg);
+}
+
+.interactive3d-icon-path {
+  position: absolute;
+  top: 12px;
+  left: 17px;
+  width: 39px;
+  height: 49px;
+  border: 1.5px dashed var(--accent-color, #e50914);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-radius: 0 0 0 24px;
+  transform: rotate(-18deg);
+}
+
+.interactive3d-icon-path-start {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--text-primary, #ffffff);
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+}
+
+.interactive3d-icon-path-pin {
+  position: absolute;
+  top: 38px;
+  right: 15px;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--text-primary, #ffffff);
+  border-radius: 50% 50% 50% 0;
+  background: var(--accent-color, #e50914);
+  transform: rotate(-45deg);
+}
+
+.interactive3d-icon-path-ring {
+  position: absolute;
+  right: 19px;
+  bottom: 14px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--text-primary, #ffffff);
+  border-radius: 50%;
+}
+
+.interactive3d-icon-guide {
+  position: absolute;
+  top: 13px;
+  left: 35px;
+  width: 1px;
+  height: 46px;
+  background: var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-icon-layer {
+  position: absolute;
+  left: 18px;
+  width: 39px;
+  height: 14px;
+  border: 1.5px solid var(--text-primary, #ffffff);
+  background: color-mix(in srgb, var(--accent-color, #e50914) 48%, var(--bg-secondary, #121212));
+  transform: skewY(-22deg) rotate(-1deg);
+}
+
+.interactive3d-icon-layer.layer-top {
+  top: 12px;
+  background: color-mix(in srgb, var(--accent-color, #e50914) 72%, #ffffff);
+}
+
+.interactive3d-icon-layer.layer-middle {
+  top: 29px;
+  left: 22px;
+}
+
+.interactive3d-icon-layer.layer-bottom {
+  top: 46px;
+  left: 26px;
+  background: color-mix(in srgb, var(--accent-color, #e50914) 30%, var(--bg-secondary, #121212));
+}
+
+.interactive3d-icon-bracket {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-color: var(--accent-color, #e50914);
+  border-style: solid;
+}
+
+.interactive3d-icon-bracket.bracket-tl {
+  top: 13px;
+  left: 13px;
+  border-width: 1.5px 0 0 1.5px;
+}
+
+.interactive3d-icon-bracket.bracket-tr {
+  top: 13px;
+  right: 13px;
+  border-width: 1.5px 1.5px 0 0;
+}
+
+.interactive3d-icon-bracket.bracket-bl {
+  bottom: 13px;
+  left: 13px;
+  border-width: 0 0 1.5px 1.5px;
+}
+
+.interactive3d-icon-bracket.bracket-br {
+  right: 13px;
+  bottom: 13px;
+  border-width: 0 1.5px 1.5px 0;
+}
+
+.interactive3d-mc--assets {
+  transform: translate(-50%, -50%) rotate(-10deg) scale(0.84);
+}
+
+/* =========================================================
+   SERVICES LIST
+========================================================= */
+
+.interactive3d-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.interactive3d-service-wrap {
+  width: 100%;
+  min-width: 0;
+}
+
+.interactive3d-service-card {
+  position: relative;
+  display: flex;
+  min-height: 155px;
+  align-items: center;
+  gap: 32px;
+  padding: 28px 32px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 20px;
+  background: var(--bg-card, rgba(20, 20, 20, 0.85));
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.interactive3d-service-card::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--accent-color, #e50914);
+  content: "";
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.35s ease;
+}
+
+.interactive3d-service-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color, #e50914) 52%, var(--border-color, rgba(255, 255, 255, 0.15)));
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.interactive3d-service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.interactive3d-service-number {
+  align-self: flex-start;
+  min-width: 36px;
+  padding-top: 5px;
+  color: var(--accent-color, #e50914);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.interactive3d-service-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.interactive3d-service-content h3 {
+  margin: 0 0 9px;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.32rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+}
+
+.interactive3d-service-content p {
+  max-width: 790px;
+  margin: 0;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
+.interactive3d-service-arrow {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.1rem;
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.interactive3d-service-card:hover .interactive3d-service-arrow {
+  transform: rotate(45deg);
+  border-color: var(--accent-color, #e50914);
+  background: var(--accent-color, #e50914);
+  color: #ffffff;
+}
+
+/* =========================================================
+   PROCESS TIMELINE
+========================================================= */
+
+.interactive3d-process {
+  background: var(--bg-primary, #0a0a0a);
+}
+
+.interactive3d-process-intro {
+  max-width: 820px;
+  margin-bottom: 78px;
+}
+
+.interactive3d-process-line {
+  position: relative;
+  padding-left: 90px;
+}
+
+.interactive3d-process-line::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 24px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-color, #e50914) 12%,
+    var(--border-color, rgba(255, 255, 255, 0.15)) 88%,
+    transparent
+  );
+  content: "";
+}
+
+.interactive3d-process-item {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.interactive3d-process-item:last-child {
+  margin-bottom: 0;
+}
+
+.interactive3d-process-marker {
+  position: absolute;
+  top: 27px;
+  left: -90px;
+  display: grid;
+  width: 49px;
+  height: 49px;
+  place-items: center;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  background: var(--bg-secondary, #121212);
+  color: var(--accent-color, #e50914);
+  font-size: 0.68rem;
+  font-weight: 850;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.interactive3d-process-item:hover .interactive3d-process-marker {
+  transform: scale(1.08) rotate(8deg);
+  border-color: var(--accent-color, #e50914);
+  background: var(--accent-color, #e50914);
+  color: #ffffff;
+}
+
+.interactive3d-process-copy {
+  padding: 27px 30px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 18px;
+  background: var(--bg-card, rgba(20, 20, 20, 0.85));
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.interactive3d-process-copy:hover {
+  transform: translateX(7px);
+  border-color: color-mix(in srgb, var(--accent-color, #e50914) 48%, var(--border-color, rgba(255, 255, 255, 0.15)));
+}
+
+.interactive3d-process-copy h3 {
+  margin: 0 0 10px;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.28rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+}
+
+.interactive3d-process-copy p {
+  max-width: 780px;
+  margin: 0;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 0.93rem;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.interactive3d-benefits {
+  background: var(--bg-secondary, #121212);
+}
+
+.interactive3d-benefit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.interactive3d-benefit {
+  display: flex;
+  min-height: 126px;
+  align-items: center;
+  gap: 30px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  transition:
+    padding 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.interactive3d-benefit-list > div:last-child .interactive3d-benefit {
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-benefit:hover {
+  padding-right: 16px;
+  padding-left: 16px;
+  background: color-mix(in srgb, var(--accent-color, #e50914) 3%, transparent);
+}
+
+.interactive3d-benefit > span:first-child {
+  flex: 0 0 45px;
+  color: var(--accent-color, #e50914);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.interactive3d-benefit > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.interactive3d-benefit h3 {
+  margin: 0 0 8px;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.18rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+
+.interactive3d-benefit p {
+  max-width: 750px;
+  margin: 0;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.interactive3d-benefit > i {
+  width: 45px;
+  height: 1px;
+  flex: 0 0 45px;
+  background: var(--border-color, rgba(255, 255, 255, 0.15));
+  transition:
+    width 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.interactive3d-benefit:hover > i {
+  width: 68px;
+  background: var(--accent-color, #e50914);
+}
+
+/* =========================================================
+   FAQ ACCORDION
+========================================================= */
+
+.interactive3d-faq {
+  background: var(--bg-primary, #0a0a0a);
+}
+
+.interactive3d-faq-list {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.interactive3d-faq-item {
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-faq-list > div:last-child .interactive3d-faq-item {
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+}
+
+.interactive3d-faq-question {
+  display: flex;
+  width: 100%;
+  min-height: 90px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary, #ffffff);
+  cursor: pointer;
+  text-align: left;
+}
+
+.interactive3d-faq-question > span:first-child {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 22px;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.interactive3d-faq-question small {
+  flex: 0 0 auto;
+  color: var(--accent-color, #e50914);
+  font-size: 0.66rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.interactive3d-faq-question b {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  color: var(--text-primary, #ffffff);
+  font-size: 1.2rem;
+  font-weight: 400;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.interactive3d-faq-item.is-active .interactive3d-faq-question b {
+  transform: rotate(180deg);
+  border-color: var(--accent-color, #e50914);
+  color: var(--accent-color, #e50914);
+}
+
+.interactive3d-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive3d-faq-answer p {
+  min-height: 0;
+  max-width: 830px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0 58px;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 0.93rem;
+  line-height: 1.85;
+}
+
+.interactive3d-faq-item.is-active .interactive3d-faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.interactive3d-faq-item.is-active .interactive3d-faq-answer p {
+  padding-bottom: 29px;
+}
+
+/* =========================================================
+   FINAL STATEMENT — NO CTA BUTTON
+========================================================= */
+
+.interactive3d-final {
+  position: relative;
+  display: flex;
+  min-height: 510px;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px;
+  overflow: hidden;
+  background: var(--bg-secondary, #121212);
+  text-align: center;
+}
+
+.interactive3d-final::before,
+.interactive3d-final::after {
+  position: absolute;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.interactive3d-final::before {
+  top: 50%;
+  left: -250px;
+  width: 500px;
+  height: 500px;
+  transform: translateY(-50%);
+}
+
+.interactive3d-final::after {
+  top: 50%;
+  right: -220px;
+  width: 430px;
+  height: 430px;
+  transform: translateY(-50%);
+}
+
+.interactive3d-final-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.interactive3d-final-inner > span {
+  justify-content: center;
+}
+
+.interactive3d-final-inner h2 {
+  margin: 25px 0 23px;
+  color: var(--text-primary, #ffffff);
+  font-size: clamp(3rem, 6.4vw, 6rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+}
+
+.interactive3d-final-inner h2 strong {
+  color: var(--accent-color, #e50914);
+  font-weight: 850;
+}
+
+.interactive3d-final-inner p {
+  max-width: 680px;
+  margin: 0 auto;
+  color: var(--text-muted, #a0a0a0);
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.interactive3d-final-line {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 40px;
+}
+
+.interactive3d-final-line span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color, #e50914);
+  animation: interactive3d-final-dot 1.6s ease-in-out infinite;
+}
+
+.interactive3d-final-line span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.interactive3d-final-line span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.interactive3d-final-line span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.interactive3d-final-line span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+
+@keyframes interactive3d-live-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.85;
+  }
+
+  80%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes interactive3d-ring-spin {
+  from {
+    rotate: 0deg;
+  }
+
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes interactive3d-hotspot-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-color, #e50914) 34%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}
+
+@keyframes interactive3d-chip-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -7px;
+  }
+}
+
+@keyframes interactive3d-final-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET & SMALL LAPTOP
+========================================================= */
+
+@media (max-width: 1100px) {
+  .interactive3d-hero-inner {
+    width: min(100% - 56px, 1000px);
+    gap: 38px;
+  }
+
+  .interactive3d-hero-content h1 {
+    font-size: clamp(3rem, 6vw, 5.3rem);
+  }
+
+  .interactive3d-stage {
+    --i3d-size: clamp(112px, 15vw, 155px);
+    min-height: 475px;
+    padding: 19px;
+  }
+
+  .interactive3d-hud--bottom {
+    right: 19px;
+    left: 19px;
+  }
+
+  .interactive3d-section {
+    padding: 105px 0;
+  }
+
+  .interactive3d-service-card {
+    gap: 24px;
+    padding: 27px;
+  }
+}
+
+@media (max-width: 900px) {
+  .interactive3d-hero {
+    min-height: auto;
+    padding: 100px 0 82px;
+  }
+
+  .interactive3d-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .interactive3d-hero-content {
+    max-width: 760px;
+  }
+
+  .interactive3d-hero-content h1 {
+    font-size: clamp(3.25rem, 8.5vw, 5.8rem);
+  }
+
+  .interactive3d-hero-visual {
+    width: min(100%, 650px);
+    margin: 0 auto;
+  }
+
+  .interactive3d-stage {
+    --i3d-size: clamp(145px, 22vw, 190px);
+    min-height: 510px;
+  }
+
+  .interactive3d-service-card {
+    gap: 20px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 680px) {
+  .interactive3d-container {
+    width: calc(100% - 36px);
+  }
+
+  .interactive3d-hero {
+    padding: 82px 0 65px;
+  }
+
+  .interactive3d-hero-inner {
+    width: calc(100% - 36px);
+    gap: 37px;
+  }
+
+  .interactive3d-eyebrow,
+  .interactive3d-section-heading > span,
+  .interactive3d-process-intro > span,
+  .interactive3d-final-inner > span {
+    gap: 8px;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .interactive3d-eyebrow::before,
+  .interactive3d-section-heading > span::before,
+  .interactive3d-process-intro > span::before,
+  .interactive3d-final-inner > span::before {
+    width: 20px;
+    flex-basis: 20px;
+  }
+
+  .interactive3d-hero-content h1 {
+    margin: 21px 0;
+    font-size: clamp(2.75rem, 11.5vw, 4.5rem);
+  }
+
+  .interactive3d-hero-content > p {
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+
+  .interactive3d-hero-meta {
+    gap: 10px;
+    margin-top: 27px;
+    font-size: 0.64rem;
+  }
+
+  .interactive3d-stage {
+    --i3d-size: clamp(116px, 33vw, 165px);
+    min-height: 435px;
+    padding: 16px;
+    border-radius: 21px;
+  }
+
+  .interactive3d-hud {
+    gap: 8px;
+    font-size: 0.53rem;
+    letter-spacing: 0.04em;
+  }
+
+  .interactive3d-hud--top {
+    padding-bottom: 14px;
+  }
+
+  .interactive3d-live {
+    gap: 7px;
+  }
+
+  .interactive3d-readout {
+    font-size: 0.51rem;
+  }
+
+  .interactive3d-scene {
+    inset: 62px 5px 76px;
+  }
+
+  .interactive3d-ring {
+    width: min(82%, 270px);
+  }
+
+  .interactive3d-stage .ring-two {
+    width: min(66%, 220px);
+  }
+
+  .interactive3d-chip {
+    padding: 7px 9px;
+    font-size: 0.56rem;
+  }
+
+  .interactive3d-chip.chip-one {
+    top: 27%;
+    left: 3%;
+  }
+
+  .interactive3d-chip.chip-two {
+    right: 3%;
+    bottom: 29%;
+  }
+
+  .interactive3d-hud--bottom {
+    right: 15px;
+    bottom: 15px;
+    left: 15px;
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .interactive3d-hint {
+    font-size: 0.56rem;
+  }
+
+  .interactive3d-controls {
+    gap: 8px;
+  }
+
+  .interactive3d-swatches {
+    gap: 6px;
+  }
+
+  .interactive3d-swatch {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
+  }
+
+  .interactive3d-reset {
+    min-height: 30px;
+    padding: 6px 9px;
+    font-size: 0.62rem !important;
+  }
+
+  .interactive3d-section {
+    padding: 78px 0;
+  }
+
+  .interactive3d-section-heading {
+    margin-bottom: 39px;
+  }
+
+  .interactive3d-section-heading h2,
+  .interactive3d-process-intro h2 {
+    margin: 17px 0;
+    font-size: clamp(2.1rem, 8.4vw, 3.4rem);
+    line-height: 1.06;
+  }
+
+  .interactive3d-section-heading > p,
+  .interactive3d-process-intro > p {
+    font-size: 0.91rem;
+    line-height: 1.8;
+  }
+
+  .interactive3d-services-list {
+    gap: 13px;
+  }
+
+  .interactive3d-service-card {
+    min-height: auto;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .interactive3d-service-number {
+    min-width: 26px;
+    padding-top: 3px;
+    font-size: 0.63rem;
+  }
+
+  .interactive3d-icon {
+    width: 55px;
+    height: 55px;
+    flex-basis: 55px;
+    border-radius: 13px;
+  }
+
+  .interactive3d-mc {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.8);
+  }
+
+  .interactive3d-mc--viewer {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.7);
+  }
+
+  .interactive3d-mc--web {
+    top: 35px;
+    left: 30px;
+    transform: rotate(-8deg) scale(0.75);
+  }
+
+  .interactive3d-icon-slider {
+    left: 8px;
+    width: 37px;
+  }
+
+  .interactive3d-icon-knob.knob-one {
+    left: 22px;
+  }
+
+  .interactive3d-icon-knob.knob-two {
+    left: 35px;
+  }
+
+  .interactive3d-icon-orbit {
+    top: 9px;
+    left: 8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .interactive3d-icon-window {
+    top: 10px;
+    left: 7px;
+    width: 41px;
+    height: 34px;
+  }
+
+  .interactive3d-icon-window-dot.dot-one {
+    top: 14px;
+    left: 12px;
+  }
+
+  .interactive3d-icon-window-dot.dot-two {
+    top: 14px;
+    left: 19px;
+  }
+
+  .interactive3d-icon-path {
+    top: 8px;
+    left: 11px;
+    width: 30px;
+    height: 36px;
+  }
+
+  .interactive3d-icon-path-start {
+    top: 8px;
+    left: 10px;
+  }
+
+  .interactive3d-icon-path-pin {
+    top: 29px;
+    right: 8px;
+  }
+
+  .interactive3d-icon-path-ring {
+    right: 12px;
+    bottom: 8px;
+  }
+
+  .interactive3d-icon-guide {
+    top: 9px;
+    left: 27px;
+    height: 35px;
+  }
+
+  .interactive3d-icon-layer {
+    left: 11px;
+    width: 32px;
+    height: 10px;
+  }
+
+  .interactive3d-icon-layer.layer-top {
+    top: 9px;
+  }
+
+  .interactive3d-icon-layer.layer-middle {
+    top: 22px;
+    left: 15px;
+  }
+
+  .interactive3d-icon-layer.layer-bottom {
+    top: 35px;
+    left: 19px;
+  }
+
+  .interactive3d-icon-bracket.bracket-tl {
+    top: 8px;
+    left: 8px;
+  }
+
+  .interactive3d-icon-bracket.bracket-tr {
+    top: 8px;
+    right: 8px;
+  }
+
+  .interactive3d-icon-bracket.bracket-bl {
+    bottom: 8px;
+    left: 8px;
+  }
+
+  .interactive3d-icon-bracket.bracket-br {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .interactive3d-service-content {
+    padding-top: 1px;
+  }
+
+  .interactive3d-service-content h3 {
+    margin-bottom: 8px;
+    font-size: 0.98rem;
+  }
+
+  .interactive3d-service-content p {
+    font-size: 0.81rem;
+    line-height: 1.75;
+  }
+
+  .interactive3d-service-arrow {
+    display: none;
+  }
+
+  .interactive3d-process-intro {
+    margin-bottom: 42px;
+  }
+
+  .interactive3d-process-line {
+    padding-left: 43px;
+  }
+
+  .interactive3d-process-line::before {
+    left: 15px;
+  }
+
+  .interactive3d-process-marker {
+    top: 22px;
+    left: -43px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.55rem;
+  }
+
+  .interactive3d-process-item {
+    margin-bottom: 20px;
+  }
+
+  .interactive3d-process-copy {
+    padding: 21px 18px;
+    border-radius: 15px;
+  }
+
+  .interactive3d-process-copy h3 {
+    font-size: 1.07rem;
+  }
+
+  .interactive3d-process-copy p {
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  .interactive3d-benefit {
+    align-items: flex-start;
+    gap: 14px;
+    padding: 21px 0;
+  }
+
+  .interactive3d-benefit:hover {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .interactive3d-benefit > span:first-child {
+    flex-basis: 29px;
+    padding-top: 3px;
+    font-size: 0.63rem;
+  }
+
+  .interactive3d-benefit h3 {
+    font-size: 1rem;
+  }
+
+  .interactive3d-benefit p {
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  .interactive3d-benefit > i {
+    display: none;
+  }
+
+  .interactive3d-faq-question {
+    min-height: 78px;
+    gap: 12px;
+    padding: 17px 0;
+  }
+
+  .interactive3d-faq-question > span:first-child {
+    gap: 13px;
+    font-size: 0.89rem;
+    line-height: 1.55;
+  }
+
+  .interactive3d-faq-question small {
+    font-size: 0.57rem;
+  }
+
+  .interactive3d-faq-question b {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+    font-size: 1.1rem;
+  }
+
+  .interactive3d-faq-answer p {
+    padding-right: 0;
+    padding-left: 34px;
+    font-size: 0.84rem;
+    line-height: 1.8;
+  }
+
+  .interactive3d-faq-item.is-active .interactive3d-faq-answer p {
+    padding-bottom: 22px;
+  }
+
+  .interactive3d-final {
+    min-height: 430px;
+    padding: 78px 20px;
+  }
+
+  .interactive3d-final-inner h2 {
+    margin: 22px 0;
+    font-size: clamp(2.55rem, 10vw, 4.4rem);
+    line-height: 1;
+  }
+
+  .interactive3d-final-inner p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  .interactive3d-final::before {
+    left: -380px;
+  }
+
+  .interactive3d-final::after {
+    right: -360px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .interactive3d-container,
+  .interactive3d-hero-inner {
+    width: calc(100% - 28px);
+  }
+
+  .interactive3d-hero-content h1 {
+    font-size: clamp(2.45rem, 11.5vw, 3.15rem);
+  }
+
+  .interactive3d-stage {
+    --i3d-size: 112px;
+    min-height: 400px;
+    padding: 13px;
+  }
+
+  .interactive3d-hud--bottom {
+    right: 12px;
+    left: 12px;
+  }
+
+  .interactive3d-hint {
+    max-width: 74px;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .interactive3d-controls {
+    gap: 7px;
+  }
+
+  .interactive3d-swatch {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+
+  .interactive3d-reset {
+    padding: 5px 7px;
+    font-size: 0.59rem !important;
+  }
+
+  .interactive3d-service-card {
+    gap: 10px;
+    padding: 17px 12px;
+  }
+
+  .interactive3d-service-number {
+    min-width: 23px;
+    font-size: 0.58rem;
+  }
+
+  .interactive3d-icon {
+    width: 45px;
+    height: 45px;
+    flex-basis: 45px;
+  }
+
+  .interactive3d-service-content h3 {
+    font-size: 0.91rem;
+  }
+
+  .interactive3d-service-content p {
+    font-size: 0.77rem;
+  }
+
+  .interactive3d-icon-slider {
+    left: 5px;
+    width: 33px;
+  }
+
+  .interactive3d-icon-knob.knob-one {
+    left: 17px;
+  }
+
+  .interactive3d-icon-knob.knob-two {
+    left: 29px;
+  }
+
+  .interactive3d-faq-question > span:first-child {
+    gap: 9px;
+    font-size: 0.82rem;
+  }
+
+  .interactive3d-faq-question b {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY — REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive3d-page *,
+  .interactive3d-page *::before,
+  .interactive3d-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .interactive3d-reveal,
+  .interactive3d-reveal--up,
+  .interactive3d-reveal--left,
+  .interactive3d-reveal--right {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .interactive3d-cube {
+    will-change: auto;
+  }
+}

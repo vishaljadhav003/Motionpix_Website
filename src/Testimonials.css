@@ -1,131 +1,203 @@
-/* =========================
-   SECTION
-========================= */
+/* ==========================================================================
+   TESTIMONIALS SECTION (Light & Dark Dynamic Theme)
+   ========================================================================== */
 
 .testimonials-section {
-  background: black;
+  background-color: var(--bg-primary);
   padding: 100px 0;
-  z-index:2;
+  position: relative;
+  z-index: 2;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow: hidden;
+}
+
+.testimonials-section h2 {
+  color: var(--text-primary);
 }
 
 .testimonials-section span {
-  color: #e50914;
+  color: var(--accent-color);
 }
 
-/* =========================
-   WRAPPER
-========================= */
+.testimonials-section p.text-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* ==========================================================================
+   WRAPPER & CARD LAYOUT
+   ========================================================================== */
 
 .testimonial-wrapper {
   position: relative;
-  max-width: 900px;
-  margin: auto;
-  min-height: 300px;
+  max-width: 850px;
+  margin: 0 auto;
+  min-height: 320px;
+
+  /* Bidirectional scroll-reveal: the block fades/slides in as a whole —
+     the individual cards keep their own .active carousel visibility. */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* =========================
-   CARD
-========================= */
+.testimonial-wrapper.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .testimonial-card {
   position: absolute;
   inset: 0;
   opacity: 0;
-  background: #111;
-  border: 1px solid #2a2a2a;
+  visibility: hidden;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 10px 15px rgb(249, 252, 253);
-  cursor:pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transform: translateY(10px);
 }
 
 .testimonial-card.active {
   opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-/* =========================
-   HEADER (LOGO)
-========================= */
+.testimonial-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 35px var(--accent-glow);
+}
+
+/* ==========================================================================
+   CARD CONTENT
+   ========================================================================== */
 
 .testimonial-header img {
   height: 45px;
+  max-width: 180px;
   object-fit: contain;
   margin-bottom: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
-
-/* =========================
-   QUOTE
-========================= */
 
 .testimonial-quote {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #eaeaea;
+  color: var(--text-secondary);
   margin-bottom: 25px;
+  font-style: italic;
 }
-
-/* =========================
-   AUTHOR
-========================= */
 
 .testimonial-author strong {
   display: block;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
 .testimonial-author span {
   font-size: 0.85rem;
-  color: #aaa;
+  color: var(--text-muted);
 }
 
-/* =========================
-   DOTS
-========================= */
+/* ==========================================================================
+   DOTS PAGINATION
+   ========================================================================== */
 
 .testimonial-dots {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   margin-top: 40px;
+
+  /* Bidirectional scroll-reveal — fades in slightly after the wrapper */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s;
+}
+
+.testimonial-dots.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
-  background: #444;
+  width: 12px;
+  height: 12px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--border-color);
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: var(--accent-glow);
 }
 
 .dot.active {
-  background: #fffeff;
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: scale(1.25);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .testimonials-section {
+    padding: 80px 0;
+  }
+  .testimonial-wrapper {
+    min-height: 350px;
+  }
+}
 
 @media (max-width: 768px) {
+  .testimonials-section {
+    padding: 60px 0;
+  }
+
+  .testimonial-wrapper {
+    min-height: 380px;
+  }
+
   .testimonial-card {
     padding: 25px;
+    border-radius: 16px;
   }
 
   .testimonial-quote {
-    font-size: 1rem;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
   }
 
   .testimonial-header img {
     height: 36px;
-  }
-  .testimonials-section{
-    background:black;
+    margin-bottom: 15px;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1280px) {
-  .testimonials-section{background:black;}
+@media (max-width: 480px) {
+  .testimonial-wrapper {
+    min-height: 420px;
+  }
+
+  .testimonial-card {
+    padding: 20px;
+  }
+
+  .testimonial-quote {
+    font-size: 0.9rem;
+  }
 }
-/* .testimonial-card.active:hover {
-  border-color: #e50914;
-} */

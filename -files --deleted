@@ -1,0 +1,146 @@
+warning: in the working copy of 'src/App.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/ELearning.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/ELearning.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/Home.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/TeamSection.jsx', LF will be replaced by CRLF the next time Git touches it
+ .gitignore                               |    2 [32m+[m
+ backend/app.js                           |  115 [32m+[m[31m-[m
+ backend/controllers/careerController.js  |  926 [32m++++++++[m[31m--[m
+ backend/controllers/contactController.js |  534 [32m++++[m[31m--[m
+ backend/middleware/auth.js               |    8 [32m+[m[31m-[m
+ backend/package-lock.json                |  334 [32m+++[m[31m-[m
+ backend/package.json                     |    6 [32m+[m[31m-[m
+ backend/routes/careerRoutes.js           |   57 [32m+[m[31m-[m
+ backend/routes/contactRoutes.js          |  598 [32m+++++[m[31m--[m
+ backend/views/admin-career.ejs           |  336 [32m+++[m[31m-[m
+ backend/views/admin.ejs                  | 1051 [32m++++++++++[m[31m-[m
+ backend/views/login.ejs                  |  155 [32m++[m
+ package-lock.json                        |  224 [32m++[m[31m-[m
+ package.json                             |    5 [32m+[m[31m-[m
+ public/All Logo-02.png                   |  Bin [31m18040[m -> [32m0[m bytes
+ public/All Logo-03.png                   |  Bin [31m13779[m -> [32m0[m bytes
+ public/All Logo-04.png                   |  Bin [31m30075[m -> [32m0[m bytes
+ public/All Logo-05.png                   |  Bin [31m10985[m -> [32m0[m bytes
+ public/All Logo-06.png                   |  Bin [31m64456[m -> [32m0[m bytes
+ public/All Logo-07.png                   |  Bin [31m22512[m -> [32m0[m bytes
+ public/All Logo-08.png                   |  Bin [31m16498[m -> [32m0[m bytes
+ public/All Logo-09.png                   |  Bin [31m16375[m -> [32m0[m bytes
+ public/All Logo-10.png                   |  Bin [31m44015[m -> [32m0[m bytes
+ public/All Logo-11.png                   |  Bin [31m42147[m -> [32m0[m bytes
+ public/All Logo-12.png                   |  Bin [31m16107[m -> [32m0[m bytes
+ public/All Logo-13.png                   |  Bin [31m27950[m -> [32m0[m bytes
+ public/All Logo-14.png                   |  Bin [31m26540[m -> [32m0[m bytes
+ public/All Logo-15.png                   |  Bin [31m20437[m -> [32m0[m bytes
+ public/All Logo-16.png                   |  Bin [31m25774[m -> [32m0[m bytes
+ public/All Logo-17.png                   |  Bin [31m22450[m -> [32m0[m bytes
+ public/All Logo-18.png                   |  Bin [31m13545[m -> [32m0[m bytes
+ public/All Logo-19.png                   |  Bin [31m52564[m -> [32m0[m bytes
+ public/All Logo-20.png                   |  Bin [31m13285[m -> [32m0[m bytes
+ public/All Logo-21.png                   |  Bin [31m19523[m -> [32m0[m bytes
+ public/All Logo-22.png                   |  Bin [31m11806[m -> [32m0[m bytes
+ public/Amod-Bara.png                     |  Bin [31m1131696[m -> [32m0[m bytes
+ public/Logo.png                          |  Bin [31m26879[m -> [32m5760[m bytes
+ public/Nagesh.png                        |  Bin [31m1002144[m -> [32m1901042[m bytes
+ public/Trupti.png                        |  Bin [31m1286941[m -> [32m0[m bytes
+ public/demo.png                          |  Bin [31m2501355[m -> [32m0[m bytes
+ public/sitemap.xml                       |  137 [32m+[m[31m-[m
+ src/ARVR.css                             |  280 [31m---[m
+ src/ARVR.jsx                             |  162 [31m--[m
+ src/About.css                            |   54 [32m+[m[31m-[m
+ src/About.jsx                            |  171 [32m+[m[31m-[m
+ src/Animation2D.css                      | 1988 [32m+++++++++++++++++[m[31m----[m
+ src/Animation2D.jsx                      |  868 [32m+++++[m[31m----[m
+ src/Animation3D.css                      | 2866 [32m++++++++++++++++++++++++++++[m[31m--[m
+ src/Animation3D.jsx                      |  820 [32m+++++++[m[31m--[m
+ src/App.jsx                              |  184 [32m+[m[31m-[m
+ src/BackgroundGridLines.css              |   62 [31m-[m
+ src/BackgroundGridLines.jsx              |  311 [31m----[m
+ src/Blog.css                             |  726 [31m--------[m
+ src/Blog.jsx                             |  910 [31m----------[m
+ src/CapsuleScrollPage.css                |  164 [31m--[m
+ src/CapsuleScrollPage.jsx                |  410 [31m-----[m
+ src/Career.css                           |  559 [32m+++[m[31m---[m
+ src/Career.jsx                           |  472 [32m++[m[31m---[m
+ src/Chatbot.css                          |  935 [32m++++++[m[31m----[m
+ src/Chatbot.jsx                          |  810 [32m+++++++[m[31m--[m
+ src/CineTestimonials.jsx                 |  195 [31m--[m
+ src/Clients.css                          |  137 [31m--[m
+ src/Contact.css                          |  320 [32m+++[m[31m-[m
+ src/Contact.jsx                          |  492 [32m++++[m[31m-[m
+ src/Courses.css                          |  413 [32m+++[m[31m--[m
+ src/DataDetail.css                       |  106 [31m--[m
+ src/DataDetail.jsx                       |   81 [31m-[m
+ src/DataPage.css                         |  187 [31m--[m
+ src/DataPage.jsx                         |  161 [31m--[m
+ src/DigitalMarketing.css                 |  232 [31m---[m
+ src/DigitalMarketing.jsx                 |  697 [32m++++++[m[31m--[m
+ src/ELearning.css                        |  756 [32m++++[m[31m----[m
+ src/ELearning.jsx                        |  325 [32m++[m[31m--[m
+ src/EarthPhoneIcon.css                   |   97 [31m-[m
+ src/EarthPhoneIcon.jsx                   |   65 [31m-[m
+ src/Faq.css                              |  116 [31m--[m
+ src/Faq.jsx                              |  117 [31m--[m
+ src/FaqCards.css                         |  166 [32m+[m[31m-[m
+ src/Footer.css                           | 1357 [32m+++++++++++[m[31m---[m
+ src/Footer.jsx                           |  381 [32m++[m[31m--[m
+ src/Gallery.css                          |   27 [32m+[m[31m-[m
+ src/GraphicsIndustrial.css               |  283 [31m---[m
+ src/GraphicsIndustrial.jsx               |  175 [31m--[m
+ src/Home.css                             |  416 [32m++++[m[31m-[m
+ src/Home.jsx                             |  830 [32m++++[m[31m-----[m
+ src/IndustrialSectors.css                |   28 [32m+[m[31m-[m
+ src/Industries.css                       |  411 [32m+++[m[31m--[m
+ src/IntroSection.css                     |  407 [32m++[m[31m---[m
+ src/IntroSection.jsx                     |  241 [32m+[m[31m--[m
+ src/LiveShoots.css                       |  257 [31m---[m
+ src/LiveShoots.jsx                       |  171 [31m--[m
+ src/Loader.css                           |  911 [32m+++++++[m[31m---[m
+ src/Loader.jsx                           |  372 [32m+++[m[31m-[m
+ src/LogoScrollReveal.css                 |   65 [31m-[m
+ src/LogoScrollReveal.jsx                 |  124 [31m--[m
+ src/MotionGraphics.css                   | 1816 [32m+++++++++++++++++[m[31m--[m
+ src/MotionGraphics.jsx                   |  658 [32m+++++[m[31m--[m
+ src/MotionPixJourney.css                 |  877 [32m+++++++[m[31m--[m
+ src/MotionPixJourney.jsx                 |  201 [32m++[m[31m-[m
+ src/Navbar.css                           | 1319 [32m++++++[m[31m--------[m
+ src/Navbar.jsx                           | 1089 [32m++++++[m[31m------[m
+ src/News.css                             |  389 [31m----[m
+ src/News.jsx                             |  553 [31m------[m
+ src/NewsCard.css                         |  188 [32m+[m[31m-[m
+ src/PageNotFound.css                     |   27 [32m+[m[31m-[m
+ src/PhysicsScene.css                     |   85 [31m-[m
+ src/PhysicsScene.jsx                     |  282 [31m---[m
+ src/PrimntMedia.jsx                      |  187 [31m--[m
+ src/PrintMedia.css                       |  281 [31m---[m
+ src/ProductBranding.css                  |  272 [31m---[m
+ src/ProductBranding.jsx                  |  176 [31m--[m
+ src/QuizSection.css                      |  148 [31m--[m
+ src/QuizSection.jsx                      |  161 [31m--[m
+ src/SEO.jsx                              |  231 [32m++[m[31m-[m
+ src/SOPDigitization.css                  |  385 [31m----[m
+ src/SOPDigitization.jsx                  |  214 [31m---[m
+ src/SearchResults.css                    |   21 [32m+[m[31m-[m
+ src/SearchResults.jsx                    |  103 [32m+[m[31m-[m
+ src/ServicesPage.css                     |  859 [32m++++++[m[31m---[m
+ src/ServicesPage.jsx                     |  680 [32m+++[m[31m----[m
+ src/StickyServices.jsx                   |  252 [32m++[m[31m-[m
+ src/TeamCard.jsx                         |   24 [32m+[m[31m-[m
+ src/TeamSection.css                      | 1182 [32m++++++++[m[31m----[m
+ src/TeamSection.jsx                      |  374 [32m++[m[31m--[m
+ src/TestCaseStore.jsx                    |   55 [31m-[m
+ src/TestCasesPage.css                    |  495 [31m------[m
+ src/TestCasesPage.jsx                    |  604 [31m-------[m
+ src/Testimonials.css                     |  180 [32m+[m[31m-[m
+ src/VisitorCounter.css                   |  147 [32m+[m[31m-[m
+ src/VisitorCounter.jsx                   |   83 [32m+[m[31m-[m
+ src/WebsiteDesign.css                    | 2362 [32m+++++++++++++++++++++[m[31m---[m
+ src/WebsiteDesign.jsx                    |  911 [32m++++++++[m[31m--[m
+ src/WhatWeDo.css                         |   31 [32m+[m[31m-[m
+ src/WhitepapersPage.css                  |  602 [31m-------[m
+ src/WhitepapersPage.jsx                  |  460 [31m-----[m
+ src/WhyMotionpix.css                     |  111 [32m+[m[31m-[m
+ src/WhyMotionpix.jsx                     |   55 [32m+[m[31m-[m
+ src/WorkProcess.css                      |   34 [32m+[m[31m-[m
+ src/cinetestimonials.css                 |  208 [31m---[m
+ src/index.css                            |  224 [32m++[m[31m-[m
+ 140 files changed, 27217 insertions(+), 20738 deletions(-)

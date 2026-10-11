@@ -1,360 +1,560 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Animation2D.css";
-import { NavLink } from "react-router-dom";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+const animationServices = [
+  {
+    number: "01",
+    title: "Explainer Animation",
+    description:
+      "Complex products, services and technical ideas are transformed into clear visual stories using purposeful scenes, character movement, transitions and controlled pacing.",
+    icon: "explainer",
+  },
+  {
+    number: "02",
+    title: "Character Animation",
+    description:
+      "Expressive 2D characters are designed with strong silhouettes, readable poses and natural movement to communicate personality, emotion and narrative.",
+    icon: "character",
+  },
+  {
+    number: "03",
+    title: "Motion Graphics",
+    description:
+      "Typography, shapes, icons, diagrams and graphical elements are animated with precise timing to create engaging brand, corporate and promotional communication.",
+    icon: "motion",
+  },
+  {
+    number: "04",
+    title: "Educational Animation",
+    description:
+      "Learning concepts are converted into structured visual sequences that make complicated subjects easier to understand, remember and communicate.",
+    icon: "education",
+  },
+  {
+    number: "05",
+    title: "Brand Storytelling",
+    description:
+      "Brand messages are developed into visual narratives where composition, movement, character, colour and timing work together to build a memorable story.",
+    icon: "story",
+  },
+  {
+    number: "06",
+    title: "Product Animation",
+    description:
+      "Product features, workflows and benefits are presented through controlled 2D sequences that clearly show how a product works and why it matters.",
+    icon: "product",
+  },
+];
 
-import img1 from "../public/Explainer videos.png";
-import img2 from "../public/Marketing and branding.png";
-import img3 from "../public/Proposal and presentation support.png";
-import img4 from "../public/SOP and process explanation.png";
-import img5 from "../public/Training and onboarding.png";
-import SEO from "./Seo";
+const processSteps = [
+  {
+    number: "01",
+    title: "Story & Script",
+    description:
+      "We define the message, audience, narrative structure and scene progression before visual production begins.",
+  },
+  {
+    number: "02",
+    title: "Design Direction",
+    description:
+      "Characters, environments, typography, colour language and visual style are established to create a consistent animation system.",
+  },
+  {
+    number: "03",
+    title: "Motion & Timing",
+    description:
+      "Every transition, character action and graphic movement is timed to create rhythm, clarity and visual continuity.",
+  },
+  {
+    number: "04",
+    title: "Final Delivery",
+    description:
+      "The completed animation is refined, reviewed and prepared for the required digital, presentation, social or marketing format.",
+  },
+];
 
-const Animation2D = () => {
-  // const revealRefs = useRef([]);
-const [activeIndex, setActiveIndex] = useState(null);
+const benefits = [
+  {
+    number: "01",
+    title: "Simplify Complex Ideas",
+    description:
+      "Visual storytelling can break down complicated products, processes and concepts into understandable scenes.",
+  },
+  {
+    number: "02",
+    title: "Create Visual Identity",
+    description:
+      "A consistent illustration and motion language helps organisations communicate with a recognisable visual style.",
+  },
+  {
+    number: "03",
+    title: "Control Emotion & Pace",
+    description:
+      "Timing, expressions, transitions and composition can be carefully controlled to guide how the audience experiences the story.",
+  },
+  {
+    number: "04",
+    title: "Adapt Across Platforms",
+    description:
+      "The animation approach can be structured for websites, presentations, social content, campaigns, training and digital communication.",
+  },
+];
 
-const toggleFAQ = (index) => {
-  setActiveIndex(activeIndex === index ? null : index);
+const faqs = [
+  {
+    question: "What type of projects can be created with 2D animation?",
+    answer:
+      "2D animation can be used for explainer videos, corporate communication, product demonstrations, educational content, training material, brand storytelling, promotional campaigns and motion graphic sequences.",
+  },
+  {
+    question: "Can character animation and motion graphics be combined?",
+    answer:
+      "Yes. Character-driven storytelling can be combined with typography, diagrams, icons, transitions and other motion-graphic elements within the same animation.",
+  },
+  {
+    question: "How is the animation style decided?",
+    answer:
+      "The visual direction is selected according to the message, audience, brand identity and communication objective. Character style, illustration language, typography and movement are planned together.",
+  },
+  {
+    question: "Can complex technical information be animated?",
+    answer:
+      "Yes. Technical workflows, product functions and processes can be broken into smaller visual scenes so that each step is easier to understand.",
+  },
+  {
+    question: "Where can the final animation be used?",
+    answer:
+      "The final animation can be prepared for websites, presentations, social media, digital campaigns, internal communication, training platforms and other required digital formats.",
+  },
+];
+
+const AnimationIcon = ({ type }) => {
+  return (
+    <div className={`animation2d-icon animation2d-icon--${type}`}>
+      {type === "explainer" && (
+        <>
+          <span className="icon-paper" />
+          <span className="icon-line icon-line-one" />
+          <span className="icon-line icon-line-two" />
+          <span className="icon-play" />
+        </>
+      )}
+
+      {type === "character" && (
+        <>
+          <span className="icon-head" />
+          <span className="icon-eye icon-eye-one" />
+          <span className="icon-eye icon-eye-two" />
+          <span className="icon-mouth" />
+          <span className="icon-body" />
+        </>
+      )}
+
+      {type === "motion" && (
+        <>
+          <span className="icon-motion-shape shape-one" />
+          <span className="icon-motion-shape shape-two" />
+          <span className="icon-motion-shape shape-three" />
+          <span className="icon-motion-line" />
+        </>
+      )}
+
+      {type === "education" && (
+        <>
+          <span className="icon-book" />
+          <span className="icon-book-line line-one" />
+          <span className="icon-book-line line-two" />
+          <span className="icon-book-dot" />
+        </>
+      )}
+
+      {type === "story" && (
+        <>
+          <span className="icon-story-circle" />
+          <span className="icon-story-ring" />
+          <span className="icon-story-line line-one" />
+          <span className="icon-story-line line-two" />
+        </>
+      )}
+
+      {type === "product" && (
+        <>
+          <span className="icon-product-box" />
+          <span className="icon-product-top" />
+          <span className="icon-product-line line-one" />
+          <span className="icon-product-line line-two" />
+        </>
+      )}
+    </div>
+  );
 };
 
-useEffect(() => {
-  const ctx = gsap.context(() => {
+const Reveal = ({ children, className = "", direction = "up", delay = 0 }) => {
+  const elementRef = useRef(null);
 
-    // HERO TEXT
-    gsap.from(".hero-content h1", {
-      y: 80,
-      opacity: 0,
-      duration: 1,
-      ease: "power3.out"
-    });
+  useEffect(() => {
+    const element = elementRef.current;
 
-    gsap.from(".hero-content p", {
-      y: 60,
-      opacity: 0,
-      delay: 0.2,
-      duration: 1,
-      ease: "power3.out"
-    });
+    if (!element) {
+      return undefined;
+    }
 
-    gsap.from(".hero-btn", {
-      scale: 0.8,
-      opacity: 0,
-      delay: 0.4,
-      duration: 0.6,
-      ease: "back.out(1.7)"
-    });
-
-    // HERO PARALLAX
-    gsap.to(".hero-media video", {
-      y: 80,
-      scrollTrigger: {
-        trigger: ".animation2d-hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-
-    // 🔥 VICE-VERSA REVEAL (MAIN FIX)
-    gsap.utils.toArray(".section, .premium-card").forEach((el) => {
-      gsap.fromTo(
-        el,
-        {
-          y: 80,
-          opacity: 0
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            end: "top 30%",
-            scrub: true,          // 👈 smooth scroll feel
-            toggleActions: "play reverse play reverse" // 👈 reverse on scroll up
-          }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          element.classList.add("is-visible");
+        } else {
+          element.classList.remove("is-visible");
         }
-      );
-    });
-
-    // APPROACH GRID STAGGER (SMOOTH + REVERSE)
-    gsap.fromTo(".approach-card",
-      {
-        y: 80,
-        opacity: 0
       },
       {
-        y: 0,
-        opacity: 1,
-        stagger: 0.2,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".approach-grid",
-          start: "top 85%",
-          end: "top 30%",
-          scrub: true,
-          toggleActions: "play reverse play reverse"
-        }
+        threshold: 0.12,
+        rootMargin: "0px 0px -60px 0px",
       }
     );
 
-    // 📱 MOBILE FIX
-    ScrollTrigger.matchMedia({
-      "(max-width: 768px)": function () {
-        gsap.set(".hero-media video", { y: 0 });
-      }
-    });
+    observer.observe(element);
 
-  });
-
-  return () => ctx.revert();
-}, []);
-
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="animation2d-page">
-      <SEO
-        title="2D Animation Services in Pune | MotionPix"
-        description="Professional 2D animation services including explainer videos, business animations, and creative storytelling at MotionPix."
-        keywords="2D animation, explainer videos, animation company India, motion graphics"
-        url="https://www.motionpixindia.com/services/2d-animation"
-        image="https://www.motionpixindia.com/images/2d-animation.jpg"
-      />
-
-      {/* HERO */}
-      <div className="animation2d-hero">
-        <div className="hero-content">
-          <h1>2D <span>Animation</span></h1>
-          <p>
-           2D animation is a visual storytelling technique where illustrations, icons, text, and 
-            characters are animated in a two-dimensional space. Unlike static images or lengthy 
-            documents, 2D animations guide viewers step-by-step through a concept, making 
-            information easier to absorb and remember.
-          </p>
-          <NavLink to="/contact" className="hero-btn">
-            Start Your Animation
-          </NavLink>
-        </div>
-
-        <div className="hero-media">
-        <video
-          data-speed="0.2"
-          src="../2D.mp4"
-          muted
-          autoPlay
-          loop
-          playsInline
-        />
-      </div>
-      </div>
-
-      {/* WHAT WE ANIMATE (UPDATED WITH IMAGES) */}
-      {/* <div className="container section reveal" ref={el => revealRefs.current[1] = el}>
-        <h2 className="section-title">What We <span>Animate</span></h2>
-
-        <div className="d-grid">
-          {[img1, img2, img3, img4, img5].map((img, i) => (
-            <div className="feature-card-2d image-card" key={i}>
-              <img src={img} alt="animation type" />
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-      <div className="container section">
-  <h2 className="section-title fw-bold">
-    What We <span>Animate</span>
-  </h2>
-
-  <div className="usecase-grid">
-    {[
-      { img: img5, title: "Training & SOP" },
-      { img: img1, title: "Explainer Videos" },
-      { img: img2, title: "Marketing & Branding" },
-      { img: img3, title: "Proposal Presentations" }
-    ].map((item, i) => (
-      <div className="usecase-card premium-card" key={i}>
-        <img src={item.img} alt={item.title} />
-        <h4>{item.title}</h4>
-      </div>
-    ))}
-  </div>
-</div>
-
-      {/* <div className="process-section reveal" ref={el => revealRefs.current[2] = el}>
-        <h2 className="fw-bold">Our 2D Animation <span>Process</span></h2>
-
-        <div className="process-flow">
-          {["Script", "Storyboard", "Design", "Animation", "Sound"].map(
-            (step, i) => (
-              <div className="process-step" key={i}>
-                <div className="step-circle ms-3">{i + 1}</div>
-                <p className="mt-3">{step}</p>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-      <div className="container section">
-        <h2 className="section-title fw-bold">Why 2D <span>Animation?</span></h2>
-
-        <div className="why-grid">
-          <div>🎯 Higher Engagement</div>
-          <div>📈 Better Conversions</div>
-          <div>🧠 Easy Storytelling</div>
-          <div>⚡ Faster Production</div>
-          <div>💰 Cost Effective</div>
-          <div>📱 Perfect for Social Media</div>
-        </div>
-      </div> */}
-
-
-  {/* ================= WHY CHOOSE 2D (B) ================= */}
-<div className="container section">
-  <h2 className="section-title fw-bold">
-    Why Choose <span>2D Animation?</span>
-  </h2>
-
-  <div className="why-2d-grid">
-    {[
-      {
-        img: img1,
-        title: "Simplifies Complex Information",
-        desc: "Technical concepts and workflows become easy with step-by-step visuals."
-      },
-      {
-        img: img2,
-        title: "Faster Communication",
-        desc: "Short animations replace long documents and presentations."
-      },
-      {
-        img: img3,
-        title: "Cost-Effective & Flexible",
-        desc: "Faster production and easy updates compared to live shoots."
-      },
-      {
-        img: img4,
-        title: "Works Across Platforms",
-        desc: "Usable across web, training, marketing, and social media."
-      }
-    ].map((item, i) => (
-      <div className="why-card premium-card" key={i}>
-        <img src={item.img} alt={item.title} />
-        <h4>{item.title}</h4>
-        <p>{item.desc}</p>
-      </div>
-    ))}
-  </div>
-</div>
-
-<div className="container section">
-  <h2 className="section-title fw-bold">
-    Motionpix <span>Approach</span>
-  </h2>
-
-  <div className="approach-grid">
-    {[
-      {
-        img: img5,
-        title: "Requirement Understanding",
-        desc: "We analyze audience, purpose, and expected outcome."
-      },
-      {
-        img: img1,
-        title: "Script & Storyboard",
-        desc: "We define visual flow, transitions, and storytelling."
-      },
-      {
-        img: img2,
-        title: "Visual Design",
-        desc: "Custom illustrations aligned with brand identity."
-      },
-      {
-        img: img3,
-        title: "Animation & Motion Design",
-        desc: "Smooth animations and transitions for clarity."
-      },
-      {
-        img: img4,
-        title: "Voiceover & Sound",
-        desc: "Optional voiceover and background music."
-      },
-      {
-        img: img1,
-        title: "Review & Delivery",
-        desc: "Final output after feedback and revisions."
-      }
-    ].map((item, i) => (
-      <div className="approach-card premium-card" key={i}>
-        <img src={item.img} alt={item.title} />
-        <h4>{item.title}</h4>
-        <p>{item.desc}</p>
-      </div>
-    ))}
-  </div>
-</div>
-
-
-      {/* FAQ SECTION (NEW) */}
-      <div className="container section">
-        <h2 className="section-title">FAQs</h2>
-
-        <div className="faq-container mt-3">
-  {[
-    {
-      q: "What type of 2D animations does Motionpix create?",
-      a: "We create explainer videos, training animations, marketing visuals, functional process animations, proposal visuals, and branding animations tailored to business and industrial needs."
-    },
-    {
-      q: "Where can 2D animations be used?",
-      a: "2D animations can be used on websites, presentations, social media, training programs, proposals, exhibitions, and digital marketing campaigns."
-    },
-    {
-      q: "How long does a 2D animation project take?",
-      a: "A typical 2D animation project takes 2–4 weeks, depending on duration, complexity, and revisions."
-    },
-    {
-      q: "What is the process flow for 2D animation?",
-      a: "Requirement understanding → Script & storyboard → Design & animation → Review & revisions → Final delivery."
-    },
-    {
-      q: "How is the cost of 2D animation calculated?",
-      a: "Cost depends on video duration, level of illustration, voiceover, animation complexity, and usage purpose."
-    }
-  ].map((item, i) => (
     <div
-      className={`faq-item ${activeIndex === i ? "active" : ""}`}
-      key={i}
-      onClick={() => toggleFAQ(i)}
+      ref={elementRef}
+      className={`animation2d-reveal animation2d-reveal--${direction} ${className}`}
+      style={{ "--reveal-delay": `${delay}ms` }}
     >
-      <div className="faq-question">
-        <h4 className="fw-bold">{item.q}</h4>
-        <span>{activeIndex === i ? "−" : "+"}</span>
-      </div>
-
-      <div className="faq-answer">
-        <p className="fw-bold">{item.a}</p>
-      </div>
+      {children}
     </div>
-  ))}
-</div>
-      </div>
-      {/* CTA */}
-      <div className="animation2d-cta">
-        <h2 className="fw-bold">Have an Idea? Let’s <span>Animate It.</span></h2>
-        <NavLink to="/contact" className="cta-btn">
-          Contact Us
-        </NavLink>
-      </div>
+  );
+};
 
-    </section>
+const Animation2D = () => {
+  const [activeFaq, setActiveFaq] = useState(null);
+
+  const toggleFaq = (index) => {
+    setActiveFaq((current) => (current === index ? null : index));
+  };
+
+  return (
+    <main className="animation2d-page">
+      {/* HERO */}
+      <section className="animation2d-hero">
+        <div className="animation2d-hero-inner">
+          <Reveal direction="left" className="animation2d-hero-content">
+            <span className="animation2d-eyebrow">
+              02D / ANIMATION STUDIO
+            </span>
+
+            <h1>
+              Ideas That
+              <span> Move.</span>
+              <br />
+              Stories That
+              <span> Stay.</span>
+            </h1>
+
+            <p>
+              We create purposeful 2D animation for brands, products,
+              technical communication and storytelling. Every frame is
+              designed around clarity, timing and visual impact — turning
+              information into movement and movement into memorable
+              communication.
+            </p>
+
+            <div className="animation2d-hero-meta">
+              <span>Story</span>
+              <i />
+              <span>Design</span>
+              <i />
+              <span>Motion</span>
+              <i />
+              <span>Sound</span>
+            </div>
+          </Reveal>
+
+          <Reveal
+            direction="right"
+            delay={120}
+            className="animation2d-hero-visual"
+          >
+            <div className="animation2d-stage">
+              <div className="animation2d-stage-label">
+                <span>FRAME</span>
+                <strong>024</strong>
+              </div>
+
+              <div className="animation2d-frame frame-one">
+                <span />
+              </div>
+
+              <div className="animation2d-frame frame-two">
+                <span />
+              </div>
+
+              <div className="animation2d-character">
+                <div className="character-head">
+                  <span className="character-eye eye-one" />
+                  <span className="character-eye eye-two" />
+                  <span className="character-mouth" />
+                </div>
+
+                <div className="character-body">
+                  <span className="character-arm arm-left" />
+                  <span className="character-arm arm-right" />
+                </div>
+
+                <div className="character-leg leg-left" />
+                <div className="character-leg leg-right" />
+              </div>
+
+              <div className="animation2d-motion-path">
+                <span />
+                <span />
+                <span />
+              </div>
+
+              <div className="animation2d-timeline">
+                <div className="timeline-head">
+                  <span>01</span>
+                  <span>02</span>
+                  <span>03</span>
+                  <span>04</span>
+                  <span>05</span>
+                  <span>06</span>
+                </div>
+
+                <div className="timeline-track">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </div>
+
+                <div className="timeline-playhead" />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section
+        className="animation2d-section animation2d-services"
+        id="animation2d-services"
+      >
+        <div className="animation2d-container">
+          <Reveal direction="up">
+            <div className="animation2d-section-heading">
+              <span>WHAT WE CREATE</span>
+              <h2>
+                Every frame has
+                <strong> a purpose.</strong>
+              </h2>
+              <p>
+                From a single product feature to a complete visual narrative,
+                our 2D animation approach combines design, storytelling and
+                movement to communicate with precision.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="animation2d-services-list">
+            {animationServices.map((service, index) => (
+              <Reveal
+                key={service.number}
+                direction={index % 2 === 0 ? "left" : "right"}
+                delay={index * 70}
+                className="animation2d-service-wrap"
+              >
+                <article className="animation2d-service-card">
+                  <div className="animation2d-service-number">
+                    {service.number}
+                  </div>
+
+                  <AnimationIcon type={service.icon} />
+
+                  <div className="animation2d-service-content">
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                  </div>
+
+                  <span className="animation2d-service-arrow">↗</span>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="animation2d-section animation2d-process">
+        <div className="animation2d-container">
+          <Reveal direction="left">
+            <div className="animation2d-process-intro">
+              <span>THE ANIMATION PROCESS</span>
+              <h2>
+                From the first
+                <strong> idea </strong>
+                to the final frame.
+              </h2>
+              <p>
+                A structured production process keeps the story clear, the
+                visual language consistent and every movement intentional.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="animation2d-process-line">
+            {processSteps.map((step, index) => (
+              <Reveal
+                key={step.number}
+                direction={index % 2 === 0 ? "right" : "left"}
+                delay={index * 100}
+                className="animation2d-process-item"
+              >
+                <div className="animation2d-process-marker">
+                  <span>{step.number}</span>
+                </div>
+
+                <div className="animation2d-process-copy">
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BENEFITS */}
+      <section className="animation2d-section animation2d-benefits">
+        <div className="animation2d-container">
+          <Reveal direction="right">
+            <div className="animation2d-section-heading">
+              <span>WHY 2D ANIMATION</span>
+              <h2>
+                Designed to make
+                <strong> information move.</strong>
+              </h2>
+              <p>
+                2D animation gives control over visual hierarchy, timing and
+                storytelling, making it suitable for communication that needs
+                both clarity and personality.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="animation2d-benefit-list">
+            {benefits.map((benefit, index) => (
+              <Reveal
+                key={benefit.number}
+                direction={index % 2 === 0 ? "left" : "right"}
+                delay={index * 90}
+              >
+                <article className="animation2d-benefit">
+                  <span>{benefit.number}</span>
+
+                  <div>
+                    <h3>{benefit.title}</h3>
+                    <p>{benefit.description}</p>
+                  </div>
+
+                  <i />
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="animation2d-section animation2d-faq">
+        <div className="animation2d-container">
+          <Reveal direction="up">
+            <div className="animation2d-section-heading">
+              <span>COMMON QUESTIONS</span>
+              <h2>
+                Understanding the
+                <strong> process.</strong>
+              </h2>
+              <p>
+                A few practical details about planning, designing and
+                delivering a 2D animation project.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="animation2d-faq-list">
+            {faqs.map((faq, index) => {
+              const isActive = activeFaq === index;
+
+              return (
+                <Reveal
+                  key={faq.question}
+                  direction={index % 2 === 0 ? "left" : "right"}
+                  delay={index * 60}
+                >
+                  <div
+                    className={`animation2d-faq-item ${
+                      isActive ? "is-active" : ""
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      className="animation2d-faq-question"
+                      onClick={() => toggleFaq(index)}
+                      aria-expanded={isActive}
+                    >
+                      <span>
+                        <small>0{index + 1}</small>
+                        {faq.question}
+                      </span>
+
+                      <b>{isActive ? "−" : "+"}</b>
+                    </button>
+
+                    <div className="animation2d-faq-answer">
+                      <p>{faq.answer}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL STATEMENT — NO CTA BUTTON */}
+      <section className="animation2d-final">
+        <Reveal direction="up">
+          <div className="animation2d-final-inner">
+            <span>THE FINAL FRAME</span>
+
+            <h2>
+              Good animation
+              <br />
+              <strong>doesn't just move.</strong>
+            </h2>
+
+            <p>
+              It gives an idea rhythm, emotion and a visual language that
+              people can understand and remember.
+            </p>
+
+            <div className="animation2d-final-line">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    </main>
   );
 };
 

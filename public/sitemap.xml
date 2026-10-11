@@ -1,105 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://www.motionpixindia.com/</loc>
   </url>
-
   <url>
     <loc>https://www.motionpixindia.com/about</loc>
   </url>
-
   <url>
     <loc>https://www.motionpixindia.com/services</loc>
   </url>
-
-  <!-- 12 services -->
+  <url>
+    <loc>https://www.motionpixindia.com/services/animation-visualization</loc>
+  </url>
   <url>
     <loc>https://www.motionpixindia.com/services/2d-animation</loc>
   </url>
-
   <url>
     <loc>https://www.motionpixindia.com/services/3d-animation</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/services/web-design</loc>
+    <loc>https://www.motionpixindia.com/services/product-visualization</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/services/digitalmarketing</loc>
+    <loc>https://www.motionpixindia.com/services/engineering-industrial-animation</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/services/liveshoots</loc>
+    <loc>https://www.motionpixindia.com/services/technical-visualization</loc>
   </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/graphicsdesign</loc>
-  </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/product-branding</loc>
-  </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/e-learning</loc>
-  </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/print-media</loc>
-  </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/ar-vr</loc>
-  </url>
-
-  <url>
-    <loc>https://www.motionpixindia.com/services/sop</loc>
-  </url>
-
   <url>
     <loc>https://www.motionpixindia.com/services/motiongraphics</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/gallery</loc>
+    <loc>https://www.motionpixindia.com/services/explainer-content</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data</loc>
+    <loc>https://www.motionpixindia.com/services/film-visual-content</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/news</loc>
+    <loc>https://www.motionpixindia.com/services/corporate-brand-films</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/faq</loc>
+    <loc>https://www.motionpixindia.com/services/product-industrial-films</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/blogs</loc>
+    <loc>https://www.motionpixindia.com/services/promotional-videos</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/testimonials</loc>
+    <loc>https://www.motionpixindia.com/services/photography-videography</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/whitepapers</loc>
+    <loc>https://www.motionpixindia.com/services/editing-vfx</loc>
   </url>
-
   <url>
-    <loc>https://www.motionpixindia.com/data/testcases</loc>
+    <loc>https://www.motionpixindia.com/services/branding-creative</loc>
   </url>
-
+  <url>
+    <loc>https://www.motionpixindia.com/services/brand-identity</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/graphicsdesign</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/marketing-collaterals</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/presentation-infographic-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/campaign-creatives</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/web-mobile-interface-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/web-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/ui-ux-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/landing-pages</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/mobile-app-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/digital-product-experiences</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/learning-training</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/e-learning</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/interactive-learning</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/articulate-storyline</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/product-training</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/employee-safety-training</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/simulation-assessment</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/immersive-technology</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/ar-vr-mr-xr</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/virtual-showrooms</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/interactive-3d</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/immersive-training</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/exhibition-experiences</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/exhibition-creative</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/exhibition-3d-design</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/interactive-displays</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/digital-installations</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/product-experiences</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/services/event-content</loc>
+  </url>
+  <url>
+    <loc>https://www.motionpixindia.com/industries</loc>
+  </url>
   <url>
     <loc>https://www.motionpixindia.com/careers</loc>
   </url>
-
   <url>
     <loc>https://www.motionpixindia.com/contact</loc>
   </url>
-
 </urlset>

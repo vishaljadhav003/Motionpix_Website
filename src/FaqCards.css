@@ -1,42 +1,168 @@
+/* ==========================================================================
+   FAQ SECTION (Light & Dark Theme Dynamic Support)
+   ========================================================================== */
+
+.faq-section {
+  background-color: var(--bg-primary);
+  padding: 100px 0;
+  position: relative;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.faq-section h2 {
+  color: var(--text-primary);
+}
+
+.faq-section h2 span {
+  color: var(--accent-color);
+}
+
+.faq-section p.text-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* ==========================================================================
+   FAQ CARDS STYLING
+   ========================================================================== */
+
 .faq-card {
-  background:black;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  padding: 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
   height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor:progress;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
+  cursor: pointer;
+
+  /* Bidirectional scroll-reveal starting state */
+  opacity: 0;
+  transform: translateY(40px);
 }
-.faq-section{
-  background:black;
+
+.faq-card.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
 }
+
 .faq-card h5 {
-  color: #fff;
-  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  transition: color 0.3s ease;
 }
 
 .faq-card p {
-  color: #b5b5b5;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
   margin: 0;
+  white-space: pre-line;
+  transition: color 0.3s ease;
 }
 
 .faq-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 30px var(--accent-glow);
 }
 
-.faq-section span{
-    color:#e50914;
+.faq-card:hover h5 {
+  color: var(--accent-color);
 }
 
-@media(max-width:768px){
-  .faq-section{
-    background:black;
+/* ==========================================================================
+   FAQ ACTION BUTTON (Theme-Driven Dynamic Visibility)
+   ========================================================================== */
+
+.btn-faq-action {
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  border: 1px solid transparent;
+}
+
+/* Light Theme: Black Background + White Text */
+[data-theme="light"] .btn-faq-action,
+:root:not([data-theme="dark"]) .btn-faq-action {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+/* Dark Theme: Light/White Background + Black Text */
+[data-theme="dark"] .btn-faq-action {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+}
+
+/* Hover States (All Themes) */
+.btn-faq-action:hover,
+[data-theme="light"] .btn-faq-action:hover,
+[data-theme="dark"] .btn-faq-action:hover {
+  background-color: var(--accent-color) !important;
+  color: #ffffff !important;
+  border-color: var(--accent-color) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px var(--accent-glow);
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .faq-section {
+    padding: 80px 0;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1280px) {
-  .faq-section{
-    background:black;
+@media (max-width: 768px) {
+  .faq-section {
+    padding: 60px 0;
+  }
+
+  .faq-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .faq-card h5 {
+    font-size: 1.05rem;
+  }
+
+  .faq-card p {
+    font-size: 0.9rem;
+  }
+
+  .btn-faq-action {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-card {
+    padding: 1.25rem;
+  }
+
+  .btn-faq-action {
+    width: 100%;
+    padding: 12px 20px;
   }
 }

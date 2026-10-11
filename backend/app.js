@@ -2,31 +2,56 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const session = require("express-session");
+
 const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 
+const liveVisitors = require("./services/liveVisitors");
+
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+
+// ============================================================
+// CORS — localhost for development + live site domains
+// ============================================================
+
+const allowedOrigins = [
+  "https://motionpixindia.com",
+  "https://www.motionpixindia.com",
+];
+
+const isAllowedOrigin = (origin) =>
+  !origin ||
+  /^https?:\/\/localhost:\d+$/.test(origin) ||
+  allowedOrigins.includes(origin);
+
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
+    credentials: true,
+  },
+});
 
 // SOCKET GLOBAL
 app.set("io", io);
 app.set("trust proxy", 1);
 
-// ✅ SESSION (ONLY ONCE)
-app.use(
-  session({
-    secret: "secret123",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false, // production मध्ये true
-    },
-  })
-);
+// ✅ SESSION (ONLY ONCE) — also shared with Socket.IO to identify the admin
+const sessionMiddleware = session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false, // production मध्ये true
+  },
+});
+
+app.use(sessionMiddleware);
+
+io.use((socket, next) => sessionMiddleware(socket.request, {}, next));
 
 // ✅ CACHE FIX
 app.use((req, res, next) => {
@@ -34,21 +59,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS
-app.use(cors({
+app.use(
+  cors({
     origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        return callback(null, true);
+      }
 
-        if (!origin) return callback(null, true);
-
-        if (/^http:\/\/localhost:\d+$/.test(origin)) {
-            return callback(null, true);
-        }
-
-        callback(new Error("Not allowed by CORS"));
+      return callback(new Error("Not allowed by CORS"));
     },
-
-    credentials: true
-}));
+    credentials: true,
+  })
+);
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
@@ -63,18 +85,57 @@ app.use("/uploads", express.static("uploads"));
 const contactRoutes = require("./routes/contactRoutes");
 const careerRoutes = require("./routes/careerRoutes");
 const visitorRoutes = require("./routes/visitorRoutes");
+const contentRoutes = require("./routes/contentRoutes"); // CMS: editable page text
+const teamRoutes = require("./routes/teamRoutes"); // CMS: team members
+const adminRoutes = require("./routes/adminRoutes"); // Admin login, dashboard, etc.
 app.use("/api", visitorRoutes);
 app.use("/api", contactRoutes);
 app.use("/api", careerRoutes);
+app.use("/api", contentRoutes);
+app.use("/api", teamRoutes);
+app.use("/api", adminRoutes);
 
 // HOME
 app.get("/", (req, res) => {
   res.redirect("/api/admin");
 });
 
+// ERROR HANDLER — keeps the chatbot working with clean JSON errors
+// (too-large uploads, bad JSON, blocked CORS) instead of an HTML error page
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+
+  if (err.type === "entity.too.large") {
+    return res.status(413).json({
+      reply: "That file is too large. Please try a smaller image or PDF.",
+    });
+  }
+
+  if (err.type === "entity.parse.failed") {
+    return res.status(400).json({ reply: "Invalid request." });
+  }
+
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).json({ reply: "Request blocked." });
+  }
+
+  console.error("❌ Unhandled error:", err);
+  return res.status(500).json({ reply: "Server error. Please try again." });
+});
+
+// ============================================================
 // SOCKET
+// "/"      -> admin dashboard (login required for live data)
+// "/live"  -> website visitors (presence tracking)
+// ============================================================
+
+liveVisitors.init(io, { isAllowedOrigin });
+
 io.on("connection", (socket) => {
-  console.log("🟢 Admin Connected");
+  if (socket.request.session?.isAuth) {
+    liveVisitors.attachAdmin(socket);
+    console.log("🟢 Admin Connected");
+  }
 
   socket.on("disconnect", () => {
     console.log("🔴 Disconnected");
