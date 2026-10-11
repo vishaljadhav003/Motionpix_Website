@@ -215,7 +215,7 @@ const Contact = () => {
       const lname = nameParts.join(" ");
 
       const res = await axios.post(
-        "http://localhost:5000/api/contact",
+        "/api/contact",
        {
           fname,
           lname,
