@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const contactController = require("../controllers/contactController");
-const argon2 = require("argon2");
+const argon2 = require("@node-rs/argon2");
 const auth = require("../middleware/auth");
 const db = require("../config/db");
 
