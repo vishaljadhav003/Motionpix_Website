@@ -17,6 +17,7 @@ const searchData = [
   { title: "Web Design", path: "/services/web-design" },
   { title: "UI/UX Design", path: "/services/ui-ux-design" },
   { title: "Website Design", path: "/services/web-design" },
+  { title: "Website Development", path: "/services/web-design" },
   { title: "Careers", path: "/careers" },
   { title: "Contact Us - Enquiry", path: "/contact" },
   { title: "Graphics Design", path: "/services/graphicsdesign" },
