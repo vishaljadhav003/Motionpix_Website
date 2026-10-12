@@ -84,7 +84,7 @@ const acceptedEmail = (fname) => `
         <p>Our team will now proceed with the next steps and contact you shortly.</p>
 
         <div style="text-align:center;margin:30px 0;">
-          <a href="https://motionpixindia.com/contact"
+          <a href="https://motionpixindia.com"
              style="background:#16a34a;color:#fff;padding:12px 25px;text-decoration:none;border-radius:6px;font-weight:bold;">
             View Details
           </a>
