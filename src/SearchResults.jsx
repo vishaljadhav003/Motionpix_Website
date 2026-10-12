@@ -11,6 +11,7 @@ const data = [
   // { title: "Digital Marketing", path: "/services/digitalmarketing" },
   { title: "Web Design", path: "/services/web-design" },
   { title: "Website Design", path: "/services/web-design" },
+  { title: "Website Development", path: "/services/web-design" },
   { title: "Careers", path: "/careers" },
   { title: "Contact Us - Enquiry", path: "/contact" },
   { title: "Graphics Design", path: "/services/graphicsdesign" },
