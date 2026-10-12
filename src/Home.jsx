@@ -248,13 +248,14 @@ useEffect(() => {
 
 {/* Universal Cinematic Hero Section */}
 
+{/* Universal Cinematic Hero Section */}
+
 <section
   ref={heroRef}
   className={`hero-section ${
     isHeroVisible ? "hero-reveal-active" : ""
   }`}
 >
-  {/* Background video changes with the active theme */}
   <video
     ref={videoRef}
     className="hero-video-bg"
@@ -262,8 +263,8 @@ useEffect(() => {
     muted
     loop
     playsInline
-    controls
-    preload="metadata"
+    controls={heroTheme !== "light"}
+    preload="auto"
     aria-label="MotionPix Cinematix hero video"
   >
     <source
@@ -274,33 +275,34 @@ useEffect(() => {
       }
       type="video/mp4"
     />
-
-    Your browser does not support HTML video.
   </video>
 
   <div className="hero-overlay" aria-hidden="true" />
 
-  <VisitorCounter />
+  {heroTheme !== "light" && (
+    <>
+      <VisitorCounter />
 
-  <div className="container hero-content">
-    <h1 className="fw-bold display-4 text-white">
-      Motion<span>Pix</span> Cinematix
-    </h1>
+      <div className="container hero-content">
+        <h1 className="fw-bold display-4 text-white">
+          Motion<span>Pix</span> Cinematix
+        </h1>
 
-    <h6 className="fs-5 text-secondary">
-      {content.hero_subtitle}
-    </h6>
+        <h6 className="fs-5 text-secondary">
+          {content.hero_subtitle}
+        </h6>
 
-    <h6 className="fs-4 text-light mb-4">
-      {content.hero_tagline}
-    </h6>
+        <h6 className="fs-4 text-light mb-4">
+          {content.hero_tagline}
+        </h6>
 
-    <h6 className="text-light fs-5 mt-4">
-      {content.hero_description}
-    </h6>
-  </div>
+        <h6 className="text-light fs-5 mt-4">
+          {content.hero_description}
+        </h6>
+      </div>
+    </>
+  )}
 </section>
-
 
       <IntroSection />
       {/* <LogoScrollReveal /> */}
