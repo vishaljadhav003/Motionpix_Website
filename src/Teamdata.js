@@ -47,7 +47,7 @@ export const teamMembersSeed = [
     sameAs: [],
     role: "Content & Instructional Design Specialist",
     location: "Pune, India",
-    image: PLACEHOLDER_IMAGE,
+    image: "Ashwini.png",
     about:
       "Focused on clean UI, scalable systems, and performance-first development.",
   },
@@ -57,7 +57,7 @@ export const teamMembersSeed = [
     sameAs: [],
     role: "Sales & Marketing Executive",
     location: "Pune, India",
-    image: PLACEHOLDER_IMAGE,
+    image:"/Himanshu.png",
     about:
       "Building reliable web experiences with modern stacks and strong attention to detail.",
   },
@@ -67,7 +67,7 @@ export const teamMembersSeed = [
     sameAs: [],
     role: "HR & Admin Executive",
     location: "Pune, India",
-    image: PLACEHOLDER_IMAGE,
+    image: "/Sadashiv.png",
     about:
       "Turning ideas into polished web products with smooth UX and solid engineering.",
   },
@@ -105,7 +105,7 @@ export const teamMembersSeed = [
     name: "Nageshwar",
     fullName: "", // TODO: add surname
     sameAs: [],
-    role: "Video Editing/Motion Graphics Animation",
+    role: "Motion Graphics Artist/Video Editing",
     location: "Pune, India",
     image: "/Nagesh.png",
     about:
