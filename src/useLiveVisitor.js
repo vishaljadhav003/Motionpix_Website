@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-// Production: put your deployed backend URL here
-const API_URL = "http://localhost:5000";
+// Same origin in production (the Express server serves the website),
+// the local backend while developing
+const API_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : window.location.origin;
 
-// Use the same key your visitor tracking already uses (if any)
+// Must be the same key your visitor tracking (POST /api/track-visitor) uses
 const TOKEN_KEY = "visitor_token";
 
 const createToken = () =>
@@ -43,7 +46,8 @@ const acquireSocket = () => {
   if (!socket) {
     socket = io(`${API_URL}/live`, {
       auth: { token: getToken() },
-      transports: ["websocket"],
+      // Polling is the fallback for hosts that block websockets
+      transports: ["websocket", "polling"],
     });
 
     socket.on("liveCount", (data) => {
