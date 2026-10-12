@@ -7,11 +7,16 @@ const auth = require("../middleware/auth");
 
 // ================= STORAGE =================
 
+const fs = require("fs");
 const path = require("path");
+
+const uploadDir = path.join(__dirname, "../uploads");
+
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../uploads"));
+    cb(null, uploadDir);
   },
 
   filename: (req, file, cb) => {
