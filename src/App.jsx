@@ -65,15 +65,22 @@ import WebMobileInterfaceDesign from "./WebMobileInterfaceDesign";
 import LearningTraining from "./LearningTraining";
 import ImmersiveTechnology from "./ImmersiveTechnology";
 import ExhibitionExperiences from "./ExhibitionExperiences";
+import useTrackVisitor from "./useTrackVisitor";
+import useLiveVisitor from "./useLiveVisitor";
 
 const App = () => {
   // The loader runs once on every full page load. "is-loading" is set before the
   // first render, so Home.jsx knows its hero has to wait for the loader hand-off.
-  const [showIntro, setShowIntro] = useState(() => {
+ const [showIntro, setShowIntro] = useState(() => {
     document.documentElement.classList.add("is-loading");
 
     return true;
   });
+
+  useTrackVisitor();
+  useLiveVisitor();
+
+
 
   return (
     <ThemeProvider>
