@@ -17,38 +17,51 @@ const BOT_PATTERN =
 
 // Rounded to 2 decimals (about 1 km): enough for a city map, not a home address
 const roundCoordinate = (value) => {
+  if (value === null || value === undefined || value === "") return null;
+
   const number = Number(value);
 
   return Number.isFinite(number) ? Math.round(number * 100) / 100 : null;
 };
 
-const isValidCoordinates = (lat, lon) =>
-  lat !== null && lon !== null && Math.abs(lat) <= 90 && Math.abs(lon) <= 180;
+const normalizeIP = (ip) => String(ip || "").replace(/^::ffff:/, "");
 
-const reverseGeocode = async (lat, lon) => {
+// Local / private addresses cannot be located
+const isPrivateIP = (ip) =>
+  !ip ||
+  ip === "unknown" ||
+  ip === "::1" ||
+  /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|fc|fd|fe80)/i.test(ip);
+
+// Location comes from the visitor's IP on the server,
+// so the browser never asks the user for permission
+const lookupIPLocation = async (ip) => {
+  const empty = { country: null, city: null, lat: null, lon: null };
+
+  if (isPrivateIP(ip)) return empty;
+
   try {
-    const geo = await axios.get("https://nominatim.openstreetmap.org/reverse", {
-      params: { lat, lon, format: "json" },
-      headers: { "User-Agent": "motionpix-app" },
-      timeout: 5000,
-    });
+    const { data } = await axios.get(
+      `https://ipwho.is/${encodeURIComponent(ip)}`,
+      {
+        params: { fields: "success,country,city,region,latitude,longitude" },
+        headers: { "User-Agent": "motionpix-app" },
+        timeout: 5000,
+      }
+    );
 
-    const address = geo.data.address || {};
+    if (!data || data.success === false) return empty;
 
     return {
-      country: address.country || null,
-      city:
-        address.city ||
-        address.town ||
-        address.municipality ||
-        address.county ||
-        address.state ||
-        null,
+      country: data.country || null,
+      city: data.city || data.region || null,
+      lat: roundCoordinate(data.latitude),
+      lon: roundCoordinate(data.longitude),
     };
   } catch (err) {
-    console.log("Geo Error:", err.message);
+    console.log("IP Geo Error:", err.message);
 
-    return { country: null, city: null };
+    return empty;
   }
 };
 
@@ -87,12 +100,12 @@ setInterval(() => {
 // ============================
 // ✅ POST (TRACK VISITOR)
 // One browser (visitorToken) = one visitor, however many times it comes back.
-// Needs a UNIQUE index on visitors.visitor_token (see the SQL notes).
+// New or returning is decided here on the server.
+// Needs a UNIQUE index on visitors.visitor_token.
 // ============================
 router.post("/track-visitor", trackRateLimit, (req, res) => {
   const io = req.app.get("io");
-  const body = req.body || {};
-  const { visitorToken } = body;
+  const { visitorToken } = req.body || {};
   const userAgent = req.headers["user-agent"] || "unknown";
 
   if (typeof visitorToken !== "string" || !TOKEN_PATTERN.test(visitorToken)) {
@@ -103,17 +116,11 @@ router.post("/track-visitor", trackRateLimit, (req, res) => {
     return res.json({ success: true, skipped: true });
   }
 
-  const lat = roundCoordinate(body.lat);
-  const lon = roundCoordinate(body.lon);
-  const hasLocation = isValidCoordinates(lat, lon);
-
-  const realIP =
-    (req.headers["x-forwarded-for"] || "").split(",")[0].trim() ||
-    req.socket.remoteAddress ||
-    "unknown";
+  // "trust proxy" is enabled in app.js, so req.ip is the real client IP
+  const realIP = normalizeIP(req.ip || req.socket.remoteAddress) || "unknown";
 
   db.query(
-    "SELECT city FROM visitors WHERE visitor_token = ? LIMIT 1",
+    "SELECT lat FROM visitors WHERE visitor_token = ? LIMIT 1",
     [visitorToken],
     async (selectErr, rows) => {
       if (selectErr) {
@@ -124,14 +131,13 @@ router.post("/track-visitor", trackRateLimit, (req, res) => {
       const isKnown = rows.length > 0;
 
       // Returning visitor that already has a location: nothing to do
-      if (isKnown && (rows[0].city || !hasLocation)) {
+      if (isKnown && rows[0].lat != null) {
         return res.json({ success: true, isNew: false });
       }
 
-      // The reverse geocoding service is only called when it is really needed
-      const place = hasLocation
-        ? await reverseGeocode(lat, lon)
-        : { country: null, city: null };
+      // The IP lookup runs only when it is really needed
+      const place = await lookupIPLocation(realIP);
+      const hasLocation = place.lat !== null && place.lon !== null;
 
       // Returning visitor without a stored location: fill it, never overwrite it
       if (isKnown) {
@@ -142,13 +148,7 @@ router.post("/track-visitor", trackRateLimit, (req, res) => {
                  lat     = COALESCE(?, lat),
                  lon     = COALESCE(?, lon)
            WHERE visitor_token = ?`,
-          [
-            place.country,
-            place.city,
-            hasLocation ? lat : null,
-            hasLocation ? lon : null,
-            visitorToken,
-          ],
+          [place.country, place.city, place.lat, place.lon, visitorToken],
           (updateErr) => {
             if (updateErr) console.log(updateErr);
 
@@ -168,8 +168,8 @@ router.post("/track-visitor", trackRateLimit, (req, res) => {
           userAgent,
           place.country,
           place.city,
-          hasLocation ? lat : null,
-          hasLocation ? lon : null,
+          place.lat,
+          place.lon,
         ],
         (insertErr) => {
           if (insertErr) {
@@ -200,8 +200,8 @@ router.post("/track-visitor", trackRateLimit, (req, res) => {
             io.to("admins").emit("visitorUpdate", {
               country: place.country,
               city: place.city,
-              lat: hasLocation ? lat : null,
-              lon: hasLocation ? lon : null,
+              lat: hasLocation ? place.lat : null,
+              lon: hasLocation ? place.lon : null,
               total,
             });
 
