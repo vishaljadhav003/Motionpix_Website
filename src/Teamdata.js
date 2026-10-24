@@ -111,16 +111,18 @@ export const teamMembersSeed = [
     about:
       "Editing and motion work with rhythm, clarity, and strong visual impact.",
   },
-  {
-    name: "Vishal",
-    fullName: "Vishal",
-    sameAs: [],
-    role: "Web Developer/Software Developer",
-    location: "Pune, India",
-    image: "/Vishal.png",
-    about:
-      "Delivering fast, responsive, and maintainable websites with modern UI standards.",
-  },
+
+{
+  name: "Vishal",
+  fullName: "Vishal Jadhav",
+  sameAs: [],
+  role: "Web Developer/Software Developer",
+  location: "Pune, India",
+  image: "/Vishal.png",
+  about:
+    "Delivering fast, responsive, and maintainable websites with modern UI standards.",
+},
+
   {
     name: "Sushant",
     fullName: "", // TODO: add surname
