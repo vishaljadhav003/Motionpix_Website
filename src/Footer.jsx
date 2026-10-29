@@ -319,7 +319,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="premium-link"
                 >
-                  Vishal Jadhav
+                  Our Web Team
                 </a>
               </p>
             </div>
