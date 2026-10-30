@@ -370,11 +370,11 @@ const Contact = () => {
                     AR/VR
                   </option>
 
-                  <option value="digitalmarketing">
+                  <option value="digital-marketing">
                     Digital Marketing
                   </option>
 
-                  <option value="web-design">
+                  <option value="website-design">
                     Website Design
                   </option>
 
@@ -382,15 +382,15 @@ const Contact = () => {
                     E-Learning
                   </option>
 
-                  <option value="graphicsdesign">
+                  <option value="graphics-design">
                     Graphics Design
                   </option>
 
-                  <option value="motiongraphics">
+                  <option value="motion-graphics">
                     Motion Graphics
                   </option>
 
-                  <option value="sop">
+                  <option value="sop-digitization">
                     SOP Digitization
                   </option>
 
@@ -406,7 +406,7 @@ const Contact = () => {
                     Live Shoots
                   </option>
 
-                  <option value="general">
+                  <option value="other">
                     General/Other
                   </option>
                 </select>
