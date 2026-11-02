@@ -33,6 +33,9 @@ router.get("/complete/:id", auth, contactController.markComplete);
 
 router.get("/delete/:id", auth, contactController.deleteContact);
 
+// Files uploaded with an inquiry (private, admin only)
+router.get("/contact-attachment/:id", auth, contactController.downloadAttachment);
+
 // ============================================================
 // LOGIN PAGE
 // ============================================================
