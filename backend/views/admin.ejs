@@ -469,7 +469,7 @@ form.row > div {
 }
 
 .table-responsive > .table {
-  min-width: 850px;
+  min-width: 1100px;
   margin-bottom: 0;
 }
 
@@ -485,6 +485,54 @@ form.row > div {
   max-width: 250px;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+/* Full message: every line break is kept and nothing is cut off */
+.table td.msg-cell {
+  white-space: pre-wrap;
+  min-width: 260px;
+  max-width: 420px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Files shared by the visitor */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.15);
+  color: #60a5fa;
+  font-size: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-chip:hover {
+  background: rgba(59,130,246,0.28);
+  color: #93c5fd;
+}
+
+.light-mode .file-chip {
+  background: rgba(29,78,216,0.1);
+  color: #1d4ed8;
+}
+
+.light-mode .file-chip:hover {
+  background: rgba(29,78,216,0.2);
+  color: #1e3a8a;
 }
 
 /* ================= NOTIFICATION ================= */
@@ -675,7 +723,7 @@ form.row > div {
   }
 
   .table-responsive > .table {
-    min-width: 850px;
+    min-width: 1100px;
   }
 
   .table th,
@@ -812,48 +860,55 @@ socket.on("newContact", (data) => {
 
   notifList.innerHTML = `
   <div class="mb-2 p-2 border-bottom notif-item">
-    <strong>${data.fname} ${data.lname}</strong><br>
-    <small class="text-muted">${data.email}</small>
+    <strong>${esc(data.fname)} ${esc(data.lname)}</strong><br>
+    <small class="text-muted">${esc(data.email)}</small>
   </div>
 ` + notifList.innerHTML;
+
+  // files shared by the visitor
+  const files = Array.isArray(data.attachments) ? data.attachments : [];
+
+  const fileCell = files.length
+    ? `<div class="file-list">${files.map(f => `
+        <a class="file-chip" href="/api/contact-attachment/${Number(f.id)}" title="${esc(f.name)}">
+          <i class="bi bi-paperclip"></i>${esc(f.name)}
+        </a>`).join("")}</div>`
+    : "—";
 
   // add table row
 const row = `
   <tr>
 
-    <td>${data.id}</td>
+    <td>${Number(data.id)}</td>
 
     <td>
-      ${data.fname || ''} ${data.lname || ''}
+      ${esc(data.fname)} ${esc(data.lname)}
     </td>
 
     <td>
-      ${data.company || '—'}
+      ${esc(data.company) || '—'}
     </td>
 
     <td>
-      ${data.email || '—'}
+      ${esc(data.email) || '—'}
     </td>
 
     <td>
-      ${data.services || '—'}
+      ${esc(data.serviceLabel || data.services) || '—'}
     </td>
 
     <td>
-      ${data.budget || '—'}
+      ${esc(data.budgetLabel || data.budget) || '—'}
     </td>
 
-    <td style="
-      max-width:200px;
-      white-space:normal;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    ">
-      ${data.msg || ''}
+    <td class="msg-cell">${esc(data.msg)}</td>
+
+    <td>
+      ${fileCell}
     </td>
 
     <td>
-      ${data.contact || '—'}
+      ${esc(data.contact) || '—'}
     </td>
 
     <td>
@@ -865,14 +920,14 @@ const row = `
     <td>
 
       <a
-        href="/api/complete/${data.id}"
+        href="/api/complete/${Number(data.id)}"
         class="btn btn-success btn-sm"
       >
         ✔
       </a>
 
       <a
-        href="/api/delete/${data.id}"
+        href="/api/delete/${Number(data.id)}"
         class="btn btn-danger btn-sm"
       >
         🗑
@@ -1031,6 +1086,7 @@ const row = `
   <th>Service</th>
   <th>Budget</th>
   <th>Message</th>
+  <th>Files</th>
   <th>Contact</th>
   <th>Status</th>
   <th>Action</th>
@@ -1058,20 +1114,27 @@ const row = `
   </td>
 
   <td class="fw-bold">
-    <%= item.services %>
+    <%= item.serviceLabel %>
   </td>
 
   <td class="fw-bold">
-    <%= item.budget || "—" %>
+    <%= item.budgetLabel %>
   </td>
 
-  <td class="fw-bold" style="
-    max-width: 200px;
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-word;
-  ">
-    <%= item.msg %>
+  <td class="fw-bold msg-cell"><%= item.msg %></td>
+
+  <td class="fw-bold">
+    <% if (item.files && item.files.length) { %>
+      <div class="file-list">
+        <% item.files.forEach(file => { %>
+          <a class="file-chip"
+             href="/api/contact-attachment/<%= file.id %>"
+             title="<%= file.name %> (<%= formatBytes(file.size) %>)"><i class="bi bi-paperclip"></i><%= file.name %></a>
+        <% }) %>
+      </div>
+    <% } else { %>
+      —
+    <% } %>
   </td>
 
   <td class="fw-bold">
