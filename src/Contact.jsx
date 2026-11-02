@@ -2,6 +2,46 @@ import { useEffect, useRef, useState } from "react";
 import "./Contact.css";
 import axios from "axios";
 
+// Attachment rules (the server checks the same limits again)
+const MAX_FILES = 3;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
+
+const ALLOWED_EXTENSIONS = [
+  "pdf",
+  "png",
+  "jpg",
+  "jpeg",
+  "webp",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "txt",
+  "csv",
+];
+
+const FILE_ACCEPT = ALLOWED_EXTENSIONS.map((ext) => `.${ext}`).join(",");
+
+const formatFileSize = (bytes) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+// Base64 text of a file (without the "data:...;base64," prefix)
+const readFileAsBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
 const Contact = () => {
   const [data, setData] = useState({
     fullname: "",
@@ -14,6 +54,10 @@ const Contact = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [files, setFiles] = useState([]);
+  const [fileError, setFileError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
@@ -159,6 +203,73 @@ const Contact = () => {
     }
   };
 
+  const addFiles = (fileList) => {
+    const incoming = Array.from(fileList || []);
+
+    if (!incoming.length) return;
+
+    const next = [...files];
+    let total = next.reduce((sum, file) => sum + file.size, 0);
+    let message = "";
+
+    for (const file of incoming) {
+      const ext = file.name.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(ext)) {
+        message = `"${file.name}" is not a supported file type.`;
+        continue;
+      }
+
+      if (file.size === 0) {
+        message = `"${file.name}" is empty.`;
+        continue;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        message = `"${file.name}" is larger than 5 MB.`;
+        continue;
+      }
+
+      if (next.some((item) => item.name === file.name && item.size === file.size)) {
+        continue;
+      }
+
+      if (next.length >= MAX_FILES) {
+        message = `You can attach up to ${MAX_FILES} files.`;
+        break;
+      }
+
+      if (total + file.size > MAX_TOTAL_SIZE) {
+        message = "Total attachment size cannot exceed 10 MB.";
+        continue;
+      }
+
+      next.push(file);
+      total += file.size;
+    }
+
+    setFiles(next);
+    setFileError(message);
+  };
+
+  const handleFileChange = (e) => {
+    addFiles(e.target.files);
+
+    // Lets the same file be chosen again after it was removed
+    e.target.value = "";
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    addFiles(e.dataTransfer.files);
+  };
+
+  const removeFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setFileError("");
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -208,7 +319,16 @@ const Contact = () => {
 
     if (!isConfirmed) return;
 
+    setIsSubmitting(true);
+
     try {
+      const attachments = await Promise.all(
+        files.map(async (file) => ({
+          name: file.name,
+          data: await readFileAsBase64(file),
+        }))
+      );
+
       const nameParts = data.fullname.trim().split(/\s+/);
 
       const fname = nameParts.shift() || "";
@@ -225,6 +345,7 @@ const Contact = () => {
           contact: data.contact.trim(),
           msg: data.msg.trim(),
           budget: data.budget,
+          attachments,
         },
         {
           withCredentials: true,
@@ -245,10 +366,18 @@ const Contact = () => {
         });
 
         setErrors({});
+        setFiles([]);
+        setFileError("");
       }
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert("❌ Error submitting inquiry");
+
+      const serverMessage =
+        err.response?.data?.message || err.response?.data?.reply;
+
+      alert(`❌ ${serverMessage || "Error submitting inquiry"}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -370,11 +499,11 @@ const Contact = () => {
                     AR/VR
                   </option>
 
-                  <option value="digital-marketing">
+                  <option value="digitalmarketing">
                     Digital Marketing
                   </option>
 
-                  <option value="website-design">
+                  <option value="web-design">
                     Website Design
                   </option>
 
@@ -382,15 +511,15 @@ const Contact = () => {
                     E-Learning
                   </option>
 
-                  <option value="graphics-design">
+                  <option value="graphicsdesign">
                     Graphics Design
                   </option>
 
-                  <option value="motion-graphics">
+                  <option value="motiongraphics">
                     Motion Graphics
                   </option>
 
-                  <option value="sop-digitization">
+                  <option value="sop">
                     SOP Digitization
                   </option>
 
@@ -406,7 +535,7 @@ const Contact = () => {
                     Live Shoots
                   </option>
 
-                  <option value="other">
+                  <option value="general">
                     General/Other
                   </option>
                 </select>
@@ -487,6 +616,90 @@ const Contact = () => {
                 )}
               </div>
 
+              {/* Attachments - OPTIONAL */}
+              <div className="col-12">
+                <label className="contact-label" htmlFor="contact-attachments">
+                  Attachments{" "}
+                  <span className="contact-optional">(optional)</span>
+                </label>
+
+                <div
+                  className={`contact-file-zone ${isDragging ? "is-dragging" : ""}`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    id="contact-attachments"
+                    type="file"
+                    className="contact-file-input"
+                    multiple
+                    accept={FILE_ACCEPT}
+                    onChange={handleFileChange}
+                    disabled={isSubmitting}
+                    aria-describedby="contact-file-hint"
+                  />
+
+                  <i
+                    className="bi bi-cloud-arrow-up contact-file-icon"
+                    aria-hidden="true"
+                  ></i>
+
+                  <span className="contact-file-title">
+                    Click to upload or drag & drop
+                  </span>
+
+                  <span className="contact-file-hint" id="contact-file-hint">
+                    Up to 3 files, 5 MB each · PDF, images, Word, Excel,
+                    PowerPoint, TXT, CSV
+                  </span>
+                </div>
+
+                {fileError && (
+                  <div className="contact-error-message">
+                    <i className="bi bi-exclamation-circle-fill"></i>
+                    {fileError}
+                  </div>
+                )}
+
+                {files.length > 0 && (
+                  <ul className="contact-file-list">
+                    {files.map((file, index) => (
+                      <li
+                        className="contact-file-item"
+                        key={`${file.name}-${file.size}`}
+                      >
+                        <i
+                          className="bi bi-paperclip contact-file-clip"
+                          aria-hidden="true"
+                        ></i>
+
+                        <span className="contact-file-name" title={file.name}>
+                          {file.name}
+                        </span>
+
+                        <span className="contact-file-size">
+                          {formatFileSize(file.size)}
+                        </span>
+
+                        <button
+                          type="button"
+                          className="contact-file-remove"
+                          onClick={() => removeFile(index)}
+                          disabled={isSubmitting}
+                          aria-label={`Remove ${file.name}`}
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
               {/* Estimated Budget - OPTIONAL */}
               <div className="col-12">
                 <label className="contact-label">
@@ -546,8 +759,9 @@ const Contact = () => {
                 <button
                   type="submit"
                   className="btn contact-submit-btn fw-bold px-5 py-3 btn-outline-light"
+                  disabled={isSubmitting}
                 >
-                  Send Inquiry
+                  {isSubmitting ? "Sending..." : "Send Inquiry"}
                 </button>
               </div>
             </div>
@@ -565,4 +779,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
