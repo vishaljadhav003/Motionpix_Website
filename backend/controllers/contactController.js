@@ -1,14 +1,21 @@
 const db = require("../config/db");
 
-const {
-  sendMicrosoftEmail,
-  escapeHtml,
-} = require("../services/microsoftMail");
+const { sendMicrosoftEmail } = require("../services/microsoftMail");
 
 const liveVisitors = require("../services/liveVisitors");
+const attachments = require("../services/contactAttachments");
+const templates = require("../services/emailTemplates");
 
-// Set EMAIL_LOGO_URL in .env to show the logo in the "accepted" email
-const LOGO_URL = process.env.EMAIL_LOGO_URL || "";
+const {
+  serviceLabel,
+  budgetLabel,
+  isValidService,
+  isValidBudget,
+  formatBytes,
+} = require("../config/contactOptions");
+
+// Files are attached to the admin email only when they are small enough
+const MAX_EMAIL_ATTACHMENT_BYTES = 2.5 * 1024 * 1024;
 
 // ============================================================
 // HELPERS
@@ -29,78 +36,6 @@ const parseId = (value) => {
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? id : null;
 };
-
-// ============================================================
-// EMAIL TEMPLATES
-// ============================================================
-
-const adminInquiryEmail = (c) => `
-  <div style="font-family:Arial,sans-serif;line-height:1.6;color:#333;">
-    <h2 style="color:#e50914;">New Contact Inquiry</h2>
-    <hr>
-    <p><strong>Name:</strong> ${c.fname} ${c.lname}</p>
-    <p><strong>Company:</strong> ${c.company}</p>
-    <p><strong>Email:</strong> ${c.email}</p>
-    <p><strong>Contact Number:</strong> ${c.contact || "Not provided"}</p>
-    <p><strong>Service:</strong> ${c.services}</p>
-    <p><strong>Estimated Budget:</strong> ${c.budget}</p>
-    <p><strong>Message:</strong></p>
-    <div style="background:#f5f5f5;padding:15px;border-radius:8px;">${c.msg}</div>
-    <br>
-    <p>This inquiry was submitted from the MotionPix website.</p>
-  </div>
-`;
-
-const userConfirmationEmail = (c) => `
-  <div style="font-family:Arial,sans-serif;background:#f4f6f8;padding:20px;">
-    <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:10px;padding:30px;">
-      <h2 style="color:#333;">Hello ${c.fname},</h2>
-      <p>Thank you for reaching out to <strong>MotionPix</strong>.</p>
-      <p>We have successfully received your inquiry regarding <strong>${c.services}</strong>.</p>
-      <p>Our team is currently reviewing your request and will get back to you shortly with the necessary details.</p>
-      <br>
-      <p style="color:#555;">We appreciate your interest in working with us.</p>
-      <p><strong>— Team MotionPix</strong></p>
-    </div>
-  </div>
-`;
-
-const acceptedEmail = (fname) => `
-  <div style="font-family:Arial,sans-serif;background:#f4f6f8;padding:20px;">
-    <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-
-      <div style="background:#0f172a;padding:20px;text-align:center;">
-        ${
-          LOGO_URL
-            ? `<img src="${escapeHtml(LOGO_URL)}" alt="MotionPix" style="height:50px;">`
-            : `<span style="color:#ffffff;font-size:22px;font-weight:bold;">MotionPix</span>`
-        }
-      </div>
-
-      <div style="padding:30px;color:#333;">
-        <h2>Hello ${escapeHtml(fname)},</h2>
-        <p>We’re happy to inform you that your inquiry has been</p>
-        <p style="font-size:18px;"><b style="color:green;">✔ Successfully Accepted</b></p>
-        <p>Our team will now proceed with the next steps and contact you shortly.</p>
-
-        <div style="text-align:center;margin:30px 0;">
-          <a href="https://motionpixindia.com"
-             style="background:#16a34a;color:#fff;padding:12px 25px;text-decoration:none;border-radius:6px;font-weight:bold;">
-            View Details
-          </a>
-        </div>
-
-        <p>If you have any questions, feel free to reply to this email.</p>
-        <p><b>— Team MotionPix</b></p>
-      </div>
-
-      <div style="background:#f1f5f9;padding:15px;text-align:center;font-size:12px;color:#777;">
-        © ${new Date().getFullYear()} MotionPix. All rights reserved.
-      </div>
-
-    </div>
-  </div>
-`;
 
 // ============================================================
 // GET CONTACTS (admin dashboard)
@@ -133,19 +68,45 @@ exports.getContacts = async (req, res) => {
   sql += " ORDER BY id DESC";
 
   try {
-    const [results, chartData] = await Promise.all([
+    const [results, chartRows] = await Promise.all([
       query(sql, params),
       query(
         "SELECT services, COUNT(*) AS count FROM contacts GROUP BY services"
       ),
     ]);
 
+    const filesByContact = await attachments.listForContacts(
+      results.map((row) => row.id)
+    );
+
+    // The dashboard shows the readable labels, never the form slugs
+    const data = results.map((row) => ({
+      ...row,
+      serviceLabel: serviceLabel(row.services),
+      budgetLabel: budgetLabel(row.budget),
+      files: filesByContact.get(row.id) || [],
+    }));
+
+    // Old rows saved with a slug and new rows can share one label
+    const chartTotals = new Map();
+
+    chartRows.forEach((row) => {
+      const label = serviceLabel(row.services);
+      chartTotals.set(label, (chartTotals.get(label) || 0) + Number(row.count));
+    });
+
+    const chartData = Array.from(chartTotals, ([services, count]) => ({
+      services,
+      count,
+    }));
+
     return res.render("admin", {
-      data: results,
+      data,
       search,
       status,
       chartData,
       emailLogs: [],
+      formatBytes,
     });
   } catch (err) {
     console.error("❌ Get contacts error:", err);
@@ -263,6 +224,19 @@ exports.createContact = async (req, res) => {
     });
   }
 
+  if (!isValidService(contact.services) || !isValidBudget(contact.budget)) {
+    return res.status(400).json({
+      success: false,
+      message: "Please choose a valid service and budget.",
+    });
+  }
+
+  const upload = attachments.validateUploads(body.attachments);
+
+  if (upload.error) {
+    return res.status(400).json({ success: false, message: upload.error });
+  }
+
   // ================= SAVE =================
 
   let insertId;
@@ -294,40 +268,81 @@ exports.createContact = async (req, res) => {
     });
   }
 
-  // ================= SOCKET =================
+  let savedFiles = [];
+
+  if (upload.files.length) {
+    try {
+      savedFiles = await attachments.saveFiles(insertId, upload.files);
+    } catch (err) {
+      console.error("❌ Save attachments error:", err);
+
+      // No half-saved inquiry: the visitor can simply send the form again
+      await query("DELETE FROM contacts WHERE id = ?", [insertId]).catch(() => {});
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not save your attachments. Please try again.",
+      });
+    }
+  }
+
+  // Readable values for the dashboard and the emails
+  const display = {
+    ...contact,
+    service: serviceLabel(contact.services),
+    budget: budgetLabel(contact.budget),
+  };
+
+  // ================= SOCKET (admin dashboard only) =================
 
   if (io) {
-    io.emit("newContact", {
+    io.to("admins").emit("newContact", {
       id: insertId,
       ...contact,
+      serviceLabel: display.service,
+      budgetLabel: display.budget,
+      attachments: savedFiles,
       status: "pending",
       created_at: new Date(),
     });
   }
 
   // ================= EMAIL =================
+  // Sent separately, so one failed email never blocks the other
+
+  const totalBytes = upload.files.reduce((sum, file) => sum + file.size, 0);
+  const attachToEmail = upload.files.length > 0 && totalBytes <= MAX_EMAIL_ATTACHMENT_BYTES;
 
   try {
-    const safe = Object.fromEntries(
-      Object.entries(contact).map(([key, value]) => [key, escapeHtml(value)])
-    );
+    const adminMail = templates.adminInquiryEmail(display, savedFiles, attachToEmail);
 
     await sendMicrosoftEmail({
       to: process.env.EMAIL_TO,
-      subject: "🚀 New Inquiry – MotionPix",
+      subject: adminMail.subject,
       replyTo: contact.email,
-      html: adminInquiryEmail(safe),
+      html: adminMail.html,
+      attachments: attachToEmail
+        ? upload.files.map((file) => ({
+            name: file.originalName,
+            contentType: file.mime,
+            content: file.buffer,
+          }))
+        : [],
     });
+  } catch (error) {
+    console.error("❌ Admin inquiry email error:", error);
+  }
+
+  try {
+    const userMail = templates.userConfirmationEmail(display, savedFiles);
 
     await sendMicrosoftEmail({
       to: contact.email,
-      subject: "Inquiry Received ✨ – MotionPix",
-      html: userConfirmationEmail(safe),
+      subject: userMail.subject,
+      html: userMail.html,
     });
-
-    console.log("✅ Microsoft 365 emails sent successfully");
   } catch (error) {
-    console.error("❌ Microsoft 365 email error:", error);
+    console.error("❌ Visitor confirmation email error:", error);
   }
 
   return res.json({
@@ -349,7 +364,7 @@ exports.markComplete = async (req, res) => {
 
   try {
     const rows = await query(
-      "SELECT email, fname, status FROM contacts WHERE id = ?",
+      "SELECT email, fname, services, status FROM contacts WHERE id = ?",
       [id]
     );
 
@@ -367,10 +382,15 @@ exports.markComplete = async (req, res) => {
     await query("UPDATE contacts SET status = 'completed' WHERE id = ?", [id]);
 
     try {
+      const mail = templates.acceptedEmail({
+        fname: user.fname,
+        service: serviceLabel(user.services),
+      });
+
       await sendMicrosoftEmail({
         to: user.email,
-        subject: "Inquiry Accepted ✅ – MotionPix",
-        html: acceptedEmail(user.fname),
+        subject: mail.subject,
+        html: mail.html,
       });
 
       console.log("✅ Inquiry accepted email sent successfully");
@@ -398,9 +418,46 @@ exports.deleteContact = async (req, res) => {
 
   try {
     await query("DELETE FROM contacts WHERE id = ?", [id]);
+
+    // The uploaded files go away together with the inquiry
+    await attachments.removeForContact(id).catch((err) => {
+      console.error("❌ Remove attachments error:", err.message);
+    });
+
     return res.redirect("/api/admin");
   } catch (err) {
     console.error("❌ Delete contact error:", err);
+    return res.status(500).send("Server error");
+  }
+};
+
+// ============================================================
+// DOWNLOAD ATTACHMENT (admin only)
+// ============================================================
+
+exports.downloadAttachment = async (req, res) => {
+  const id = parseId(req.params.id);
+
+  if (!id) {
+    return res.status(400).send("Invalid file id");
+  }
+
+  try {
+    const file = await attachments.findById(id);
+
+    if (!file) {
+      return res.status(404).send("File not found");
+    }
+
+    res.set("X-Content-Type-Options", "nosniff");
+
+    return res.download(file.filePath, file.name, (err) => {
+      if (err && !res.headersSent) {
+        res.status(404).send("File not found");
+      }
+    });
+  } catch (err) {
+    console.error("❌ Download attachment error:", err);
     return res.status(500).send("Server error");
   }
 };
