@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot Conversations</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0f172a;
+  color: #fff;
+}
+
+.light-mode { background: #f1f5f9; color: #111; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.header .btn { white-space: nowrap; }
+
+.nav-links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.card {
+  min-width: 0;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  color: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.light-mode .card {
+  background: #ffffff;
+  color: #111;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.muted { color: #cbd5e1; }
+.light-mode .muted { color: #555; }
+
+.stat-card { padding: 18px 20px; }
+.stat-card h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); }
+
+/* CONVERSATION LIST */
+.chat-session { margin-bottom: 12px; overflow: hidden; }
+
+.chat-session > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.chat-session > summary::-webkit-details-marker { display: none; }
+
+.session-title {
+  min-width: 0;
+  flex: 1;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-meta {
+  flex-shrink: 0;
+  font-size: 12px;
+  text-align: right;
+}
+
+.session-body {
+  padding: 4px 18px 16px;
+  border-top: 1px solid rgba(128,128,128,0.25);
+}
+
+.exchange { margin-top: 14px; }
+
+.bubble {
+  max-width: 100%;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.bubble.visitor { background: rgba(59,130,246,0.18); }
+.bubble.bot { background: rgba(128,128,128,0.16); }
+
+.who { font-size: 12px; font-weight: 600; opacity: 0.8; }
+
+.attach-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(245,158,11,0.2);
+  color: #f59e0b;
+  font-size: 11px;
+}
+
+.time { margin-left: 8px; font-size: 11px; font-weight: 400; opacity: 0.6; }
+
+@media (max-width: 575.98px) {
+  .container { padding: 10px !important; }
+
+  .header { gap: 10px; }
+
+  .chat-session > summary { flex-direction: column; align-items: flex-start; gap: 4px; }
+
+  .session-title { width: 100%; }
+
+  .session-meta { text-align: left; }
+}
+</style>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle("light-mode");
+
+  const light = document.body.classList.contains("light-mode");
+
+  document.getElementById("themeBtn").innerText = light ? "☀️ Light" : "🌙 Dark";
+  localStorage.setItem("theme", light ? "light" : "dark");
+}
+
+window.addEventListener("load", () => {
+  const light = localStorage.getItem("theme") === "light";
+
+  document.body.classList.toggle("light-mode", light);
+  document.getElementById("themeBtn").innerText = light ? "☀️ Light" : "🌙 Dark";
+});
+</script>
+</head>
+<body>
+
+<div class="container py-4">
+
+  <div class="header">
+    <h4 class="mb-0">🚀 MotionPix Admin</h4>
+
+    <div class="nav-links">
+      <a href="/api/admin" class="btn btn-primary">📩 Contact</a>
+      <a href="/api/admin/careers" class="btn btn-warning">💼 Careers</a>
+      <a href="/api/admin/content" class="btn btn-info">📝 Content</a>
+      <a href="/api/admin/team" class="btn btn-success">👥 Team</a>
+      <a href="/api/admin/chats" class="btn btn-secondary active">💬 Chats</a>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button id="themeBtn" onclick="toggleTheme()" class="btn btn-dark">🌙 Dark</button>
+      <a href="/api/logout" class="btn btn-danger">Logout</a>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6">
+      <div class="card stat-card" style="border-left:4px solid #3b82f6;">
+        <small class="muted">Conversations</small>
+        <h2><%= totals.conversations %></h2>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card stat-card" style="border-left:4px solid #22c55e;">
+        <small class="muted">Questions asked</small>
+        <h2><%= totals.messages %></h2>
+      </div>
+    </div>
+  </div>
+
+  <form method="GET" action="/api/admin/chats" class="row g-2 mb-3">
+    <div class="col-12 col-md-8">
+      <input type="text" name="search" value="<%= search %>" class="form-control fw-bold" placeholder="Search questions or answers...">
+    </div>
+
+    <div class="col-6 col-md-2">
+      <button class="btn btn-primary w-100 fw-bold">Search</button>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="/api/admin/chats" class="btn btn-outline-secondary w-100 fw-bold">Reset</a>
+    </div>
+  </form>
+
+  <% if (!sessions.length) { %>
+    <div class="card p-4 text-center muted">No chatbot conversations found.</div>
+  <% } %>
+
+  <% sessions.forEach((session) => { %>
+    <details class="card chat-session">
+      <summary>
+        <span class="session-title"><%= session.title %></span>
+        <span class="session-meta muted">
+          <%= session.exchanges.length %> question<%= session.exchanges.length === 1 ? "" : "s" %>
+          &middot; <%= session.lastAt %>
+        </span>
+      </summary>
+
+      <div class="session-body">
+        <% session.exchanges.forEach((item) => { %>
+          <div class="exchange">
+            <div class="who">Visitor<% if (item.attachment) { %><span class="attach-tag"><%= item.attachment %></span><% } %><span class="time"><%= item.time %></span></div>
+            <div class="bubble visitor"><%= item.question %></div>
+
+            <div class="who mt-2">MotionPix AI</div>
+            <div class="bubble bot"><%= item.answer %></div>
+          </div>
+        <% }) %>
+      </div>
+    </details>
+  <% }) %>
+
+  <% if (sessions.length >= 100) { %>
+    <p class="muted text-center small">Showing the latest 100 conversations. Use search to find older ones.</p>
+  <% } %>
+
+</div>
+
+</body>
+</html>
