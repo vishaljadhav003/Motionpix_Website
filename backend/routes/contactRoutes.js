@@ -10,6 +10,8 @@ const fetch = require("node-fetch");
 const franc = require("franc");
 const pdfParse = require("pdf-parse");
 
+const chatLogs = require("../services/chatLogs");
+
 // ============================================================
 // CONTACT
 // ============================================================
@@ -35,6 +37,24 @@ router.get("/delete/:id", auth, contactController.deleteContact);
 
 // Files uploaded with an inquiry (private, admin only)
 router.get("/contact-attachment/:id", auth, contactController.downloadAttachment);
+
+// What visitors asked the chatbot and what it answered
+router.get("/admin/chats", auth, async (req, res) => {
+  const search =
+    typeof req.query.search === "string" ? req.query.search.trim().slice(0, 100) : "";
+
+  try {
+    const [sessions, totals] = await Promise.all([
+      chatLogs.listSessions({ search }),
+      chatLogs.totals(),
+    ]);
+
+    return res.render("admin-chats", { sessions, totals, search });
+  } catch (err) {
+    console.error("❌ Admin chats error:", err);
+    return res.status(500).send("Server error");
+  }
+});
 
 // ============================================================
 // LOGIN PAGE
@@ -114,14 +134,18 @@ router.post("/login", async (req, res) => {
 
 const CHAT_CONFIG = {
   model: "openrouter/free",
-  maxTokens: 700,
+  maxTokens: 1200,
   temperature: 0.7,
-  timeoutMs: 40000,
+  timeoutMs: 30000, // per attempt (one retry when the model returns nothing)
   maxMessageLength: 2000, // characters per user message
   maxHistoryMessages: 10, // conversation memory window
   maxHistoryLength: 1500, // characters per history message
   pdfCharLimit: 4000, // PDF text passed to the model
   rateLimit: { windowMs: 60 * 1000, max: 20 }, // per IP
+  outOfScopeReply:
+    "The asked question is out of scope of MotionPix, so please ask relevant questions about it.",
+  emptyReply:
+    "I couldn't find a clear answer to that. Please rephrase your question about MotionPix's services, pricing, timeline or contact details.",
 };
 
 const CONTACT_EMAIL = "info@motionpixindia.com";
@@ -234,7 +258,7 @@ const detectLanguageInstruction = (message) => {
 // Lightweight signal only — the model decides the final wording.
 // It lets the prompt tell the model to respond like a calm, professional agent.
 const ABUSE_PATTERN =
-  /\b(fuck\w*|shit|bitch|bastard|asshole|idiot|stupid|moron|dumb|bhosd\w*|madarchod|bhenchod|chutiy\w*|gandu|randi|harami|kutta|saala|saale|zavadya|zavad\w*|bhadva|lavda|lund|gaand|aaichi|aai\s*cha)\b/i;
+  /\b(fuck\w*|shit|bitch|bastard|asshole|idiot|stupid|moron|dumb|bhosd\w*|madarchod|bhenchod|chutiya|aaighalya|bahin|behen\w*|gandu|randi|harami|kutta|saala|saale|zavadya|zavad\w*|bhadva|lavda|lund|gaand|aaichi|aai\s*cha)\b/i;
 
 const hasOffensiveLanguage = (text) => ABUSE_PATTERN.test(text || "");
 
@@ -258,10 +282,15 @@ CONTACT
 Email: ${CONTACT_EMAIL}
 Contact Number: ${CONTACT_PHONE}
 
+SCOPE
+- You only help with MotionPix: its services, projects, pricing, timelines, process and contact details, and how its fields work (animation, AR/VR, e-learning, web design, branding, digital marketing, SOP digitization, print, live shoots, and how AI and technology are used in them).
+- If the question is clearly unrelated to MotionPix and these topics (for example general knowledge, homework, coding help, news, politics, entertainment, personal advice), reply with ONLY this sentence, in the reply language: "${CHAT_CONFIG.outOfScopeReply}"
+- If the question is vague but could relate to MotionPix, answer it in the context of MotionPix, or ask one short question about their project. Never reply that you could not generate a response.
+
 CONVERSATION
 - You can see the earlier messages of this conversation. Use them to stay consistent and remember what the user told you (name, project, preferences).
-- Answer general questions (knowledge, writing, coding, translation, explanations) helpfully too, not only MotionPix topics.
 - If you are unsure, say so honestly instead of guessing.
+- Never mention the name of the AI model, its provider or any AI company behind you. If asked who or what you are, say you are MotionPix AI, the assistant of the MotionPix website.
 
 IMAGES AND PDFs
 - You can understand images the user sends: describe them, read visible text, and answer questions about them.
@@ -339,6 +368,7 @@ const buildUserContent = ({ message, image, pdfText, pdfName }) => {
 
 const cleanReply = (reply) =>
   reply
+    .replace(/<think>[\s\S]*?<\/think>/gi, "")
     .replace(/^\s*(assistant|user)\s*:\s*/gim, "")
     .trim();
 
@@ -382,6 +412,8 @@ const callModel = async (messages) => {
         model: CHAT_CONFIG.model,
         max_tokens: CHAT_CONFIG.maxTokens,
         temperature: CHAT_CONFIG.temperature,
+        // Keeps reasoning models from using all tokens on thinking (empty replies)
+        reasoning: { effort: "low" },
         messages,
       }),
     });
@@ -394,27 +426,62 @@ const callModel = async (messages) => {
 // AI CHAT — ROUTE
 // ============================================================
 
-router.post("/chat", chatRateLimit, async (req, res) => {
-  try {
-    const body = req.body || {};
+// Asks the model. If it returns nothing, asks once more before giving up.
+const getModelReply = async (messages) => {
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const response = await callModel(messages);
 
-    const message =
-      typeof body.message === "string"
-        ? body.message.trim().slice(0, CHAT_CONFIG.maxMessageLength)
-        : "";
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ OPENROUTER ERROR:", errorText);
 
-    const image = isValidImage(body.image) ? body.image : null;
-    const pdf = body.pdf && typeof body.pdf === "object" ? body.pdf : null;
-
-    if (!message && !image && !pdf) {
-      return res.status(400).json({ reply: "Please type a message first." });
+      return friendlyModelError(response.status, errorText);
     }
 
+    const data = await response.json();
+    const reply = cleanReply(data?.choices?.[0]?.message?.content || "");
+
+    if (reply) return reply;
+
+    console.error(`⚠️ Empty AI reply (attempt ${attempt})`);
+  }
+
+  return CHAT_CONFIG.emptyReply;
+};
+
+router.post("/chat", chatRateLimit, async (req, res) => {
+  const body = req.body || {};
+
+  const message =
+    typeof body.message === "string"
+      ? body.message.trim().slice(0, CHAT_CONFIG.maxMessageLength)
+      : "";
+
+  const image = isValidImage(body.image) ? body.image : null;
+  const pdf = body.pdf && typeof body.pdf === "object" ? body.pdf : null;
+
+  if (!message && !image && !pdf) {
+    return res.status(400).json({ reply: "Please type a message first." });
+  }
+
+  const pdfName = typeof pdf?.name === "string" ? pdf.name.slice(0, 80) : "";
+
+  // Sends the reply and saves the question + answer for the admin
+  const reply = (text, status = 200) => {
+    chatLogs.log({
+      sessionId: body.sessionId,
+      question: message || (image ? "[image]" : "[pdf]"),
+      answer: text,
+      attachment: image ? "image" : pdf ? `pdf: ${pdfName || "document"}` : null,
+    });
+
+    return res.status(status).json({ reply: text });
+  };
+
+  try {
     if (!process.env.OPENROUTER_API_KEY) {
       console.error("❌ OPENROUTER_API_KEY is missing");
-      return res.status(200).json({
-        reply: "Sorry, the AI is temporarily unavailable. Please try again.",
-      });
+      return reply("Sorry, the AI is temporarily unavailable. Please try again.");
     }
 
     const pdfText = image ? "" : await extractPdfText(pdf);
@@ -431,46 +498,20 @@ router.post("/chat", chatRateLimit, async (req, res) => {
       ...sanitizeHistory(body.history),
       {
         role: "user",
-        content: buildUserContent({
-          message,
-          image,
-          pdfText,
-          pdfName: typeof pdf?.name === "string" ? pdf.name.slice(0, 80) : "",
-        }),
+        content: buildUserContent({ message, image, pdfText, pdfName }),
       },
     ];
 
-    const response = await callModel(messages);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("❌ OPENROUTER ERROR:", errorText);
-
-      return res.status(200).json({
-        reply: friendlyModelError(response.status, errorText),
-      });
-    }
-
-    const data = await response.json();
-
-    const reply = cleanReply(
-      data?.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response."
-    );
-
-    return res.json({ reply: reply || "Sorry, I couldn't generate a response." });
+    return reply(await getModelReply(messages));
   } catch (err) {
     if (err.name === "AbortError") {
       console.error("❌ Chat error: AI request timed out");
-      return res.status(200).json({
-        reply: "The AI is taking longer than usual. Please try again in a moment.",
-      });
+      return reply("The AI is taking longer than usual. Please try again in a moment.");
     }
 
     console.error("❌ Chat error:", err);
 
-    return res.status(500).json({
-      reply: "Error getting AI response. Please try again.",
-    });
+    return reply("Error getting AI response. Please try again.", 500);
   }
 });
 
