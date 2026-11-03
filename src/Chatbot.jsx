@@ -14,7 +14,7 @@ const LEGACY_KEY = "chat"; // old single-conversation key (migrated once)
 const TIP_KEY = "chatTipDismissed";
 const MAX_HISTORY = 10; // last N messages sent to the AI as memory
 const MAX_CHATS = 30; // saved conversations limit
-const REQUEST_TIMEOUT = 45000; // ms
+const REQUEST_TIMEOUT = 70000; // ms (the server may retry once)
 const MAX_PDF_SIZE = 8 * 1024 * 1024; // 8 MB
 
 const suggestions = [
@@ -177,6 +177,144 @@ const compressImage = (file, maxWidth = 1280, quality = 0.7) =>
     reader.readAsDataURL(file);
   });
 
+// ---------- thought process (progress shown before the answer) ----------
+const buildThoughts = (attachedFile) => [
+  "Understanding your question",
+  ...(attachedFile?.type === "image" ? ["Looking at your image"] : []),
+  ...(attachedFile?.type === "pdf" ? ["Reading your PDF"] : []),
+  "Checking MotionPix information",
+  "Writing the answer"
+];
+
+// ---------- site theme (index.css sets data-theme="light" for light mode) ----------
+const detectSiteTheme = () => {
+  const value =
+    document.documentElement.getAttribute("data-theme") ||
+    document.body?.getAttribute("data-theme") ||
+    document.querySelector("[data-theme]:not(.chatbot-global)")?.getAttribute("data-theme");
+
+  return value === "light" ? "light" : "dark";
+};
+
+// ---------- download (TXT / PDF) ----------
+const escapeHtml = (value) =>
+  String(value ?? "").replace(
+    /[&<>"']/g,
+    (ch) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]
+  );
+
+const formatStamp = (ts) =>
+  new Date(ts).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+
+const speakerName = (m) => (m.role === "user" ? "You" : "MotionPix AI");
+
+const printableMessages = (chat) => chat.messages.filter((m) => m.content);
+
+const buildTranscriptText = (chatList) => {
+  const lines = [
+    "MotionPix AI - Chat transcript",
+    `Downloaded: ${formatStamp(Date.now())}`,
+    "Website: motionpixindia.com",
+    ""
+  ];
+
+  chatList.forEach((chat, index) => {
+    lines.push(
+      "=".repeat(48),
+      `Chat ${index + 1}: ${chat.title}`,
+      `Date: ${formatStamp(chat.updatedAt)}`,
+      "=".repeat(48),
+      ""
+    );
+
+    printableMessages(chat).forEach((m) => {
+      lines.push(`[${m.time || ""}] ${speakerName(m)}:`);
+      if (m.fileName) lines.push(`(Attachment: ${m.fileName})`);
+      lines.push(m.content, "");
+    });
+  });
+
+  return lines.join("\n").replace(/\r?\n/g, "\r\n");
+};
+
+const buildTranscriptHtml = (chatList, title) => `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${escapeHtml(title)}</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #111; margin: 24px; line-height: 1.5; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .meta { color: #666; font-size: 12px; margin-bottom: 18px; }
+  h2 { font-size: 15px; margin: 22px 0 10px; padding-top: 12px; border-top: 2px solid #e50914; }
+  .m { margin: 0 0 10px; padding: 9px 12px; border: 1px solid #ddd; border-radius: 8px; page-break-inside: avoid; }
+  .u { background: #f3f4f6; }
+  .w { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 4px; }
+  .t { font-weight: normal; color: #777; margin-left: 6px; }
+  .c { white-space: pre-wrap; word-wrap: break-word; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>MotionPix AI - Chat transcript</h1>
+<div class="meta">Downloaded: ${escapeHtml(formatStamp(Date.now()))} &middot; motionpixindia.com</div>
+${chatList
+  .map(
+    (chat, index) => `
+<h2>Chat ${index + 1}: ${escapeHtml(chat.title)} <span class="t">${escapeHtml(formatStamp(chat.updatedAt))}</span></h2>
+${printableMessages(chat)
+  .map(
+    (m) => `<div class="m ${m.role === "user" ? "u" : ""}">
+<div class="w">${speakerName(m)}<span class="t">${escapeHtml(m.time || "")}</span></div>
+${m.fileName ? `<div class="t">Attachment: ${escapeHtml(m.fileName)}</div>` : ""}
+<div class="c">${escapeHtml(m.content)}</div>
+</div>`
+  )
+  .join("\n")}`
+  )
+  .join("\n")}
+</body>
+</html>`;
+
+const downloadTextFile = (text, filename) => {
+  // The BOM keeps Hindi / Marathi text readable in Windows Notepad
+  const blob = new Blob(["﻿", text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+// Opens the print dialog for the transcript; "Save as PDF" creates the PDF file.
+// Works for every language because the browser draws the text itself.
+const printAsPdf = (html) => {
+  const frame = document.createElement("iframe");
+
+  frame.setAttribute("aria-hidden", "true");
+  frame.style.cssText =
+    "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;";
+  frame.srcdoc = html;
+
+  frame.onload = () => {
+    const win = frame.contentWindow;
+    if (!win) return;
+
+    win.onafterprint = () => frame.remove();
+    win.focus();
+    win.print();
+
+    setTimeout(() => frame.remove(), 120000);
+  };
+
+  document.body.appendChild(frame);
+};
+
 const Chatbot = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [chats, setChats] = useState(() => [createChat(), ...loadChats()]);
@@ -184,7 +322,12 @@ const Chatbot = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [dark, setDark] = useState(true);
+  const [theme, setTheme] = useState(() =>
+    typeof document === "undefined" ? "dark" : detectSiteTheme()
+  );
+  const [fullscreen, setFullscreen] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [thinkStep, setThinkStep] = useState(0);
   const [voiceOn, setVoiceOn] = useState(false);
   const [copied, setCopied] = useState(false);
   const [previewImg, setPreviewImg] = useState(null);
@@ -210,6 +353,7 @@ const Chatbot = () => {
   const intervalRef = useRef(null);
   const abortRef = useRef(null);
   const voiceOnRef = useRef(false);
+  const thoughtCountRef = useRef(1);
 
   // ---------- derived ----------
   const activeChat = chats.find((c) => c.id === activeId) || chats[0];
@@ -265,7 +409,54 @@ const Chatbot = () => {
       top: chatRef.current.scrollHeight,
       behavior: "smooth"
     });
-  }, [messages, typing]);
+  }, [messages, typing, thinkStep]);
+
+  // Follows the site's light / dark theme
+  useEffect(() => {
+    const sync = () => setTheme(detectSiteTheme());
+
+    sync();
+
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+      subtree: true
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Full screen: Esc closes it, and the page behind does not scroll
+  useEffect(() => {
+    if (!chatOpen || !fullscreen) return undefined;
+
+    const onKey = (e) => {
+      if (e.key === "Escape") setFullscreen(false);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [chatOpen, fullscreen]);
+
+  // Thought process: moves to the next step while the answer is being prepared
+  useEffect(() => {
+    setThinkStep(0);
+    if (!typing) return undefined;
+
+    const timer = setInterval(
+      () => setThinkStep((step) => Math.min(step + 1, thoughtCountRef.current - 1)),
+      1100
+    );
+
+    return () => clearInterval(timer);
+  }, [typing]);
 
   // Online / offline detection
   useEffect(() => {
@@ -518,9 +709,12 @@ const Chatbot = () => {
 
     setTyping(true);
 
+    const thoughts = buildThoughts(attachedFile);
+    thoughtCountRef.current = thoughts.length;
+
     updateMessages((prev) => [
       ...prev,
-      { role: "assistant", content: "", time: getTime(), reacting: null }
+      { role: "assistant", content: "", time: getTime(), reacting: null, thoughts }
     ]);
 
     try {
@@ -535,6 +729,7 @@ const Chatbot = () => {
         signal: controller.signal,
         body: JSON.stringify({
           message: text,
+          sessionId: activeId,
           history,
           image: attachedFile?.type === "image" ? attachedFile.base64 : null,
           pdf:
@@ -689,6 +884,26 @@ const Chatbot = () => {
     );
   };
 
+  // ---------- download ----------
+  const downloadChats = (scope, format) => {
+    const list =
+      scope === "all" ? savedChats : savedChats.filter((c) => c.id === activeId);
+
+    if (!list.length) return;
+
+    const name = `MotionPix-${scope === "all" ? "all-chats" : "chat"}-${new Date()
+      .toISOString()
+      .slice(0, 10)}`;
+
+    if (format === "txt") {
+      downloadTextFile(buildTranscriptText(list), `${name}.txt`);
+    } else {
+      printAsPdf(buildTranscriptHtml(list, name));
+    }
+
+    setDownloadOpen(false);
+  };
+
   // ---------- edit message ----------
   const startEdit = (i) => {
     setEditingIndex(i);
@@ -737,7 +952,10 @@ const Chatbot = () => {
 
   // ================= RENDER =================
   return (
-    <div className={`chatbot-global ${dark ? "dark" : "light"}`}>
+    <div
+      className={`chatbot-global${chatOpen && fullscreen ? " is-fullscreen" : ""}`}
+      data-theme={theme}
+    >
 
       {/* LAUNCHER: tip + toggle */}
       {!chatOpen && (
@@ -770,7 +988,7 @@ const Chatbot = () => {
       )}
 
       {chatOpen && (
-        <div className="chat-window">
+        <div className={`chat-window${fullscreen ? " is-fullscreen" : ""}`}>
 
           {/* HEADER */}
           <div className="chat-header">
@@ -805,12 +1023,70 @@ const Chatbot = () => {
               <button onClick={toggleVoice} title={voiceOn ? "Mute voice" : "Unmute voice"}>
                 {voiceOn ? "🔊" : "🔇"}
               </button>
+              <button
+                onClick={() => setDownloadOpen((open) => !open)}
+                title="Download chat"
+                aria-label="Download chat"
+                aria-expanded={downloadOpen}
+                disabled={!savedChats.length}
+              >
+                <i className="bi bi-download"></i>
+              </button>
+              <button
+                className="fullscreen-btn"
+                onClick={() => setFullscreen((value) => !value)}
+                title={fullscreen ? "Exit full screen" : "Full screen"}
+                aria-label={fullscreen ? "Exit full screen" : "Full screen"}
+              >
+                <i
+                  className={`bi ${
+                    fullscreen ? "bi-fullscreen-exit" : "bi-arrows-fullscreen"
+                  }`}
+                ></i>
+              </button>
               <button onClick={clearHistory} title="Clear this chat">
                 <i className="bi bi-trash3-fill"></i>
               </button>
-              <button onClick={() => setChatOpen(false)} title="Close">✕</button>
+              <button
+                onClick={() => {
+                  setChatOpen(false);
+                  setFullscreen(false);
+                  setDownloadOpen(false);
+                }}
+                title="Close"
+              >
+                ✕
+              </button>
             </div>
           </div>
+
+          {/* DOWNLOAD MENU */}
+          {downloadOpen && (
+            <>
+              <div
+                className="download-backdrop"
+                onClick={() => setDownloadOpen(false)}
+              ></div>
+
+              <div className="download-menu" role="menu">
+                <p>This chat</p>
+                <button role="menuitem" onClick={() => downloadChats("current", "txt")}>
+                  <i className="bi bi-file-earmark-text"></i> Download as TXT
+                </button>
+                <button role="menuitem" onClick={() => downloadChats("current", "pdf")}>
+                  <i className="bi bi-file-earmark-pdf"></i> Download as PDF
+                </button>
+
+                <p>All saved chats</p>
+                <button role="menuitem" onClick={() => downloadChats("all", "txt")}>
+                  <i className="bi bi-file-earmark-text"></i> Download as TXT
+                </button>
+                <button role="menuitem" onClick={() => downloadChats("all", "pdf")}>
+                  <i className="bi bi-file-earmark-pdf"></i> Download as PDF
+                </button>
+              </div>
+            </>
+          )}
 
           {/* OFFLINE BANNER */}
           {!isLive && (
@@ -836,7 +1112,12 @@ const Chatbot = () => {
             )}
 
             {messages.map((m, i) => (
-              <div key={i} className={`msg ${m.role}`}>
+              <div
+                key={i}
+                className={`msg ${m.role}${
+                  typing && i === messages.length - 1 && !m.content ? " is-pending" : ""
+                }`}
+              >
 
                 {editingIndex === i ? (
                   <div className="edit-box">
@@ -872,6 +1153,23 @@ const Chatbot = () => {
                         <span>{m.fileName}</span>
                       </div>
                     )}
+
+                    {m.role === "assistant" &&
+                      !m.local &&
+                      m.content &&
+                      m.thoughts?.length > 0 && (
+                        <details className="thought-process">
+                          <summary>Thought process</summary>
+                          <ul>
+                            {m.thoughts.map((step) => (
+                              <li key={step}>
+                                <i className="bi bi-check2"></i>
+                                {step}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      )}
 
                     <ReactMarkdown
                       components={{
@@ -938,12 +1236,37 @@ const Chatbot = () => {
             ))}
 
             {typing && messages[messages.length - 1]?.content === "" && (
-              <div className="msg assistant">
-                <div className="thinking">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+              <div className="msg assistant thinking-panel" role="status" aria-live="polite">
+                <div className="thinking-head">
+                  <div className="thinking">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span>Thinking...</span>
                 </div>
+
+                <ul className="thought-steps">
+                  {(messages[messages.length - 1].thoughts || []).map((step, index) => (
+                    <li
+                      key={step}
+                      className={
+                        index < thinkStep ? "done" : index === thinkStep ? "active" : ""
+                      }
+                    >
+                      <i
+                        className={`bi ${
+                          index < thinkStep
+                            ? "bi-check-circle-fill"
+                            : index === thinkStep
+                              ? "bi-arrow-repeat"
+                              : "bi-circle"
+                        }`}
+                      ></i>
+                      {step}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
@@ -1033,7 +1356,8 @@ const Chatbot = () => {
 
           {/* AI DISCLAIMER */}
           <div className="ai-disclaimer">
-            Content is generated with AI assistance, so surprises and mistakes are possible.
+            Content is generated with AI assistance, so surprises and mistakes are
+            possible. Chats may be reviewed by MotionPix to improve our service.
           </div>
 
           {/* SIDEBAR: conversation history */}
