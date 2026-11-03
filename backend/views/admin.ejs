@@ -181,6 +181,122 @@ body:not(.light-mode) small {
 }
 
 /* =========================================================
+   AI CHAT CONVERSATIONS
+   ========================================================= */
+
+.chat-log {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.light-mode .chat-log {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.1);
+}
+
+.chat-log > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.chat-log > summary::-webkit-details-marker {
+  display: none;
+}
+
+.chat-log-title {
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-log-meta {
+  flex-shrink: 0;
+  font-size: 12px;
+  opacity: 0.75;
+  text-align: right;
+}
+
+.chat-log-body {
+  padding: 4px 14px 14px;
+}
+
+.chat-turn {
+  margin-top: 10px;
+}
+
+.chat-bubble {
+  padding: 8px 12px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 14px;
+}
+
+.chat-bubble.q {
+  background: rgba(59,130,246,0.18);
+}
+
+.chat-bubble.a {
+  margin-top: 6px;
+  background: rgba(255,255,255,0.07);
+}
+
+.light-mode .chat-bubble.a {
+  background: rgba(0,0,0,0.06);
+}
+
+.chat-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.chat-flag {
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  background: rgba(245,158,11,0.25);
+  color: #f59e0b;
+}
+
+.chat-flag.error {
+  background: rgba(239,68,68,0.2);
+  color: #ef4444;
+}
+
+@media (max-width: 575.98px) {
+  .chat-log > summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .chat-log-title {
+    width: 100%;
+  }
+
+  .chat-log-meta {
+    text-align: left;
+  }
+}
+
+/* =========================================================
    LIVE VISITORS
    ========================================================= */
 
@@ -954,9 +1070,11 @@ const row = `
   <h4>🚀 MotionPix Admin</h4>
   <div class="mb-3">
   <a href="/api/admin" class="btn btn-primary">📩 Contact</a>
+  <a href="/api/admin/chats" class="btn btn-secondary">💬 Chats</a>
   <a href="/api/admin/careers" class="btn btn-warning">💼 Careers</a>
   <a href="/api/admin/content" class="btn btn-info">📝 Content</a>
   <a href="/api/admin/team" class="btn btn-success">👥 Team</a>
+  <a href="/api/admin/chats" class="btn btn-secondary">💬 Chats</a>
 </div>
 
   <div class="d-flex gap-2">
@@ -1191,6 +1309,36 @@ const row = `
 
 </div>
 </div>
+
+<!-- 💬 AI CHAT CONVERSATIONS -->
+<div class="card p-3 mb-3" id="chatLogsCard">
+
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+      <h5 class="mb-0">💬 AI Chat Conversations</h5>
+      <small class="text-muted">What visitors asked and what the AI replied</small>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <a id="chatExport" class="btn btn-sm btn-outline-primary" href="/api/chat-logs/export">⬇ Download all (TXT)</a>
+      <button type="button" id="chatRefresh" class="btn btn-sm btn-primary">↻ Refresh</button>
+    </div>
+  </div>
+
+  <form id="chatSearchForm" class="d-flex gap-2 mb-3">
+    <input id="chatSearch" type="text" class="form-control" placeholder="Search questions or replies...">
+    <button class="btn btn-primary">Search</button>
+  </form>
+
+  <div id="chatLogList"><small class="text-muted">Loading…</small></div>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <button type="button" id="chatPrev" class="btn btn-sm btn-outline-primary">‹ Prev</button>
+    <small id="chatPageInfo" class="text-muted"></small>
+    <button type="button" id="chatNext" class="btn btn-sm btn-outline-primary">Next ›</button>
+  </div>
+</div>
+
 <ul id="visitorList"></ul>
 
 <!-- 🟢 VISITOR STATS + LIVE NOW -->
@@ -1328,6 +1476,126 @@ function showPage(page){
 showPage(1);
 
 
+</script>
+
+<script>
+/* 💬 AI CHAT CONVERSATIONS (admin review) */
+let chatPage = 1;
+let chatTotalPages = 1;
+let chatConversations = [];
+
+function chatTime(value) {
+  return new Date(value).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function chatFlag(outcome) {
+  if (outcome === "off_topic") return '<span class="chat-flag">Out of scope</span>';
+  if (outcome === "no_reply") return '<span class="chat-flag">No answer</span>';
+  if (outcome === "error") return '<span class="chat-flag error">Error</span>';
+  return "";
+}
+
+function renderChatLogs(data) {
+  chatConversations = data.conversations || [];
+  chatTotalPages = Math.max(1, Math.ceil((data.total || 0) / (data.pageSize || 10)));
+
+  const list = document.getElementById("chatLogList");
+
+  list.innerHTML = chatConversations.length
+    ? chatConversations.map((c, index) => `
+        <details class="chat-log">
+          <summary>
+            <span class="chat-log-title">${esc((c.messages[0] && c.messages[0].user) || "Conversation")}</span>
+            <span class="chat-log-meta">${c.turns} message${c.turns === 1 ? "" : "s"} · ${esc(chatTime(c.lastAt))}</span>
+          </summary>
+
+          <div class="chat-log-body">
+            ${c.messages.map(m => `
+              <div class="chat-turn">
+                <div class="chat-label">
+                  <span>Visitor · ${esc(chatTime(m.at))}</span>
+                  ${m.attachment ? `<span>📎 ${esc(m.attachment)}</span>` : ""}
+                </div>
+                <div class="chat-bubble q">${esc(m.user)}</div>
+
+                <div class="chat-bubble a">
+                  <div class="chat-label"><span>MotionPix AI</span>${chatFlag(m.outcome)}</div>${esc(m.reply)}</div>
+              </div>
+            `).join("")}
+
+            <button type="button" class="btn btn-sm btn-outline-primary mt-3" data-chat-download="${index}">⬇ Download this chat (TXT)</button>
+          </div>
+        </details>
+      `).join("")
+    : '<small class="text-muted">No chat conversations yet</small>';
+
+  document.getElementById("chatPageInfo").innerText = `Page ${chatPage} of ${chatTotalPages}`;
+  document.getElementById("chatPrev").disabled = chatPage <= 1;
+  document.getElementById("chatNext").disabled = chatPage >= chatTotalPages;
+}
+
+async function loadChatLogs() {
+  const search = document.getElementById("chatSearch").value.trim();
+
+  document.getElementById("chatExport").href =
+    "/api/chat-logs/export" + (search ? "?search=" + encodeURIComponent(search) : "");
+
+  try {
+    const res = await fetch(
+      `/api/chat-logs?page=${chatPage}&search=${encodeURIComponent(search)}`
+    );
+
+    if (res.ok) {
+      renderChatLogs(await res.json());
+    }
+  } catch (err) {
+    console.error("Chat logs load error:", err);
+  }
+}
+
+function downloadChatLog(conversation) {
+  const text = conversation.messages.map(m =>
+    `[${chatTime(m.at)}] Visitor:\n${m.user}\n\nMotionPix AI:\n${m.reply}`
+  ).join("\n\n");
+
+  const blob = new Blob(["\ufeff" + text], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = `motionpix-chat-${conversation.id}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+}
+
+document.getElementById("chatSearchForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  chatPage = 1;
+  loadChatLogs();
+});
+
+document.getElementById("chatRefresh").addEventListener("click", loadChatLogs);
+
+document.getElementById("chatPrev").addEventListener("click", () => {
+  if (chatPage > 1) { chatPage -= 1; loadChatLogs(); }
+});
+
+document.getElementById("chatNext").addEventListener("click", () => {
+  if (chatPage < chatTotalPages) { chatPage += 1; loadChatLogs(); }
+});
+
+document.getElementById("chatLogList").addEventListener("click", (e) => {
+  const button = e.target.closest("[data-chat-download]");
+
+  if (button) downloadChatLog(chatConversations[Number(button.dataset.chatDownload)]);
+});
+
+window.addEventListener("load", loadChatLogs);
 </script>
 
 <script>
