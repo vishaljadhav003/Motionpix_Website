@@ -81,16 +81,18 @@ export const teamMembersSeed = [
     about:
       "Dr. Pravin Yadav is a PhD-holding researcher, educator, and technologist based in Pune, Maharashtra. A passionate lifelong learner with honed technical skills, he combines academic rigor from Symbiosis International University with deep expertise in VR, XR, animation, and emerging technologies.",
   },
+  
   {
-    name: "Arka",
-    fullName: "", // TODO: add surname
-    sameAs: [],
-    role: "Business Development Manager",
-    location: "Pune, India",
-    image: "/Arka.png",
-    about:
-      "Leading 3D animation workflows, storytelling, and high-quality visual production.",
-  },
+  name: "Vishal",
+  fullName: "Vishal Jadhav",
+  sameAs: [],
+  role: "Web Developer/Software Developer",
+  location: "Pune, India",
+  image: "/Vishal.png",
+  about:
+    "Delivering fast, responsive, and maintainable websites with modern UI standards.",
+},
+  
   {
     name: "Rutvik",
     fullName: "", // TODO: add surname
@@ -112,16 +114,7 @@ export const teamMembersSeed = [
       "Editing and motion work with rhythm, clarity, and strong visual impact.",
   },
 
-{
-  name: "Vishal",
-  fullName: "Vishal Jadhav",
-  sameAs: [],
-  role: "Web Developer/Software Developer",
-  location: "Pune, India",
-  image: "/Vishal.png",
-  about:
-    "Delivering fast, responsive, and maintainable websites with modern UI standards.",
-},
+
 
   {
     name: "Sushant",
