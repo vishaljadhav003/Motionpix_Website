@@ -84,7 +84,7 @@ export const teamMembersSeed = [
   
   {
   name: "Vishal",
-  fullName: "Vishal Jadhav",
+  fullName: "Vishal",
   sameAs: [],
   role: "Web Developer/Software Developer",
   location: "Pune, India",
