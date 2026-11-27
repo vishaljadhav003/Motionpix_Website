@@ -25,13 +25,13 @@ export const SITE = {
     region: "Maharashtra",
     postalCode: "411030",
     country: "IN",
-    latitude: "",
-    longitude: "",
+    latitude: "18.5130",
+    longitude: "73.8560",
   },
-  social: [
-    // TODO: add ONLY real links (LinkedIn, Instagram, Facebook, YouTube, Clutch, GoodFirms)
-    https://www.linkedin.com/company/143638943/
-  ],
+social: [
+  "https://www.linkedin.com/company/143638943/",
+  // add later: Instagram, Facebook, YouTube, Clutch, GoodFirms
+],
 };
 
 // The route that shows <TeamSection />. Person schema (name + photo) is published on this page.
