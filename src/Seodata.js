@@ -352,6 +352,16 @@ export const PAGES = {
     keywords:
       "digital product experience design, interactive product demo, digital presentations, interactive digital experiences, product experience design India",
   },
+    "/services/digital-presentations": {
+    name: "Digital Presentations",
+    service: "Digital Presentation Design",
+    parent: CATEGORY.web,
+    title: "Digital Presentation Design in Pune | MotionPix India",
+    description:
+      "Digital presentation design in Pune and across India: interactive and animated presentations that explain your offer clearly and impress clients.",
+    keywords:
+      "digital presentation design Pune, digital presentation design India, interactive presentation design, animated presentation, corporate presentation design, sales presentation design",
+  },
 
   // ---------- Learning & Training ----------
   [CATEGORY.learning]: {
@@ -579,16 +589,6 @@ export const PAGES = {
 // Pages that have SEO text ready but NO route in App.jsx yet.
 // Not used by Seo.jsx and not in the sitemap. Move an entry into PAGES when its route exists.
 export const DRAFT_PAGES = {
-  "/services/digital-presentations": {
-    name: "Digital Presentations",
-    service: "Digital Presentation Design",
-    parent: CATEGORY.web,
-    title: "Digital Presentation Design in India | MotionPix India",
-    description:
-      "Digital presentation design in India: interactive and animated presentations that explain your offer clearly and impress clients. Talk to MotionPix India.",
-    keywords:
-      "digital presentation design India, interactive presentation design, animated presentation, corporate presentation design, sales presentation design",
-  },
   "/services/liveshoots": {
     name: "Live Shoots",
     service: "Live Shoot and Video Production",
