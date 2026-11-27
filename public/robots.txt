@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /search
 
 Sitemap: https://www.motionpixindia.com/sitemap.xml
