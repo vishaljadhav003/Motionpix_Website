@@ -11,19 +11,25 @@ export const SITE = {
   name: "MotionPix India",
   legalName: "Motionpix Cinematix India Private Limited", // TODO: confirm the registered name
   alternateNames: ["MotionPix", "MotionPix Cinematix"],
-  defaultTitle: "MotionPix India | 3D Animation, AR/VR & Video Studio",
+  defaultTitle: "MotionPix India | 3D Animation Company in Pune, India",
   description:
-    "MotionPix India is a creative studio for 3D and 2D animation, product visualization, corporate films, AR/VR, e-learning and web design. Start your project.",
-  logo: "/Logo1.png", // same logo file the Navbar uses (public/Logo1.png)
-  ogImage: "/og-image.jpg", // TODO: create a 1200x630 image in /public (share previews are blank without it)
-  // TODO (optional but good for local SEO): fill the real details, the empty ones are skipped.
-  contact: { email: "", phone: "", locality: "", region: "", postalCode: "", country: "IN" },
+    "MotionPix India is a Pune-based 3D and 2D animation studio for product visualization, corporate films, AR/VR, e-learning and web design. Get a free quote.",
+  logo: "/Logo1.png",
+  ogImage: "/og-image.jpg", // TODO: create a 1200x630 image in /public, otherwise share previews are blank
+  // TODO: fill the real details (empty ones are skipped). This is the most important block for "Pune" ranking.
+  contact: {
+    email: "",
+    phone: "",        // e.g. "+91-XXXXXXXXXX"
+    street: "",       // full street address as on your Google Business Profile
+    locality: "Pune", // TODO: confirm
+    region: "Maharashtra",
+    postalCode: "",
+    country: "IN",
+    latitude: "",
+    longitude: "",
+  },
   social: [
-    // TODO: add ONLY your real profile links, e.g.
-    // "https://www.linkedin.com/company/your-page",
-    // "https://www.instagram.com/your-page",
-    // "https://www.facebook.com/your-page",
-    // "https://www.youtube.com/@your-channel",
+    // TODO: add ONLY real links (LinkedIn, Instagram, Facebook, YouTube, Clutch, GoodFirms)
   ],
 };
 
@@ -56,60 +62,59 @@ const CATEGORY = {
 };
 
 export const PAGES = {
-  "/": {
+   "/": {
     name: "Home",
-    title: "MotionPix India | 3D Animation, AR/VR & Video Studio",
+    title: "MotionPix India | 3D Animation Company in Pune, India",
     description: SITE.description,
     keywords:
-      "3D animation company in India, 2D animation studio, product visualization, corporate video production, AR VR development, e-learning development, motion graphics, MotionPix India",
+      "3D animation company in Pune, 3D animation company in Maharashtra, 3D animation company in India, 2D animation studio, product visualization, corporate video production, AR VR development, MotionPix India",
   },
   "/about": {
     name: "About",
-    title: "About MotionPix India | Animation & Creative Studio",
+    title: "About MotionPix India | Animation Studio in Pune",
     description:
-      "Meet MotionPix India, a creative studio combining animation, film, branding and immersive technology to turn complex ideas into clear, engaging visuals.",
+      "Meet MotionPix India, a Pune creative studio combining 3D animation, film, branding and AR/VR to turn complex ideas into clear, engaging visuals.",
     keywords:
-      "about MotionPix India, animation studio India, creative studio India, animation and film company, visual communication agency, MotionPix team",
+      "about MotionPix India, animation studio Pune, creative studio India, animation and film company, visual communication agency, MotionPix team",
   },
   "/services": {
     name: "Services",
-    title: "Animation, Film, Branding, Web & AR/VR Services | MotionPix",
+    title: "Animation, Film, AR/VR & Web Services in Pune | MotionPix",
     description:
-      "Explore MotionPix India services: 3D and 2D animation, films, branding, web and app design, e-learning, AR/VR and exhibition experiences for your brand.",
+      "Explore MotionPix India services from Pune: 3D and 2D animation, films, branding, web and app design, e-learning, AR/VR and exhibition experiences.",
     keywords:
-      "animation services India, video production services India, branding services, web design services, e-learning development, AR VR services, creative agency India",
+      "animation services Pune, video production services India, branding services, web design services, e-learning development, AR VR services, creative agency Pune",
   },
-
   // ---------- Animation & Visualization ----------
   [CATEGORY.animation]: {
     name: "Animation & Visualization",
     service: "Animation and Visualization",
     parent: "/services",
-    title: "Animation & Visualization Services | MotionPix India",
+    title: "Animation & Visualization Services Pune | MotionPix",
     description:
-      "Animation and visualization services in India: 3D and 2D animation, product visualization, industrial animation, motion graphics and explainers.",
+      "Animation and visualization services in Pune and across India: 3D and 2D animation, product visualization, industrial animation, motion graphics and explainers.",
     keywords:
-      "animation and visualization services, 3D animation company in India, 2D animation studio, product visualization, industrial animation, explainer videos",
+      "animation and visualization services, 3D animation company in Pune, 2D animation studio, product visualization, industrial animation, explainer videos",
   },
   "/services/2d-animation": {
     name: "2D Animation",
     service: "2D Animation",
     parent: CATEGORY.animation,
-    title: "2D Animation Services in India | MotionPix India",
+    title: "2D Animation Company in Pune, India | MotionPix India",
     description:
-      "Custom 2D animation services in India: explainer videos, motion graphics and animated stories that simplify your message. Talk to MotionPix India today.",
+      "2D animation company in Pune serving clients across India: explainer videos, motion graphics and animated stories. Talk to MotionPix India today.",
     keywords:
-      "2D animation services in India, 2D animation company, 2D animation studio, 2D explainer video, 2D animated video, animation video production",
+      "2D animation company in Pune, 2D animation services in India, 2D animation studio, 2D explainer video, 2D animated video, animation video production",
   },
   "/services/3d-animation": {
     name: "3D Animation",
     service: "3D Animation",
     parent: CATEGORY.animation,
-    title: "3D Animation Company in India | MotionPix India",
+    title: "3D Animation Services in Pune, Maharashtra | MotionPix",
     description:
-      "3D animation company in India creating product, industrial and explainer animations with realistic visuals. Share your brief with MotionPix India.",
+      "3D animation company in Pune, Maharashtra serving India: product, industrial and explainer animations with realistic visuals. Share your brief today.",
     keywords:
-      "3D animation company in India, 3D animation services, 3D animation studio, 3D product animation, 3D explainer video, 3D modelling and rendering",
+      "3D animation company in Pune, 3D animation company in Maharashtra, best 3D animation company in India, 3D animation services, 3D animation studio, 3D product animation, 3D explainer video",
   },
   "/services/product-visualization": {
     name: "Product Visualization",
@@ -683,4 +688,6 @@ export const KNOWS_ABOUT = [
   "Mobile Apps Design",
   "E-Learning Development",
   "AR VR Development",
+  "Industrial Animation",
+  "Animation Studio Pune",
 ];
