@@ -23,6 +23,13 @@ const toAbsolute = (src) => {
 
 const ORGANIZATION_ID = `${SITE.url}/#organization`;
 
+// Local targeting: Pune -> Maharashtra -> India
+const AREA_SERVED = [
+  { "@type": "City", name: "Pune" },
+  { "@type": "AdministrativeArea", name: "Maharashtra" },
+  { "@type": "Country", name: "India" },
+];
+
 // Home > Services > Category > Service, built from the `parent` field in seoData.js
 const buildBreadcrumbs = (route) => {
   const trail = [];
@@ -48,29 +55,41 @@ const buildBreadcrumbs = (route) => {
 
 const buildOrganization = () => {
   const { contact } = SITE;
-  const hasAddress = contact.locality || contact.region || contact.postalCode;
+  const hasAddress =
+    contact.street || contact.locality || contact.region || contact.postalCode;
 
   return {
-    "@type": "Organization",
+    "@type": ["Organization", "ProfessionalService"],
     "@id": ORGANIZATION_ID,
     name: SITE.name,
     legalName: SITE.legalName,
     alternateName: SITE.alternateNames,
     url: `${SITE.url}/`,
     logo: { "@type": "ImageObject", url: toAbsolute(SITE.logo) },
+    image: toAbsolute(SITE.ogImage),
     description: SITE.description,
     knowsAbout: KNOWS_ABOUT,
+    areaServed: AREA_SERVED,
     ...(contact.email && { email: contact.email }),
     ...(contact.phone && { telephone: contact.phone }),
     ...(hasAddress && {
       address: {
         "@type": "PostalAddress",
+        ...(contact.street && { streetAddress: contact.street }),
         addressLocality: contact.locality,
         addressRegion: contact.region,
         postalCode: contact.postalCode,
         addressCountry: contact.country,
       },
     }),
+    ...(contact.latitude &&
+      contact.longitude && {
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: contact.latitude,
+          longitude: contact.longitude,
+        },
+      }),
     ...(SITE.social.length > 0 && { sameAs: SITE.social }),
   };
 };
@@ -137,7 +156,7 @@ const SEO = ({ title, description, keywords, image, noindex = false }) => {
         serviceType: page.service,
         description: pageDescription,
         url: pageUrl,
-        areaServed: { "@type": "Country", name: "India" },
+        areaServed: AREA_SERVED,
         provider: { "@id": ORGANIZATION_ID },
       });
     }
@@ -170,6 +189,10 @@ const SEO = ({ title, description, keywords, image, noindex = false }) => {
         }
       />
       {indexable && <link rel="canonical" href={pageUrl} />}
+
+      {/* Local signals (Bing and other engines read these) */}
+      <meta name="geo.region" content="IN-MH" />
+      <meta name="geo.placename" content="Pune" />
 
       {/* Open Graph (Facebook, LinkedIn, WhatsApp) */}
       <meta property="og:type" content="website" />
