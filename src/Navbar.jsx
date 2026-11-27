@@ -6,61 +6,75 @@ import "./Navbar.css";
 import "./NavbarSearch.css";
 
 // Search Dataset
+// Search Dataset (keywords = extra words people type that are not in the title)
 const searchData = [
   { title: "Home", path: "/" },
   { title: "About Us", path: "/about" },
   { title: "Services", path: "/services" },
+  { title: "Contact Us - Enquiry", path: "/contact", keywords: "quote enquiry get in touch" },
+  { title: "Careers", path: "/careers", keywords: "jobs hiring vacancy" },
+  { title: "Industries", path: "/industries" },
+
+  // Categories
   { title: "Animation & Visualization", path: "/services/animation-visualization" },
-  { title: "2D Animation", path: "/services/2d-animation" },
-  { title: "3D Animation", path: "/services/3d-animation" },
-  // { title: "Digital Marketing", path: "/services/digitalmarketing" },
-  { title: "Web Design", path: "/services/web-design" },
-  { title: "UI/UX Design", path: "/services/ui-ux-design" },
-  { title: "Website Design", path: "/services/web-design" },
-  { title: "Website Development", path: "/services/web-design" },
-  { title: "Careers", path: "/careers" },
-  { title: "Contact Us - Enquiry", path: "/contact" },
-  { title: "Graphics Design", path: "/services/graphicsdesign" },
-  { title: "E Learning", path: "/services/e-learning" },
-  { title: "Motion Graphics", path: "/services/motiongraphics" },
-  { title: "Product Visualization", path: "/services/product-visualization" },
+  { title: "Film & Visual Content", path: "/services/film-visual-content", keywords: "video production" },
+  { title: "Branding & Creative", path: "/services/branding-creative" },
+  { title: "Web, Mobile & Interface Design", path: "/services/web-mobile-interface-design" },
+  { title: "Learning & Training", path: "/services/learning-training" },
+  { title: "Immersive Technology", path: "/services/immersive-technology" },
+  { title: "Exhibition & Experiences", path: "/services/exhibition-experiences" },
+
+  // Animation & Visualization
+  { title: "3D Animation", path: "/services/3d-animation", keywords: "3d animation company pune india" },
+  { title: "2D Animation", path: "/services/2d-animation", keywords: "2d animation company pune india" },
+  { title: "Product Visualization", path: "/services/product-visualization", keywords: "3d rendering" },
+  { title: "Engineering & Industrial Animation", path: "/services/engineering-industrial-animation", keywords: "machine animation" },
   { title: "Technical Visualization", path: "/services/technical-visualization" },
-  { title: "Engineering & Industrial Animation", path: "/services/engineering-industrial-animation" },
-  { title: "Explainer Content", path: "/services/explainer-content" },
-  { title: "Corporate & Brand Films", path: "/services/corporate-brand-films" },
+  { title: "Motion Graphics", path: "/services/motiongraphics" },
+  { title: "Explainer Content", path: "/services/explainer-content", keywords: "explainer video" },
+
+  // Film & Visual Content
+  { title: "Corporate & Brand Films", path: "/services/corporate-brand-films", keywords: "corporate video" },
   { title: "Product & Industrial Films", path: "/services/product-industrial-films" },
-  { title: "Promotional Videos", path: "/services/promotional-videos" },
+  { title: "Promotional Videos", path: "/services/promotional-videos", keywords: "ad film promo" },
   { title: "Photography & Videography", path: "/services/photography-videography" },
-  { title: "Editing & VFX", path: "/services/editing-vfx" },
-  { title: "Brand Identity", path: "/services/brand-identity" },
+  { title: "Editing & VFX", path: "/services/editing-vfx", keywords: "video editing post production" },
+
+  // Branding & Creative
+  { title: "Brand Identity", path: "/services/brand-identity", keywords: "logo design" },
+  { title: "Graphic Design", path: "/services/graphicsdesign", keywords: "graphics design" },
+  { title: "Marketing Collaterals", path: "/services/marketing-collaterals", keywords: "brochure catalogue" },
+  { title: "Presentation & Infographic Design", path: "/services/presentation-infographic-design", keywords: "ppt powerpoint" },
+  { title: "Campaign Creatives", path: "/services/campaign-creatives" },
+
+  // Web, Mobile & Interface Design
+  { title: "Website Design", path: "/services/web-design", keywords: "web design website development web development" },
+  { title: "Mobile App Design", path: "/services/mobile-app-design", keywords: "android ios app" },
+  { title: "UI/UX Design", path: "/services/ui-ux-design" },
   { title: "Landing Pages", path: "/services/landing-pages" },
-  { title: "Mobile App Design", path: "/services/mobile-app-design" },
-  { title: "Digital Presentations", path: "/services/digital-presentations" },
   { title: "Digital Product Experiences", path: "/services/digital-product-experiences" },
-  { title: "Articulate Storyline", path: "/services/articulate-storyline" },
+
+  // Learning & Training
+  { title: "E-Learning Development", path: "/services/e-learning", keywords: "e learning elearning" },
   { title: "Interactive Learning", path: "/services/interactive-learning" },
+  { title: "Articulate Storyline", path: "/services/articulate-storyline" },
   { title: "Product Training", path: "/services/product-training" },
   { title: "Employee & Safety Training", path: "/services/employee-safety-training" },
   { title: "Simulation & Assessment", path: "/services/simulation-assessment" },
-  { title: "AR|VR|MR|XR Experiences", path: "/services/ar-vr-mr-xr" },
-  { title: "Virtual ShowRooms", path: "/services/virtual-showrooms" },
+
+  // Immersive Technology
+  { title: "AR|VR|MR|XR Experiences", path: "/services/ar-vr-mr-xr", keywords: "augmented virtual reality" },
+  { title: "Virtual Showrooms", path: "/services/virtual-showrooms" },
   { title: "Interactive 3D", path: "/services/interactive-3d" },
   { title: "Immersive Training", path: "/services/immersive-training" },
+
+  // Exhibition & Experiences
   { title: "Exhibition Creative", path: "/services/exhibition-creative" },
-  { title: "Exhibition 3D Design", path: "/services/exhibition-3d-design" },
-  { title: "Interactive Displays", path: "/services/interactive-displays" },
+  { title: "Exhibition 3D Design", path: "/services/exhibition-3d-design", keywords: "stand design booth" },
+  { title: "Interactive Displays", path: "/services/interactive-displays", keywords: "kiosk touch screen" },
   { title: "Digital Installations", path: "/services/digital-installations" },
-  { title: "Event Content", path: "/services/event-content" },
   { title: "Product Experiences", path: "/services/product-experiences" },
-  { title: "Campaign Creatives", path: "/services/campaign-creatives" },
-  { title: "Presentation & Infographic Design", path: "/services/presentation-infographic-design" },
-  { title: "Film & Visual Content", path: "/services/film-visual-content" },
-  { title: "Animation & Visualization", path: "/services/animation-visualization" },
-  { title: "Branding & Creative", path: "/services/branding-creative" },
-  { title: "Learning & Training", path: "/services/learning-training" },
-  { title: "Immersive Technology", path: "/services/immersive-technology" },
-  { title: "Exhibition Experiences", path: "/services/exhibition-experiences" },
-  { title: "Web & Mobile Interface Design", path: "/services/web-mobile-interface-design" }
+  { title: "Event Content", path: "/services/event-content" },
 ];
 
 // Services Dropdown Dataset (parent categories -> child items)
@@ -105,7 +119,7 @@ const servicesMenu = [
     ],
   },
   {
-    title: "Web,Mobile & Interface Design",
+    title: "Web, Mobile & Interface Design",
     path:"web-mobile-interface-design",
     items: [
       { title: "Website Design", path: "web-design" },
@@ -132,7 +146,7 @@ const servicesMenu = [
     title: "Immersive Technology",
     path:"immersive-technology",
     items: [
-      { title: "AR|VR|MR|XR Experineces", path: "ar-vr-mr-xr" },
+      { title: "AR|VR|MR|XR Experiences", path: "ar-vr-mr-xr" },
       { title: "Virtual Showrooms", path: "virtual-showrooms" },
       { title: "Interactive 3D", path: "interactive-3d" },
       { title: "Immersive Training", path: "immersive-training" },
@@ -297,9 +311,10 @@ const Navbar = () => {
   };
 
   // Search functionality
-  const filteredSuggestions = searchQuery.trim()
+  const query = searchQuery.trim().toLowerCase();
+  const filteredSuggestions = query
     ? searchData.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        `${item.title} ${item.keywords || ""}`.toLowerCase().includes(query)
       )
     : [];
 
@@ -333,7 +348,7 @@ const Navbar = () => {
             >
               <img
                 src="/Logo1.png"
-                alt="Logo"
+                alt="MotionPix India logo"
                 className="navbar-logo me-2 rounded"
               />
             </NavLink>
