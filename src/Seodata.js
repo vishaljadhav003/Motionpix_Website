@@ -18,18 +18,19 @@ export const SITE = {
   ogImage: "/og-image.jpg", // TODO: create a 1200x630 image in /public, otherwise share previews are blank
   // TODO: fill the real details (empty ones are skipped). This is the most important block for "Pune" ranking.
   contact: {
-    email: "",
-    phone: "",        // e.g. "+91-XXXXXXXXXX"
-    street: "",       // full street address as on your Google Business Profile
+    email: "info@motionpixindia.com",
+    phone: "+919822055205",        // e.g. "+91-XXXXXXXXXX"
+    street: "Ground Floor, Building No-48, Smile Foundation Lane, near Post Office, Lokamanya Nagar, Navi Peth, Sadashiv Peth, Pune, Maharashtra 411030",       // full street address as on your Google Business Profile
     locality: "Pune", // TODO: confirm
     region: "Maharashtra",
-    postalCode: "",
+    postalCode: "411030",
     country: "IN",
     latitude: "",
     longitude: "",
   },
   social: [
     // TODO: add ONLY real links (LinkedIn, Instagram, Facebook, YouTube, Clutch, GoodFirms)
+    https://www.linkedin.com/company/143638943/
   ],
 };
 
