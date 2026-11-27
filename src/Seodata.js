@@ -352,7 +352,7 @@ export const PAGES = {
     keywords:
       "digital product experience design, interactive product demo, digital presentations, interactive digital experiences, product experience design India",
   },
-    "/services/digital-presentations": {
+  "/services/digital-presentations": {
     name: "Digital Presentations",
     service: "Digital Presentation Design",
     parent: CATEGORY.web,
