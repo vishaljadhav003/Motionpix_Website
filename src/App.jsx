@@ -39,6 +39,7 @@ import UIUXDesign from "./UIUXDesign";
 import LandingPages from "./LandingPages";
 import MobileAppDesign from "./MobileAppDesign";
 import DigitalProductExperiences from "./DigitalProductExperiences";
+import DigitalMarketing from "./DigitalMarketing";
 import ArticulateStoryline from "./ArticulateStoryline";
 import InteractiveLearning from "./InteractiveLearning";
 import SEO from "./SEO";
@@ -110,6 +111,7 @@ const App = () => {
           <Route path="/services/landing-pages" element={<LandingPages />} />
           <Route path="/services/mobile-app-design" element={<MobileAppDesign />} />
           <Route path="/services/digital-product-experiences" element={<DigitalProductExperiences />} />
+           <Route path="/services/digital-presentations" element={<DigitalMarketing />} />
           <Route path="/services/articulate-storyline" element={<ArticulateStoryline />} />
           <Route path="/services/interactive-learning" element={<InteractiveLearning/>} />
           <Route path="/services/graphicsdesign" element={<GraphicsDesign />} />
